@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ResharperCodeContractNullability</id>
+    <version>1.0.0.0</version>
+    <title>Resharper Code Contract Nullability</title>
+    <authors>Bart Koelman</authors>
+    <owners>Bart Koelman</owners>
+    <projectUrl>https://github.com/bkoelman/ResharperCodeContractNullability</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Annotations_in_Source_Code.html</description>
+    <releaseNotes>Initial public version.</releaseNotes>
+    <language>en-us</language>
+    <tags>resharper, code contracts, annotations, nullability, analyzer, canbenull, notnull</tags>
+  </metadata>
+  <!-- The convention for analyzers is to put language agnostic dlls in analyzers\dotnet and language specific analyzers in either analyzers\dotnet\cs or analyzers\dotnet\vb -->
+  <files>
+    <file src="*.dll" target="analyzers\dotnet\cs" exclude="**\JetBrains.Annotations.dll;**\Microsoft.CodeAnalysis.*;**\System.Collections.Immutable.*;**\System.Reflection.Metadata.*;**\System.Composition.*" />
+    <file src="tools\*.ps1" target="tools\" />
+  </files>
+</package>
