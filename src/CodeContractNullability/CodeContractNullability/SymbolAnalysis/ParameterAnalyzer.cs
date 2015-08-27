@@ -53,9 +53,7 @@ namespace CodeContractNullability.SymbolAnalysis
             IParameterSymbol baseParameter = TryGetBaseParameterFor(parameterSymbol);
             while (baseParameter != null)
             {
-                bool defined = AppliesToItem
-                    ? baseParameter.HasItemNullabilityDefined()
-                    : baseParameter.HasNullabilityDefined();
+                bool defined = baseParameter.HasNullabilityAnnotation(AppliesToItem);
                 if (defined || ExternalAnnotations.Contains(baseParameter, AppliesToItem))
                 {
                     return true;
@@ -119,9 +117,7 @@ namespace CodeContractNullability.SymbolAnalysis
                         int parameterIndex = containingMethod.Parameters.IndexOf(Symbol);
                         IParameterSymbol ifaceParameter = ifaceMember.Parameters[parameterIndex];
 
-                        bool defined = AppliesToItem
-                            ? ifaceParameter.HasItemNullabilityDefined()
-                            : ifaceParameter.HasNullabilityDefined();
+                        bool defined = ifaceParameter.HasNullabilityAnnotation(AppliesToItem);
                         if (defined || ExternalAnnotations.Contains(ifaceParameter, AppliesToItem))
                         {
                             return true;
@@ -146,9 +142,7 @@ namespace CodeContractNullability.SymbolAnalysis
                         int parameterIndex = containingProperty.Parameters.IndexOf(Symbol);
                         IParameterSymbol ifaceParameter = ifaceMember.Parameters[parameterIndex];
 
-                        bool defined = AppliesToItem
-                            ? ifaceParameter.HasItemNullabilityDefined()
-                            : ifaceParameter.HasNullabilityDefined();
+                        bool defined = ifaceParameter.HasNullabilityAnnotation(AppliesToItem);
                         if (defined || ExternalAnnotations.Contains(ifaceParameter, AppliesToItem))
                         {
                             return true;

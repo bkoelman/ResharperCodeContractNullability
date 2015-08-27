@@ -54,11 +54,23 @@ namespace CodeContractNullability.SymbolAnalysis
         private void AnalyzeNullability([NotNull] DiagnosticDescriptor descriptor,
             [NotNull] ImmutableDictionary<string, string> properties)
         {
-            bool canBeSkipped = AppliesToItem ? CanItemBeSkipped() : CanBeSkipped();
-            if (!canBeSkipped)
+            if (Symbol.HasNullabilityAnnotation(AppliesToItem))
             {
-                AnalyzeFor(descriptor, properties);
+                return;
             }
+
+            ITypeSymbol symbolType = GetEffectiveSymbolType();
+            if (!symbolType.TypeCanContainNull())
+            {
+                return;
+            }
+
+            if (IsSafeToIgnore())
+            {
+                return;
+            }
+
+            AnalyzeFor(descriptor, properties);
         }
 
         private void AnalyzeFor([NotNull] DiagnosticDescriptor descriptor,
@@ -94,9 +106,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     // ReSharper disable once PossibleUnintendedReferenceComparison
                     if (implementer == (ISymbol) Symbol)
                     {
-                        bool defined = AppliesToItem
-                            ? ifaceMember.HasItemNullabilityDefined()
-                            : ifaceMember.HasNullabilityDefined();
+                        bool defined = ifaceMember.HasNullabilityAnnotation(AppliesToItem);
                         if (defined || ExternalAnnotations.Contains(ifaceMember, AppliesToItem))
                         {
                             return true;
@@ -107,44 +117,17 @@ namespace CodeContractNullability.SymbolAnalysis
             return false;
         }
 
-        private bool CanBeSkipped()
+        private ITypeSymbol GetEffectiveSymbolType()
         {
-            if (Symbol.HasNullabilityDefined())
-            {
-                return true;
-            }
-
-            ITypeSymbol symbolType = GetSymbolType();
-            if (!symbolType.TypeCanContainNull())
-            {
-                return true;
-            }
-
-            return IsSafeToIgnore();
-        }
-
-        private bool CanItemBeSkipped()
-        {
-            if (Symbol.HasItemNullabilityDefined())
-            {
-                return true;
-            }
-
             ITypeSymbol symbolType = GetSymbolType();
 
-            ITypeSymbol itemSymbolType = symbolType.TryGetItemTypeForSequenceOrCollection(context.Compilation) ??
-                symbolType.TryGetItemTypeForLazyOrGenericTask(context.Compilation);
-            if (itemSymbolType == null)
+            if (AppliesToItem)
             {
-                return true;
+                symbolType = symbolType.TryGetItemTypeForSequenceOrCollection(context.Compilation) ??
+                    symbolType.TryGetItemTypeForLazyOrGenericTask(context.Compilation);
             }
 
-            if (!itemSymbolType.TypeCanContainNull())
-            {
-                return true;
-            }
-
-            return IsSafeToIgnore();
+            return symbolType;
         }
 
         private bool IsSafeToIgnore()
@@ -155,7 +138,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 return true;
             }
 
-            if (Symbol.IsAnnotatedWithReshaperConditionalAttribute(context.Compilation))
+            if (Symbol.HasResharperConditionalAnnotation(context.Compilation))
             {
                 return true;
             }

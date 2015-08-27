@@ -48,9 +48,7 @@ namespace CodeContractNullability.SymbolAnalysis
             IMethodSymbol baseMember = methodSymbol.OverriddenMethod;
             while (baseMember != null)
             {
-                bool defined = AppliesToItem
-                    ? baseMember.HasItemNullabilityDefined()
-                    : baseMember.HasNullabilityDefined();
+                bool defined = baseMember.HasNullabilityAnnotation(AppliesToItem);
                 if (defined || ExternalAnnotations.Contains(baseMember, AppliesToItem))
                 {
                     return true;

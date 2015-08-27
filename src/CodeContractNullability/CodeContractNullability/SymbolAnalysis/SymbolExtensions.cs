@@ -15,26 +15,18 @@ namespace CodeContractNullability.SymbolAnalysis
 {
     public static class SymbolExtensions
     {
-        public static bool HasNullabilityDefined([NotNull] this ISymbol memberSymbol)
+        public static bool HasNullabilityAnnotation([NotNull] this ISymbol memberSymbol, bool appliesToItem)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
 
             ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
-            return attributes.Any(IsNullabilityAttribute);
+            return attributes.Any(x => appliesToItem ? IsItemNullabilityAttribute(x) : IsNullabilityAttribute(x));
         }
 
         private static bool IsNullabilityAttribute([NotNull] AttributeData attribute)
         {
             string typeName = attribute.AttributeClass.Name;
             return typeName == "CanBeNullAttribute" || typeName == "NotNullAttribute";
-        }
-
-        public static bool HasItemNullabilityDefined([NotNull] this ISymbol memberSymbol)
-        {
-            Guard.NotNull(memberSymbol, nameof(memberSymbol));
-
-            ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
-            return attributes.Any(IsItemNullabilityAttribute);
         }
 
         private static bool IsItemNullabilityAttribute([NotNull] AttributeData attribute)
@@ -141,17 +133,17 @@ namespace CodeContractNullability.SymbolAnalysis
             return attributes.Any(attr => attr.AttributeClass == debuggerNonUserCodeAttributeType);
         }
 
-        public static bool IsAnnotatedWithReshaperConditionalAttribute([NotNull] this ISymbol symbol,
+        public static bool HasResharperConditionalAnnotation([NotNull] this ISymbol symbol,
             [NotNull] Compilation compilation)
         {
             Guard.NotNull(symbol, nameof(symbol));
             Guard.NotNull(compilation, nameof(compilation));
 
             ImmutableArray<AttributeData> attributes = symbol.ContainingType.GetAttributes();
-            return attributes.Any(attr => IsReshaperConditionalAttribute(attr, compilation));
+            return attributes.Any(attr => IsResharperConditionalAttribute(attr, compilation));
         }
 
-        private static bool IsReshaperConditionalAttribute([NotNull] AttributeData attribute,
+        private static bool IsResharperConditionalAttribute([NotNull] AttributeData attribute,
             [NotNull] Compilation compilation)
         {
             INamedTypeSymbol conditionalAttributeType =
