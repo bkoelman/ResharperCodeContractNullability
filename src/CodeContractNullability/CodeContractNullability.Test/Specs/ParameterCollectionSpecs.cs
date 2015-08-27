@@ -134,7 +134,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M(<annotate/> IEnumerable<T?> [|p|]) { }
                     }
-                    ")
+                ")
                 .Build();
 
             // Act and assert

@@ -464,7 +464,7 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     }
-                    ")
+                ")
                 .Build();
 
             // Act and assert

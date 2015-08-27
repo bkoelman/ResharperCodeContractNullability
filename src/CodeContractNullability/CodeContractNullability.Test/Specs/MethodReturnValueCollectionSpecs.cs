@@ -381,13 +381,13 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         IList<string> I.M() { throw new NotImplementedException(); }
 
-                        public IList<string> [|M|]() { throw new NotImplementedException(); }
+                        <annotate/> public IList<string> [|M|]() { throw new NotImplementedException(); }
                     }
                 ")
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyItemNullabilityFix(source);
         }
 
         [Test]
@@ -467,14 +467,11 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_type_is_task_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (Task).Namespace)
-                .InGlobalScope(@"
-                    class C
-                    {
-                        Task M() { throw new NotImplementedException(); }
-                    }
+                .InDefaultClass(@"
+                    Task M() { throw new NotImplementedException(); }
                 ")
                 .Build();
 

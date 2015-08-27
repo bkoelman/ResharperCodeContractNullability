@@ -530,13 +530,13 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         string I.M() { throw new NotImplementedException(); }
 
-                        public string [|M|]() { throw new NotImplementedException(); }
+                        <annotate/> public string [|M|]() { throw new NotImplementedException(); }
                     }
                 ")
                 .Build();
 
             // Act and assert
-            VerifyNullabilityDiagnostic(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]

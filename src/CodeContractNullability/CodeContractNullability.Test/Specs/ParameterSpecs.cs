@@ -152,7 +152,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M(<annotate/> T? [|p|]) { }
                     }
-                    ")
+                ")
                 .Build();
 
             // Act and assert
@@ -497,7 +497,7 @@ namespace CodeContractNullability.Test.Specs
                             public void M(string p) { }
                         }
                     }
-                    ")
+                ")
                 .ExternallyAnnotated(new ExternalAnnotationsBuilder()
                     .IncludingMember(new ExternalAnnotationFragmentBuilder()
                         .Named("M:N.I.M(System.String)")
@@ -535,7 +535,7 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     }
-                    ")
+                ")
                 .ExternallyAnnotated(new ExternalAnnotationsBuilder()
                     .IncludingMember(new ExternalAnnotationFragmentBuilder()
                         .Named("P:N.I.Item(System.String)")
@@ -680,7 +680,7 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     }
-                    ")
+                ")
                 .ExternallyAnnotated(new ExternalAnnotationsBuilder()
                     .IncludingMember(new ExternalAnnotationFragmentBuilder()
                         .Named("P:N.I.Item(System.String)")
