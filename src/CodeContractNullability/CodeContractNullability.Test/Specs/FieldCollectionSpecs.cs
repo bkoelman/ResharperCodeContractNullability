@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeContractNullability.Test.TestDataBuilders;
 using NUnit.Framework;
@@ -78,8 +79,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
-                            public const string[] f = null;
-                        ")
+                    public const string[] f = null;
+                ")
                 .Build();
 
             // Act and assert
@@ -93,8 +94,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
-                            System.Collections.Generic.List<int> f;
-                        ")
+                    System.Collections.Generic.List<int> f;
+                ")
                 .Build();
 
             // Act and assert
@@ -108,11 +109,11 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
-                            class C<T> where T : struct
-                            {
-                                System.Collections.Generic.IList<T> f;
-                            }
-                        ")
+                    class C<T> where T : struct
+                    {
+                        System.Collections.Generic.IList<T> f;
+                    }
+                ")
                 .Build();
 
             // Act and assert
@@ -128,8 +129,8 @@ namespace CodeContractNullability.Test.Specs
                 .WithReference(typeof (HashSet<>).Assembly)
                 .Using("System.Reflection")
                 .InDefaultClass(@"
-                            System.Collections.Generic.HashSet<BindingFlags> f;
-                        ")
+                    System.Collections.Generic.HashSet<BindingFlags> f;
+                ")
                 .Build();
 
             // Act and assert
@@ -176,11 +177,11 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
-                            class C<T> where T : struct
-                            {
-                                <annotate/> System.Collections.Generic.ISet<T?> [|f|];
-                            }
-                        ")
+                    class C<T> where T : struct
+                    {
+                        <annotate/> System.Collections.Generic.ISet<T?> [|f|];
+                    }
+                ")
                 .Build();
 
             // Act and assert
@@ -194,8 +195,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
-                            <annotate/> System.Collections.Generic.IEnumerable<string> [|f|];
-                        ")
+                    <annotate/> System.Collections.Generic.IEnumerable<string> [|f|];
+                ")
                 .Build();
 
             // Act and assert
@@ -211,9 +212,9 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
                 .Using(typeof (DebuggerNonUserCodeAttribute).Namespace)
                 .InDefaultClass(@"
-                            [CompilerGenerated]
-                            System.Collections.Generic.IEnumerable<string> f;
-                        ")
+                    [CompilerGenerated]
+                    System.Collections.Generic.IEnumerable<string> f;
+                ")
                 .Build();
 
             // Act and assert
@@ -231,11 +232,11 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof (Control).Namespace)
                 .Using(typeof (Component).Namespace)
                 .InGlobalScope(@"
-                            public partial class DerivedControl : System.Windows.Forms.Control
-                            {
-                                private System.Collections.Generic.IList<System.Windows.Forms.Control> controls;
-                            }
-                        ")
+                    public partial class DerivedControl : System.Windows.Forms.Control
+                    {
+                        private System.Collections.Generic.IList<System.Windows.Forms.Control> controls;
+                    }
+                ")
                 .Build();
 
             // Act and assert
@@ -260,8 +261,8 @@ namespace CodeContractNullability.Test.Specs
         //------------------------------------------------------------------------------
         ")
                 .InDefaultClass(@"
-                            private System.Collections.IList f;
-                        ")
+                    private System.Collections.IList f;
+                ")
                 .Build();
 
             // Act and assert
@@ -275,8 +276,55 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
-                            <annotate/> System.Collections.Generic.List<int?> [|f|], [|g|];
-                        ")
+                    <annotate/> System.Collections.Generic.List<int?> [|f|], [|g|];
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityFix(source);
+        }
+
+        [Test]
+        public void When_field_type_is_lazy_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .InDefaultClass(@"
+                    <annotate/> Lazy<string> [|f|];
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityFix(source);
+        }
+
+        [Test]
+        public void When_field_type_is_task_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (Task).Namespace)
+                .InDefaultClass(@"
+                    Task f;
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_field_type_is_generic_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (Task<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> Task<string> [|f|];
+                ")
                 .Build();
 
             // Act and assert

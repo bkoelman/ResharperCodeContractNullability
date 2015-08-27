@@ -15,6 +15,7 @@ namespace CodeContractNullability.Utilities
         where TInterface : class
     {
         [NotNull]
+        [ItemNotNull]
         private readonly Lazy<TInterface> lazyInstance;
 
         [CanBeNull]

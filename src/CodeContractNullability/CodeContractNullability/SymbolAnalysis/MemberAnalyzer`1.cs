@@ -132,7 +132,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
             ITypeSymbol symbolType = GetSymbolType();
 
-            ITypeSymbol itemSymbolType = symbolType.TryGetItemTypeForSequenceOrCollection(context.Compilation);
+            ITypeSymbol itemSymbolType = symbolType.TryGetItemTypeForSequenceOrCollection(context.Compilation) ??
+                symbolType.TryGetItemTypeForLazyOrGenericTask(context.Compilation);
             if (itemSymbolType == null)
             {
                 return true;

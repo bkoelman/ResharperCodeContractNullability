@@ -44,6 +44,7 @@ namespace CodeContractNullability
         }
 
         [NotNull]
+        [ItemNotNull]
         private static async Task<NullabilityAttributeSymbols> GetNullabilityAttributesFromDiagnostic(
             CodeFixContext context, [NotNull] Diagnostic diagnostic)
         {
@@ -103,6 +104,7 @@ namespace CodeContractNullability
         }
 
         [NotNull]
+        [ItemNotNull]
         private async Task<Document> WithAttributeAsync([NotNull] INamedTypeSymbol attribute,
             [NotNull] Document document, [NotNull] SyntaxNode syntaxNode, CancellationToken cancellationToken)
         {
@@ -135,6 +137,7 @@ namespace CodeContractNullability
         }
 
         [NotNull]
+        [ItemNotNull]
         private static async Task<Document> SimplifyAsync([NotNull] Document document,
             CancellationToken cancellationToken)
         {
@@ -142,6 +145,7 @@ namespace CodeContractNullability
         }
 
         [NotNull]
+        [ItemNotNull]
         private static async Task<SyntaxNode> FormatAsync([NotNull] Document document,
             CancellationToken cancellationToken)
         {

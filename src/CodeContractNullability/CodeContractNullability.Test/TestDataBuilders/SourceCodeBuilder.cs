@@ -159,13 +159,15 @@ namespace CodeContractNullability.Test.TestDataBuilders
     public static class SourceCodeBuilderExtensions
     {
         [NotNull]
-        public static TBuilder Using<TBuilder>([NotNull] this TBuilder source, [NotNull] string codeNamespace)
+        public static TBuilder Using<TBuilder>([NotNull] this TBuilder source, [CanBeNull] string codeNamespace)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
-            Guard.NotNull(codeNamespace, nameof(codeNamespace));
+            if (!string.IsNullOrWhiteSpace(codeNamespace))
+            {
+                source._Using(codeNamespace);
+            }
 
-            source._Using(codeNamespace);
             return source;
         }
 

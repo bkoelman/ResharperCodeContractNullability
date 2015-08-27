@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -79,6 +81,33 @@ namespace CodeContractNullability.SymbolAnalysis
             if (typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol).Any(type => type == nonGenericSequenceType))
             {
                 return compilation.GetTypeByMetadataName("System.Object");
+            }
+
+            return null;
+        }
+
+        [CanBeNull]
+        public static ITypeSymbol TryGetItemTypeForLazyOrGenericTask([NotNull] this ITypeSymbol typeSymbol,
+            [NotNull] Compilation compilation)
+        {
+            Guard.NotNull(typeSymbol, nameof(typeSymbol));
+            Guard.NotNull(compilation, nameof(compilation));
+
+            INamedTypeSymbol lazyType = compilation.GetTypeByMetadataName(typeof (Lazy<>).FullName);
+            INamedTypeSymbol taskType = compilation.GetTypeByMetadataName(typeof (Task<>).FullName);
+
+            var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
+            if (namedTypeSymbol != null)
+            {
+                // ReSharper disable PossibleUnintendedReferenceComparison
+                bool isMatch = namedTypeSymbol.ConstructedFrom == lazyType ||
+                    namedTypeSymbol.ConstructedFrom == taskType;
+                // ReSharper restore PossibleUnintendedReferenceComparison
+
+                if (isMatch)
+                {
+                    return namedTypeSymbol.TypeArguments.Single();
+                }
             }
 
             return null;

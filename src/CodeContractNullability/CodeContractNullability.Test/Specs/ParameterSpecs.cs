@@ -84,7 +84,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
-                    public void M(int someValue) { }
+                    public void M(int p) { }
                 ")
                 .Build();
 

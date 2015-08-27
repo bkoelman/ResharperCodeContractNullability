@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using CodeContractNullability.Test.TestDataBuilders;
 using NUnit.Framework;
 
@@ -427,6 +428,56 @@ namespace CodeContractNullability.Test.Specs
 
             // Act and assert
             VerifyItemNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_return_value_type_is_lazy_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .InDefaultClass(@"
+                    <annotate/> Lazy<string> [|M|]() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityFix(source);
+        }
+
+        [Test]
+        public void When_return_value_type_is_task_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (Task).Namespace)
+                .InGlobalScope(@"
+                    class C
+                    {
+                        Task M() { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_return_value_type_is_generic_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (Task<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> Task<string> [|M|]() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityFix(source);
         }
     }
 }
