@@ -557,7 +557,7 @@ namespace CodeContractNullability.Test.Specs
                     namespace N
                     {
                         [Conditional(""JETBRAINS_ANNOTATIONS"")]
-                        class C : System.Attribute
+                        class C : Attribute
                         {
                             public string P { get; set; }
                         }

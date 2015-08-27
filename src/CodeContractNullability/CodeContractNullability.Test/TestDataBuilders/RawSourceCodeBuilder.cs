@@ -27,5 +27,14 @@ namespace CodeContractNullability.Test.TestDataBuilders
             expectedText = expected;
             return this;
         }
+
+        [NotNull]
+        public static string PublicGlobalNullabilityAttributes => @"
+
+public class CanBeNullAttribute : System.Attribute { }
+public class NotNullAttribute : System.Attribute { }
+public class ItemCanBeNullAttribute : System.Attribute { }
+public class ItemNotNullAttribute : System.Attribute { }
+";
     }
 }

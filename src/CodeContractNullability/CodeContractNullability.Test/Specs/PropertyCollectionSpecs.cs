@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -21,11 +22,12 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .Imported())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C
                     {
                         [ItemNotNull]
-                        System.Collections.Generic.IEnumerable<string> P { get; set; }
+                        IEnumerable<string> P { get; set; }
                     }
                 ")
                 .Build();
@@ -41,11 +43,12 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .Imported())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C
                     {
                         [ItemCanBeNull]
-                        System.Collections.Generic.IEnumerable<string> P { get; set; }
+                        IEnumerable<string> P { get; set; }
                     }
                 ")
                 .Build();
@@ -60,8 +63,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IList<>).Namespace)
                 .InDefaultClass(@"
-                    System.Collections.Generic.IList<int> P { get; set; }
+                    IList<int> P { get; set; }
                 ")
                 .Build();
 
@@ -75,10 +79,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        System.Collections.Generic.IEnumerable<T> P { get; set; }
+                        IEnumerable<T> P { get; set; }
                     }
                 ")
                 .Build();
@@ -93,9 +98,10 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .Using(typeof (BindingFlags).Namespace)
                 .InDefaultClass(@"
-                    System.Collections.Generic.IEnumerable<BindingFlags> P { get; set; }
+                    IEnumerable<BindingFlags> P { get; set; }
                 ")
                 .Build();
 
@@ -109,8 +115,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.Generic.IEnumerable<int?> [|P|] { get; set; }
+                    <annotate/> IEnumerable<int?> [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -124,10 +131,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        <annotate/> System.Collections.Generic.IEnumerable<T?> [|P|] { get; set; }
+                        <annotate/> IEnumerable<T?> [|P|] { get; set; }
                     }
                 ")
                 .Build();
@@ -142,8 +150,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.Generic.IEnumerable<string> [|P|] { get; }
+                    <annotate/> IEnumerable<string> [|P|] { get; }
                 ")
                 .Build();
 
@@ -157,8 +166,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (ArrayList).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.ArrayList [|P|] { get; }
+                    <annotate/> ArrayList [|P|] { get; }
                 ")
                 .Build();
 
@@ -172,10 +182,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
-                    System.Collections.Generic.IEnumerable<string> P { get; set; }
+                    IEnumerable<string> P { get; set; }
                 ")
                 .Build();
 
@@ -189,10 +200,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .Using(typeof (DebuggerNonUserCodeAttribute).Namespace)
                 .InDefaultClass(@"
                     [DebuggerNonUserCode]
-                    System.Collections.Generic.IEnumerable<string> P { get; set; }
+                    IEnumerable<string> P { get; set; }
                 ")
                 .Build();
 
@@ -206,8 +218,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.Generic.IEnumerable<int?> [|this|][int p]
+                    <annotate/> IEnumerable<int?> [|this|][int p]
                     {
                         get { throw new NotImplementedException(); }
                         set { throw new NotImplementedException(); }
@@ -226,11 +239,12 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .Imported())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class B
                     {
                         [ItemNotNull]
-                        public virtual System.Collections.Generic.IEnumerable<string> P { get; set; }
+                        public virtual IEnumerable<string> P { get; set; }
                     }
                         
                     class D1 : B { }
@@ -238,7 +252,7 @@ namespace CodeContractNullability.Test.Specs
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
-                        public override System.Collections.Generic.IEnumerable<string> P { get; set; }
+                        public override IEnumerable<string> P { get; set; }
                     }
                 ")
                 .Build();
@@ -254,17 +268,18 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .Imported())
+                .Using(typeof (IList<>).Namespace)
                 .InGlobalScope(@"
                     interface I
                     {
                         [ItemCanBeNull]
-                        System.Collections.Generic.IList<string> P { get; set; }
+                        IList<string> P { get; set; }
                     }
                         
                     class C : I
                     {
                         // implicitly inherits decoration from interface
-                        public System.Collections.Generic.IList<string> P { get; set; }
+                        public IList<string> P { get; set; }
                     }
                 ")
                 .Build();
@@ -280,17 +295,18 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .Imported())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     interface I
                     {
                         [ItemCanBeNull]
-                        System.Collections.Generic.IEnumerable<string> P { get; set; }
+                        IEnumerable<string> P { get; set; }
                     }
                         
                     class C : I
                     {
                         // implicitly inherits decoration from interface
-                        System.Collections.Generic.IEnumerable<string> I.P { get; set; }
+                        IEnumerable<string> I.P { get; set; }
                     }
                 ")
                 .Build();
@@ -307,19 +323,20 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .Imported())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     interface I
                     {
                         [ItemNotNull]
-                        System.Collections.Generic.IEnumerable<string> P { get; set; }
+                        IEnumerable<string> P { get; set; }
                     }
 
                     class C : I
                     {
                         // implicitly inherits decoration from interface
-                        System.Collections.Generic.IEnumerable<string> I.P { get; set; }
+                        IEnumerable<string> I.P { get; set; }
 
-                        <annotate/> public System.Collections.Generic.IEnumerable<string> [|P|] { get; set; }
+                        <annotate/> public IEnumerable<string> [|P|] { get; set; }
                     }
                 ")
                 .Build();
@@ -375,6 +392,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .WithHeader(@"
 //------------------------------------------------------------------------------
 // <auto-generated>
@@ -387,7 +405,7 @@ namespace CodeContractNullability.Test.Specs
 //------------------------------------------------------------------------------
 ")
                 .InDefaultClass(@"
-                    System.Collections.Generic.IEnumerable<string> this[int index] 
+                    IEnumerable<string> this[int index] 
                     { 
                         get 
                         { 

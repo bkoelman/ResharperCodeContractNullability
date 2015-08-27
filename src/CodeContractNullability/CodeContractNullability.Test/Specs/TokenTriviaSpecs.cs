@@ -13,19 +13,15 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     // before
     <annotate/>
     int? [|f|]; // on same line
     // after
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -38,19 +34,15 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_field_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     /* line before */
     <annotate/>
     int? /* intermediate */ [|f|] /* after */; /* line end */
     /* line after */
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -63,19 +55,15 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_property_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     // before
     <annotate/>
     public int? [|P|] { get; set; } // on same line
     // after
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -88,19 +76,15 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_property_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     /* line before */
     <annotate/>
     public int? /* before */ [|P|] /* after */ { get; set; } /* line end */
     /* line after */
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -113,7 +97,7 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_indexer_result_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     // before
     <annotate/>
@@ -124,12 +108,8 @@ public class ItemNotNullAttribute : System.Attribute { }
         set { throw new System.NotImplementedException(); }
     }
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -142,7 +122,7 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_indexer_result_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     /* line before */
     <annotate/>
@@ -153,12 +133,8 @@ public class ItemNotNullAttribute : System.Attribute { }
         set { throw new System.NotImplementedException(); }
     }
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -171,7 +147,7 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_indexer_parameter_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     // before
     public byte this[<annotate/> int? [|offset|]] // on same line
@@ -181,12 +157,8 @@ public class ItemNotNullAttribute : System.Attribute { }
         set { throw new System.NotImplementedException(); }
     }
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(code, code)
                 .Build();
@@ -199,7 +171,7 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_indexer_parameter_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     /* line before */
     public byte this[/* before */<annotate/>int? /* intermediate */ [|offset|] /* after */ ] /* line end */
@@ -209,12 +181,8 @@ public class ItemNotNullAttribute : System.Attribute { }
         set { throw new System.NotImplementedException(); }
     }
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(code, code.Replace("<annotate/>", "<annotate/> "))
                 .Build();
@@ -227,19 +195,15 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_return_value_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     // before
     <annotate/>
     int? [|M|]() { throw new System.NotImplementedException(); } // on same line
     // after
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -252,19 +216,15 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_return_value_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     /* line before */
     <annotate/>
     int? /* intermediate */ [|M|]/* after */() { throw new System.NotImplementedException(); } /* line end */
     /* line after */
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(RemoveLinesWithAnnotation(code), code)
                 .Build();
@@ -277,18 +237,14 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_method_parameter_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     // before
     void M(<annotate/> int? [|p|]) { } // on same line
     // after
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(code, code)
                 .Build();
@@ -301,18 +257,14 @@ public class ItemNotNullAttribute : System.Attribute { }
         public void When_method_parameter_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
-            const string code = @"public class T
+            string code = @"public class T
 {
     /* line before */
     void M(/* before */<annotate/>int? /* intermediate */ [|p|] /* after */) { } /* line end */
     /* line after */
 }
+" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
             ParsedSourceCode source = new RawSourceCodeBuilder()
                 .Exactly(code, code.Replace("<annotate/>", "<annotate/> "))
                 .Build();

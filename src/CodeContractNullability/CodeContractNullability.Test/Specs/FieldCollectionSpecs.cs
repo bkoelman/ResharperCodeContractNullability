@@ -1,6 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,6 +21,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace N.M
                     {
@@ -32,7 +34,7 @@ namespace CodeContractNullability.Test.Specs
                     class C
                     {
                         [N.M.ItemNotNull] // Using fully qualified namespace
-                        System.Collections.Generic.IEnumerable<string> f;
+                        IEnumerable<string> f;
                     }
                 ")
                 .Build();
@@ -46,6 +48,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace N1
                     {
@@ -62,7 +65,7 @@ namespace CodeContractNullability.Test.Specs
                         class C
                         {
                             [ICBN()] // Using type/namespace alias
-                            System.Collections.Generic.IEnumerable<string> f;
+                            IEnumerable<string> f;
                         }
                     }
                 ")
@@ -93,8 +96,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (List<>).Namespace)
                 .InDefaultClass(@"
-                    System.Collections.Generic.List<int> f;
+                    List<int> f;
                 ")
                 .Build();
 
@@ -108,10 +112,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IList<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        System.Collections.Generic.IList<T> f;
+                        IList<T> f;
                     }
                 ")
                 .Build();
@@ -127,9 +132,10 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .WithReference(typeof (HashSet<>).Assembly)
-                .Using("System.Reflection")
+                .Using(typeof (HashSet<>).Namespace)
+                .Using(typeof (BindingFlags).Namespace)
                 .InDefaultClass(@"
-                    System.Collections.Generic.HashSet<BindingFlags> f;
+                    HashSet<BindingFlags> f;
                 ")
                 .Build();
 
@@ -144,9 +150,10 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InGlobalNamespace())
+                .Using(typeof (IList).Namespace)
                 .InDefaultClass(@"
                     [NotNull]
-                    <annotate/> System.Collections.IList [|f|];
+                    <annotate/> IList [|f|];
                 ")
                 .Build();
 
@@ -161,8 +168,9 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InGlobalNamespace())
+                .Using(typeof (IList<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.Generic.IList<int?> [|f|];
+                    <annotate/> IList<int?> [|f|];
                 ")
                 .Build();
 
@@ -176,10 +184,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (ISet<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        <annotate/> System.Collections.Generic.ISet<T?> [|f|];
+                        <annotate/> ISet<T?> [|f|];
                     }
                 ")
                 .Build();
@@ -194,8 +203,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.Generic.IEnumerable<string> [|f|];
+                    <annotate/> IEnumerable<string> [|f|];
                 ")
                 .Build();
 
@@ -209,11 +219,11 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IEnumerable<>).Namespace)
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
-                .Using(typeof (DebuggerNonUserCodeAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
-                    System.Collections.Generic.IEnumerable<string> f;
+                    IEnumerable<string> f;
                 ")
                 .Build();
 
@@ -229,12 +239,12 @@ namespace CodeContractNullability.Test.Specs
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Named("MainForm.Designer.cs")
                 .WithReference(typeof (Control).Assembly)
+                .Using(typeof (IList<>).Namespace)
                 .Using(typeof (Control).Namespace)
-                .Using(typeof (Component).Namespace)
                 .InGlobalScope(@"
-                    public partial class DerivedControl : System.Windows.Forms.Control
+                    public partial class DerivedControl : Control
                     {
-                        private System.Collections.Generic.IList<System.Windows.Forms.Control> controls;
+                        private IList<Control> controls;
                     }
                 ")
                 .Build();
@@ -249,6 +259,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (IList).Namespace)
                 .WithHeader(@"
         //------------------------------------------------------------------------------
         // <auto-generated>
@@ -261,7 +272,7 @@ namespace CodeContractNullability.Test.Specs
         //------------------------------------------------------------------------------
         ")
                 .InDefaultClass(@"
-                    private System.Collections.IList f;
+                    private IList f;
                 ")
                 .Build();
 
@@ -275,8 +286,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                .Using(typeof (List<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> System.Collections.Generic.List<int?> [|f|], [|g|];
+                    <annotate/> List<int?> [|f|], [|g|];
                 ")
                 .Build();
 

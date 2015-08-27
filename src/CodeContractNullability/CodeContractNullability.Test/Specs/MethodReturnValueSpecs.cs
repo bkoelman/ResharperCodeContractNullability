@@ -645,7 +645,7 @@ namespace CodeContractNullability.Test.Specs
                     namespace N
                     {
                         [Conditional(""JETBRAINS_ANNOTATIONS"")]
-                        class C : System.Attribute
+                        class C : Attribute
                         {
                             string M() { throw new NotImplementedException(); }
                         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using CodeContractNullability.Test.TestDataBuilders;
@@ -150,7 +151,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
-                .Using("System.Reflection")
+                .Using(typeof (BindingFlags).Namespace)
                 .InDefaultClass(@"
                     BindingFlags f;
                 ")
@@ -240,7 +241,6 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
-                .Using(typeof (DebuggerNonUserCodeAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
                     string f;
@@ -274,6 +274,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (EventHandler<>).Namespace)
+                .Using(typeof (EventArgs).Namespace)
                 .InGlobalScope(@"
                     public class DerivedEventArgs : EventArgs { }
 
@@ -282,7 +283,7 @@ namespace CodeContractNullability.Test.Specs
                         public event EventHandler<DerivedEventArgs> e;
                     }
 
-                    class D<T> where T : System.EventArgs
+                    class D<T> where T : EventArgs
                     {
                         public event EventHandler<T> e;
                     }
@@ -302,11 +303,11 @@ namespace CodeContractNullability.Test.Specs
                 .Named("MainForm.Designer.cs")
                 .WithReference(typeof (Control).Assembly)
                 .Using(typeof (Control).Namespace)
-                .Using(typeof (Component).Namespace)
+                .Using(typeof (Button).Namespace)
                 .InGlobalScope(@"
-                    public partial class DerivedControl : System.Windows.Forms.Control
+                    public partial class DerivedControl : Control
                     {
-                        private System.Windows.Forms.Button button1;
+                        private Button button1;
                     }
                 ")
                 .Build();
@@ -353,7 +354,7 @@ namespace CodeContractNullability.Test.Specs
                     namespace N
                     {
                         [Conditional(""JETBRAINS_ANNOTATIONS"")]
-                        class C : System.Attribute
+                        class C : Attribute
                         {
                             private string f;
                         }
