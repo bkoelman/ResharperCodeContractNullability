@@ -60,7 +60,7 @@ namespace CodeContractNullability.SymbolAnalysis
             }
 
             ITypeSymbol symbolType = GetEffectiveSymbolType();
-            if (!symbolType.TypeCanContainNull())
+            if (symbolType == null || !symbolType.TypeCanContainNull())
             {
                 return;
             }
@@ -117,6 +117,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return false;
         }
 
+        [CanBeNull]
         private ITypeSymbol GetEffectiveSymbolType()
         {
             ITypeSymbol symbolType = GetSymbolType();
