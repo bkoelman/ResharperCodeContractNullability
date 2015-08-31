@@ -38,7 +38,7 @@
     <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\FieldAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\MemberAnalyzer`1.cs" />
+    <Compile Include="SymbolAnalysis\MemberAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\ParameterAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\PropertyAnalyzer.cs" />
@@ -54,7 +54,7 @@
     <Compile Include="GeneratedCodeDocumentCache.cs" />
     <Compile Include="Utilities\Guard.cs" />
     <Compile Include="NullabilityAttributes\INullabilityAttributeProvider.cs" />
-    <Compile Include="SymbolAnalysis\MemberAnalyzer.cs" />
+    <Compile Include="SymbolAnalysis\FunctionAnalysis.cs" />
     <Compile Include="ExternalAnnotations\Storage\MemberNullabilityInfo.cs" />
     <Compile Include="NullabilityAttributes\NullabilityAttributeCache.cs" />
     <Compile Include="NullabilityAttributes\NullabilityAttributeMetadataNames.cs" />

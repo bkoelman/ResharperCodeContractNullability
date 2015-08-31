@@ -21,7 +21,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected override bool RequiresAnnotation()
         {
-            if (MemberAnalyzer.MethodKindsToSkip.Contains(Symbol.MethodKind))
+            if (FunctionAnalysis.KindsToSkip.Contains(Symbol.MethodKind))
             {
                 return false;
             }

@@ -45,7 +45,7 @@ namespace CodeContractNullability.SymbolAnalysis
         private bool ContainerIsLambda()
         {
             var method = Symbol.ContainingSymbol as IMethodSymbol;
-            return method != null && MemberAnalyzer.MethodKindsToSkip.Contains(method.MethodKind);
+            return method != null && FunctionAnalysis.KindsToSkip.Contains(method.MethodKind);
         }
 
         private bool HasAnnotationInBaseClass([NotNull] IParameterSymbol parameterSymbol)
