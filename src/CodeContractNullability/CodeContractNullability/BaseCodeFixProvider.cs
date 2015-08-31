@@ -13,13 +13,28 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace CodeContractNullability
 {
-    public class MemberFixProvider
+    public abstract class BaseCodeFixProvider : CodeFixProvider
     {
         [NotNull]
         private static readonly SyntaxAnnotation NamespaceImportAnnotation = new SyntaxAnnotation();
 
+        private readonly bool appliesToItem;
+
+        protected BaseCodeFixProvider(bool appliesToItem)
+        {
+            this.appliesToItem = appliesToItem;
+        }
+
         [NotNull]
-        public async Task ProvideFixes(CodeFixContext context, bool appliesToItem)
+        public override sealed FixAllProvider GetFixAllProvider()
+        {
+            // Note: this may annotate too much. For instance, when an interface is annotated, its implementation should not.
+            // But because at the time of analysis, both are not annotated, a diagnostic is created for both.
+            return WellKnownFixAllProviders.BatchFixer;
+        }
+
+        [NotNull]
+        public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
@@ -37,8 +52,7 @@ namespace CodeContractNullability
                 if (targetSyntax is MethodDeclarationSyntax || targetSyntax is IndexerDeclarationSyntax ||
                     targetSyntax is PropertyDeclarationSyntax || targetSyntax is ParameterSyntax || fieldSyntax != null)
                 {
-                    RegisterFixesForSyntaxNode(context, fieldSyntax ?? targetSyntax, diagnostic, nullSymbols,
-                        appliesToItem);
+                    RegisterFixesForSyntaxNode(context, fieldSyntax ?? targetSyntax, diagnostic, nullSymbols);
                 }
             }
         }
@@ -65,14 +79,14 @@ namespace CodeContractNullability
         }
 
         private void RegisterFixesForSyntaxNode(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols, bool appliesToItem)
+            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
         {
-            RegisterFixForNotNull(context, syntaxNode, diagnostic, nullSymbols, appliesToItem);
-            RegisterFixForCanBeNull(context, syntaxNode, diagnostic, nullSymbols, appliesToItem);
+            RegisterFixForNotNull(context, syntaxNode, diagnostic, nullSymbols);
+            RegisterFixForCanBeNull(context, syntaxNode, diagnostic, nullSymbols);
         }
 
         private void RegisterFixForNotNull(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols, bool appliesToItem)
+            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
         {
             INamedTypeSymbol notNullAttribute = appliesToItem ? nullSymbols.ItemNotNull : nullSymbols.NotNull;
 
@@ -85,7 +99,7 @@ namespace CodeContractNullability
         }
 
         private void RegisterFixForCanBeNull(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols, bool appliesToItem)
+            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
         {
             INamedTypeSymbol canBeNullAttribute = appliesToItem ? nullSymbols.ItemCanBeNull : nullSymbols.CanBeNull;
 

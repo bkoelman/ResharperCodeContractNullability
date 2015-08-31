@@ -32,6 +32,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BaseAnalyzer.cs" />
+    <Compile Include="BaseCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
@@ -53,7 +55,6 @@
     <Compile Include="Utilities\Guard.cs" />
     <Compile Include="NullabilityAttributes\INullabilityAttributeProvider.cs" />
     <Compile Include="SymbolAnalysis\MemberAnalyzer.cs" />
-    <Compile Include="MemberFixProvider.cs" />
     <Compile Include="ExternalAnnotations\Storage\MemberNullabilityInfo.cs" />
     <Compile Include="NullabilityAttributes\NullabilityAttributeCache.cs" />
     <Compile Include="NullabilityAttributes\NullabilityAttributeMetadataNames.cs" />
