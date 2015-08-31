@@ -106,8 +106,8 @@ namespace CodeContractNullability.SymbolAnalysis
                     // ReSharper disable once PossibleUnintendedReferenceComparison
                     if (implementer == (ISymbol) Symbol)
                     {
-                        bool defined = ifaceMember.HasNullabilityAnnotation(AppliesToItem);
-                        if (defined || ExternalAnnotations.Contains(ifaceMember, AppliesToItem))
+                        if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) ||
+                            ExternalAnnotations.Contains(ifaceMember, AppliesToItem))
                         {
                             return true;
                         }

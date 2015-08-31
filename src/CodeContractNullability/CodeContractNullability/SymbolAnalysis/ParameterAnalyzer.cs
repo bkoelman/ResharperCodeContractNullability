@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Immutable;
 using CodeContractNullability.ExternalAnnotations.Storage;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -53,8 +55,8 @@ namespace CodeContractNullability.SymbolAnalysis
             IParameterSymbol baseParameter = TryGetBaseParameterFor(parameterSymbol);
             while (baseParameter != null)
             {
-                bool defined = baseParameter.HasNullabilityAnnotation(AppliesToItem);
-                if (defined || ExternalAnnotations.Contains(baseParameter, AppliesToItem))
+                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) ||
+                    ExternalAnnotations.Contains(baseParameter, AppliesToItem))
                 {
                     return true;
                 }
@@ -88,37 +90,25 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected override bool HasAnnotationInInterface()
         {
-            var containingMethod = Symbol.ContainingSymbol as IMethodSymbol;
-            if (containingMethod != null)
-            {
-                return HasAnnotationInInterfaceForParent(containingMethod);
-            }
+            ISymbol containingMember = Symbol.ContainingSymbol;
 
-            var containingProperty = Symbol.ContainingSymbol as IPropertySymbol;
-            if (containingProperty != null)
-            {
-                return HasAnnotationInInterfaceForParent(containingProperty);
-            }
-
-            return false;
-        }
-
-        private bool HasAnnotationInInterfaceForParent([NotNull] IMethodSymbol containingMethod)
-        {
             foreach (INamedTypeSymbol iface in Symbol.ContainingType.AllInterfaces)
             {
-                foreach (IMethodSymbol ifaceMember in iface.GetMembers().OfType<IMethodSymbol>())
+                foreach (ISymbol ifaceMember in iface.GetMembers())
                 {
                     ISymbol implementer = Symbol.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
 
                     // ReSharper disable once PossibleUnintendedReferenceComparison
-                    if (implementer == containingMethod)
+                    if (implementer == containingMember)
                     {
-                        int parameterIndex = containingMethod.Parameters.IndexOf(Symbol);
-                        IParameterSymbol ifaceParameter = ifaceMember.Parameters[parameterIndex];
+                        ImmutableArray<IParameterSymbol> parameters = GetParametersFor(containingMember);
+                        int parameterIndex = parameters.IndexOf(Symbol);
 
-                        bool defined = ifaceParameter.HasNullabilityAnnotation(AppliesToItem);
-                        if (defined || ExternalAnnotations.Contains(ifaceParameter, AppliesToItem))
+                        ImmutableArray<IParameterSymbol> ifaceParameters = GetParametersFor(ifaceMember);
+                        IParameterSymbol ifaceParameter = ifaceParameters[parameterIndex];
+
+                        if (ifaceParameter.HasNullabilityAnnotation(AppliesToItem) ||
+                            ExternalAnnotations.Contains(ifaceParameter, AppliesToItem))
                         {
                             return true;
                         }
@@ -128,29 +118,22 @@ namespace CodeContractNullability.SymbolAnalysis
             return false;
         }
 
-        private bool HasAnnotationInInterfaceForParent([NotNull] IPropertySymbol containingProperty)
+        [ItemNotNull]
+        private ImmutableArray<IParameterSymbol> GetParametersFor([NotNull] ISymbol symbol)
         {
-            foreach (INamedTypeSymbol iface in Symbol.ContainingType.AllInterfaces)
+            var method = symbol as IMethodSymbol;
+            if (method != null)
             {
-                foreach (IPropertySymbol ifaceMember in iface.GetMembers().OfType<IPropertySymbol>())
-                {
-                    ISymbol implementer = Symbol.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
-
-                    // ReSharper disable once PossibleUnintendedReferenceComparison
-                    if (implementer == containingProperty)
-                    {
-                        int parameterIndex = containingProperty.Parameters.IndexOf(Symbol);
-                        IParameterSymbol ifaceParameter = ifaceMember.Parameters[parameterIndex];
-
-                        bool defined = ifaceParameter.HasNullabilityAnnotation(AppliesToItem);
-                        if (defined || ExternalAnnotations.Contains(ifaceParameter, AppliesToItem))
-                        {
-                            return true;
-                        }
-                    }
-                }
+                return method.Parameters;
             }
-            return false;
+
+            var property = symbol as IPropertySymbol;
+            if (property != null)
+            {
+                return property.Parameters;
+            }
+
+            throw new NotSupportedException($"Expected IMethodSymbol or IPropertySymbol, not {symbol.GetType()}.");
         }
     }
 }
