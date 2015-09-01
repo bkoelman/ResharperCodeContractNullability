@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/bkoelman/ResharperCodeContractNullability</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html</description>
-    <releaseNotes>Initial public version.</releaseNotes>
+    <releaseNotes>Added support for [ItemNotNull] and [ItemCanBeNull] on Lazy<T> and Task<T> (new in ReSharper v9.2)</releaseNotes>
     <copyright>Apache License, Version 2.0</copyright>
     <language>en-us</language>
     <tags>resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul rinul</tags>
