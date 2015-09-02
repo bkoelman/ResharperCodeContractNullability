@@ -13,6 +13,9 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace CodeContractNullability
 {
+    /// <summary>
+    /// Common functionality for all the fix providers that are included in this project.
+    /// </summary>
     public abstract class BaseCodeFixProvider : CodeFixProvider
     {
         [NotNull]

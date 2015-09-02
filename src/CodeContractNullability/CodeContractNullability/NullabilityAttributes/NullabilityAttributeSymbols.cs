@@ -6,6 +6,9 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability.NullabilityAttributes
 {
+    /// <summary>
+    /// Exposes the found nullability attributes as (source or external) symbols.
+    /// </summary>
     public sealed class NullabilityAttributeSymbols
     {
         [NotNull]

@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace CodeContractNullability
 {
     /// <summary>
-    /// The Analyzer entry point, which creates diagnostics for members that need item nullability annotation.
+    /// Entry point for analyzer that creates diagnostics for members that need item nullability annotation.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class CodeContractItemNullabilityAnalyzer : BaseAnalyzer

@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
+    /// <summary>
+    /// Performs analysis of a field.
+    /// </summary>
     public class FieldAnalyzer : BaseAnalyzer<IFieldSymbol>
     {
         public FieldAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,

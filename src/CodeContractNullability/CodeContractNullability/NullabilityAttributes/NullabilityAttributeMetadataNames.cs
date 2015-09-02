@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability.NullabilityAttributes
 {
+    /// <summary>
+    /// Holds information about where the nullability attributes are located.
+    /// </summary>
     public sealed class NullabilityAttributeMetadataNames
     {
         private const string KeyNotNull = "NotNull";

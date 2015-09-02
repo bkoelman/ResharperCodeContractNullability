@@ -11,6 +11,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability
 {
+    /// <summary>
+    /// Common functionality for all the diagnostics analyzers that are included in this project.
+    /// </summary>
     public abstract class BaseAnalyzer : DiagnosticAnalyzer
     {
         protected const string Category = "Nullability";

@@ -7,6 +7,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
+    /// <summary>
+    /// Performs analysis of a method parameter.
+    /// </summary>
     public class ParameterAnalyzer : BaseAnalyzer<IParameterSymbol>
     {
         public ParameterAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,

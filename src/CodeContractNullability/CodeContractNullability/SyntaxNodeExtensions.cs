@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability
 {
+    /// <summary />
     public static class SyntaxNodeExtensions
     {
         [CanBeNull]

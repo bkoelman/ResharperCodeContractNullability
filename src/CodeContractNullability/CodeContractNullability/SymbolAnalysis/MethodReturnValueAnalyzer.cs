@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
+    /// <summary>
+    /// Performs analysis of the return value of a method.
+    /// </summary>
     public class MethodReturnValueAnalyzer : BaseAnalyzer<IMethodSymbol>
     {
         public MethodReturnValueAnalyzer(SymbolAnalysisContext context,

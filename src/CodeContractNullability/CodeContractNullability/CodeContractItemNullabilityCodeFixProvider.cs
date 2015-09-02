@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 namespace CodeContractNullability
 {
     /// <summary>
-    /// The FixProvider entry point, which generates fixes ("Annotate with ...") for diagnostics.
+    /// Provides code fixes for diagnostics reported by <see cref="CodeContractItemNullabilityCodeFixProvider" />.
     /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(CodeContractItemNullabilityCodeFixProvider))]
     [Shared]

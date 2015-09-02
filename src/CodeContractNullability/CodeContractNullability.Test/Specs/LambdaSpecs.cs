@@ -3,6 +3,9 @@ using NUnit.Framework;
 
 namespace CodeContractNullability.Test.Specs
 {
+    /// <summary>
+    /// Tests for reporting nullability diagnostics on lambda expressions.
+    /// </summary>
     [TestFixture]
     internal class LambdaSpecs : NullabilityNUnitRoslynTest
     {
