@@ -27,21 +27,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 return false;
             }
 
-            if (HasAnnotationInBaseClass(Symbol))
-            {
-                // Resharper reports nullability attribute as unneeded 
-                // if parameter on base class contains nullability attribute.
-                return false;
-            }
-
-            if (HasAnnotationInInterface())
-            {
-                // Resharper reports nullability attribute as unneeded on interface implementation
-                // if parameter on interface contains nullability attribute.
-                return false;
-            }
-
-            return true;
+            return base.RequiresAnnotation();
         }
 
         private bool ContainerIsLambda()
@@ -50,13 +36,14 @@ namespace CodeContractNullability.SymbolAnalysis
             return method != null && FunctionAnalysis.KindsToSkip.Contains(method.MethodKind);
         }
 
-        private bool HasAnnotationInBaseClass([NotNull] IParameterSymbol parameterSymbol)
+        protected override bool HasAnnotationInBaseClass()
         {
-            IParameterSymbol baseParameter = TryGetBaseParameterFor(parameterSymbol);
+            IParameterSymbol baseParameter = TryGetBaseParameterFor(Symbol);
             while (baseParameter != null)
             {
                 if (baseParameter.HasNullabilityAnnotation(AppliesToItem) ||
-                    ExternalAnnotations.Contains(baseParameter, AppliesToItem))
+                    ExternalAnnotations.Contains(baseParameter, AppliesToItem) ||
+                    HasAnnotationInInterface(baseParameter))
                 {
                     return true;
                 }
@@ -88,21 +75,21 @@ namespace CodeContractNullability.SymbolAnalysis
             return null;
         }
 
-        protected override bool HasAnnotationInInterface()
+        protected override bool HasAnnotationInInterface(IParameterSymbol parameter)
         {
-            ISymbol containingMember = Symbol.ContainingSymbol;
+            ISymbol containingMember = parameter.ContainingSymbol;
 
-            foreach (INamedTypeSymbol iface in Symbol.ContainingType.AllInterfaces)
+            foreach (INamedTypeSymbol iface in parameter.ContainingType.AllInterfaces)
             {
                 foreach (ISymbol ifaceMember in iface.GetMembers())
                 {
-                    ISymbol implementer = Symbol.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
+                    ISymbol implementer = parameter.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
 
                     // ReSharper disable once PossibleUnintendedReferenceComparison
                     if (implementer == containingMember)
                     {
                         ImmutableArray<IParameterSymbol> parameters = GetParametersFor(containingMember);
-                        int parameterIndex = parameters.IndexOf(Symbol);
+                        int parameterIndex = parameters.IndexOf(parameter);
 
                         ImmutableArray<IParameterSymbol> ifaceParameters = GetParametersFor(ifaceMember);
                         IParameterSymbol ifaceParameter = ifaceParameters[parameterIndex];

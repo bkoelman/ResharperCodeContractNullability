@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability.Vsix", "CodeContractNullability\CodeContractNullability.Vsix\CodeContractNullability.Vsix.csproj", "{3B498FFB-024D-4BB1-8D55-165FF10FCEA5}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability", "CodeContractNullability\CodeContractNullability\CodeContractNullability.csproj", "{1881B7FC-7A28-42ED-94B4-3F2B03FEA0BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability.Test", "CodeContractNullability\CodeContractNullability.Test\CodeContractNullability.Test.csproj", "{7337149E-293E-4775-8844-771D6B1D2A91}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability.Vsix", "CodeContractNullability\CodeContractNullability.Vsix\CodeContractNullability.Vsix.csproj", "{3B498FFB-024D-4BB1-8D55-165FF10FCEA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

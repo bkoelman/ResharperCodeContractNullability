@@ -26,30 +26,16 @@ namespace CodeContractNullability.SymbolAnalysis
                 return false;
             }
 
-            if (HasAnnotationInBaseClass(Symbol))
-            {
-                // Resharper reports nullability attribute as unneeded 
-                // if return value on base method contains nullability attribute.
-                return false;
-            }
-
-            if (HasAnnotationInInterface())
-            {
-                // Resharper reports nullability attribute as unneeded on interface implementation
-                // if return value on interface method contains nullability attribute.
-                return false;
-            }
-
-            return true;
+            return base.RequiresAnnotation();
         }
 
-        private bool HasAnnotationInBaseClass([NotNull] IMethodSymbol methodSymbol)
+        protected override bool HasAnnotationInBaseClass()
         {
-            IMethodSymbol baseMember = methodSymbol.OverriddenMethod;
+            IMethodSymbol baseMember = Symbol.OverriddenMethod;
             while (baseMember != null)
             {
                 if (baseMember.HasNullabilityAnnotation(AppliesToItem) ||
-                    ExternalAnnotations.Contains(baseMember, AppliesToItem))
+                    ExternalAnnotations.Contains(baseMember, AppliesToItem) || HasAnnotationInInterface(baseMember))
                 {
                     return true;
                 }

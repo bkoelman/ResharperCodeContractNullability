@@ -18,32 +18,13 @@ namespace CodeContractNullability.SymbolAnalysis
             return Symbol.Type;
         }
 
-        protected override bool RequiresAnnotation()
+        protected override bool HasAnnotationInBaseClass()
         {
-            if (HasAnnotationInBaseClass(Symbol))
-            {
-                // Resharper reports nullability attribute as unneeded 
-                // if property on base class contains nullability attribute.
-                return false;
-            }
-
-            if (HasAnnotationInInterface())
-            {
-                // Resharper reports nullability attribute as unneeded on interface implementation
-                // if property on interface contains nullability attribute.
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool HasAnnotationInBaseClass([NotNull] IPropertySymbol propertySymbol)
-        {
-            IPropertySymbol baseMember = propertySymbol.OverriddenProperty;
+            IPropertySymbol baseMember = Symbol.OverriddenProperty;
             while (baseMember != null)
             {
                 if (baseMember.HasNullabilityAnnotation(AppliesToItem) ||
-                    ExternalAnnotations.Contains(baseMember, AppliesToItem))
+                    ExternalAnnotations.Contains(baseMember, AppliesToItem) || HasAnnotationInInterface(baseMember))
                 {
                     return true;
                 }

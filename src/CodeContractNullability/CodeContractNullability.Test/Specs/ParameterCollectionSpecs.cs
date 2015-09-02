@@ -554,5 +554,38 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyItemNullabilityFix(source);
         }
+
+        [Test]
+        public void When_base_parameter_inherits_item_annotation_from_interface_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
+                    .Imported())
+                .Using(typeof (List<>).Namespace)
+                .InGlobalScope(@"
+                    namespace N
+                    {
+                        public interface I
+                        {
+                            void M([ItemNotNull] List<string> p);
+                        }
+
+                        public class B : I
+                        {
+                            public virtual void M(List<string> p) { }
+                        }
+
+                        public class C : B
+                        {
+                            public override void M(List<string> p) { }
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityDiagnostic(source);
+        }
     }
 }
