@@ -76,7 +76,7 @@ namespace CodeContractNullability
 
             ExternalAnnotationsMap externalAnnotations = ExternalAnnotationsRegistry.GetCached();
             var generatedCodeCache = new GeneratedCodeDocumentCache();
-            var info = new MemberAnalysisInfo(nullSymbols, externalAnnotations, generatedCodeCache);
+            var info = new SymbolAnalysisInfo(nullSymbols, externalAnnotations, generatedCodeCache);
 
             context.RegisterSymbolAction(c => AnalyzeField(c, info), SymbolKind.Field);
             context.RegisterSymbolAction(c => AnalyzeProperty(c, info), SymbolKind.Property);
@@ -84,27 +84,27 @@ namespace CodeContractNullability
             context.RegisterSyntaxNodeAction(c => AnalyzeParameterSyntax(c, info), SyntaxKind.Parameter);
         }
 
-        private void AnalyzeField(SymbolAnalysisContext context, [NotNull] MemberAnalysisInfo info)
+        private void AnalyzeField(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
         {
             var analyzer = new FieldAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache, appliesToItem);
             analyzer.Analyze(ruleForField, info.Properties);
         }
 
-        private void AnalyzeProperty(SymbolAnalysisContext context, [NotNull] MemberAnalysisInfo info)
+        private void AnalyzeProperty(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
         {
             var analyzer = new PropertyAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache,
                 appliesToItem);
             analyzer.Analyze(ruleForProperty, info.Properties);
         }
 
-        private void AnalyzeMethod(SymbolAnalysisContext context, [NotNull] MemberAnalysisInfo info)
+        private void AnalyzeMethod(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
         {
             var analyzer = new MethodReturnValueAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache,
                 appliesToItem);
             analyzer.Analyze(ruleForMethodReturnValue, info.Properties);
         }
 
-        private void AnalyzeParameterSyntax(SyntaxNodeAnalysisContext context, [NotNull] MemberAnalysisInfo info)
+        private void AnalyzeParameterSyntax(SyntaxNodeAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
         {
             ISymbol symbol = context.SemanticModel.GetDeclaredSymbol(context.Node);
             SymbolAnalysisContext symbolContext = SyntaxToSymbolContext(context, symbol);
@@ -120,14 +120,14 @@ namespace CodeContractNullability
                 context.ReportDiagnostic, x => true, context.CancellationToken);
         }
 
-        private void AnalyzeParameter(SymbolAnalysisContext context, [NotNull] MemberAnalysisInfo info)
+        private void AnalyzeParameter(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
         {
             var analyzer = new ParameterAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache,
                 appliesToItem);
             analyzer.Analyze(ruleForParameter, info.Properties);
         }
 
-        private sealed class MemberAnalysisInfo
+        private sealed class SymbolAnalysisInfo
         {
             [NotNull]
             public ImmutableDictionary<string, string> Properties { get; }
@@ -138,7 +138,7 @@ namespace CodeContractNullability
             [NotNull]
             public GeneratedCodeDocumentCache GeneratedCodeCache { get; }
 
-            public MemberAnalysisInfo([NotNull] NullabilityAttributeSymbols nullSymbols,
+            public SymbolAnalysisInfo([NotNull] NullabilityAttributeSymbols nullSymbols,
                 [NotNull] ExternalAnnotationsMap externalAnnotations,
                 [NotNull] GeneratedCodeDocumentCache generatedCodeCache)
             {

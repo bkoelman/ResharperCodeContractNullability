@@ -8,12 +8,12 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace CodeContractNullability.SymbolAnalysis
 {
     /// <summary>
-    /// Performs the basic analysis (and reporting) required to determine whether a member needs annotation.
+    /// Performs the basic analysis (and reporting) required to determine whether a member or parameter needs annotation.
     /// </summary>
     /// <typeparam name="TSymbol">
     /// The symbol type of the class member to analyze.
     /// </typeparam>
-    public abstract class MemberAnalyzer<TSymbol>
+    public abstract class BaseAnalyzer<TSymbol>
         where TSymbol : ISymbol
     {
         private readonly SymbolAnalysisContext context;
@@ -21,7 +21,7 @@ namespace CodeContractNullability.SymbolAnalysis
         [NotNull]
         private readonly GeneratedCodeDocumentCache generatedCodeCache;
 
-        protected MemberAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
+        protected BaseAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));

@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
-    public class MethodReturnValueAnalyzer : MemberAnalyzer<IMethodSymbol>
+    public class MethodReturnValueAnalyzer : BaseAnalyzer<IMethodSymbol>
     {
         public MethodReturnValueAnalyzer(SymbolAnalysisContext context,
             [NotNull] ExternalAnnotationsMap externalAnnotations,

@@ -38,7 +38,7 @@
     <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\FieldAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\MemberAnalyzer.cs" />
+    <Compile Include="SymbolAnalysis\BaseAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\ParameterAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\PropertyAnalyzer.cs" />

@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
-    public class FieldAnalyzer : MemberAnalyzer<IFieldSymbol>
+    public class FieldAnalyzer : BaseAnalyzer<IFieldSymbol>
     {
         public FieldAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
