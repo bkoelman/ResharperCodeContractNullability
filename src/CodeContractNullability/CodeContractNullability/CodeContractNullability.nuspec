@@ -9,15 +9,25 @@
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/bkoelman/ResharperCodeContractNullability</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html</description>
-    <releaseNotes>Added support for [ItemNotNull] and [ItemCanBeNull] on Lazy&lt;T&gt; and Task&lt;T&gt; (new in ReSharper v9.2)</releaseNotes>
+    <description>
+      Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull
+      attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html
+    </description>
+    <releaseNotes>
+      Added support for [ItemNotNull] and [ItemCanBeNull] on Lazy&lt;T&gt; and Task&lt;T&gt; (new in
+      ReSharper v9.2)
+    </releaseNotes>
     <copyright>Apache License, Version 2.0</copyright>
     <language>en-us</language>
-    <tags>resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul rinul</tags>
+    <tags>
+      resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul
+      rinul
+    </tags>
   </metadata>
   <!-- The convention for analyzers is to put language agnostic dlls in analyzers\dotnet and language specific analyzers in either analyzers\dotnet\cs or analyzers\dotnet\vb -->
   <files>
-    <file src="*.dll" target="analyzers\dotnet\cs" exclude="**\JetBrains.Annotations.dll;**\Microsoft.CodeAnalysis.*;**\System.Collections.Immutable.*;**\System.Reflection.Metadata.*;**\System.Composition.*" />
+    <file src="*.dll" target="analyzers\dotnet\cs"
+      exclude="**\JetBrains.Annotations.dll;**\Microsoft.CodeAnalysis.*;**\System.Collections.Immutable.*;**\System.Reflection.Metadata.*;**\System.Composition.*" />
     <file src="tools\*.ps1" target="tools\" />
   </files>
 </package>

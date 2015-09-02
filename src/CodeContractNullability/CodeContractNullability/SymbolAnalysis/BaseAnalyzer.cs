@@ -89,8 +89,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
         private bool IsSafeToIgnore()
         {
-            if (Symbol.IsCompilerGenerated(context.Compilation) || Symbol.IsDebuggerNonUserCode(context.Compilation) ||
-                Symbol.IsImplicitlyDeclared)
+            if (Symbol.HasCompilerGeneratedAnnotation(context.Compilation) ||
+                Symbol.HasDebuggerNonUserCodeAnnotation(context.Compilation) || Symbol.IsImplicitlyDeclared)
             {
                 return true;
             }
@@ -158,7 +158,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     ISymbol implementer = symbol.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
 
                     // ReSharper disable once PossibleUnintendedReferenceComparison
-                    if (implementer == (ISymbol) symbol)
+                    if (implementer == symbol)
                     {
                         if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) ||
                             ExternalAnnotations.Contains(ifaceMember, AppliesToItem))

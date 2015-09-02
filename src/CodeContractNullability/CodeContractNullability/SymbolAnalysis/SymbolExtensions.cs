@@ -105,7 +105,8 @@ namespace CodeContractNullability.SymbolAnalysis
             return null;
         }
 
-        public static bool IsCompilerGenerated([NotNull] this ISymbol memberSymbol, [NotNull] Compilation compilation)
+        public static bool HasCompilerGeneratedAnnotation([NotNull] this ISymbol memberSymbol,
+            [NotNull] Compilation compilation)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
             Guard.NotNull(compilation, nameof(compilation));
@@ -119,7 +120,8 @@ namespace CodeContractNullability.SymbolAnalysis
             return attributes.Any(attr => attr.AttributeClass == compilerGeneratedAttributeType);
         }
 
-        public static bool IsDebuggerNonUserCode([NotNull] this ISymbol memberSymbol, [NotNull] Compilation compilation)
+        public static bool HasDebuggerNonUserCodeAnnotation([NotNull] this ISymbol memberSymbol,
+            [NotNull] Compilation compilation)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
             Guard.NotNull(compilation, nameof(compilation));
