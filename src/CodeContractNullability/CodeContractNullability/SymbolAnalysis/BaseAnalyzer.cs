@@ -14,7 +14,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// The symbol type of the class member to analyze.
     /// </typeparam>
     public abstract class BaseAnalyzer<TSymbol>
-        where TSymbol : ISymbol
+        where TSymbol : class, ISymbol
     {
         private readonly SymbolAnalysisContext context;
 
