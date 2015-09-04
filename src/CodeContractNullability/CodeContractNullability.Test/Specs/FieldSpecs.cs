@@ -281,11 +281,6 @@ namespace CodeContractNullability.Test.Specs
                     {
                         public event EventHandler<DerivedEventArgs> e;
                     }
-
-                    class D<T> where T : EventArgs
-                    {
-                        public event EventHandler<T> e;
-                    }
                 ")
                 .Build();
 
