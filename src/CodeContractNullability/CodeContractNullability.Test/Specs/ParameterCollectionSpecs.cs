@@ -550,5 +550,31 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyItemNullabilityDiagnostic(source);
         }
+
+        [Test]
+        public void When_override_breaks_inheritance_it_must_be_reported()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .Using(typeof (IEnumerable<>).Namespace)
+                .InGlobalScope(@"
+                    namespace N
+                    {
+                        public class B
+                        {
+                            public virtual void M([ItemNotNull] IEnumerable<int?> p) { throw new NotImplementedException(); }
+                        }
+
+                        public class C : B
+                        {
+                            public new void M(<annotate/> IEnumerable<int?> [|p|]) { throw new NotImplementedException(); }
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyItemNullabilityFix(source);
+        }
     }
 }

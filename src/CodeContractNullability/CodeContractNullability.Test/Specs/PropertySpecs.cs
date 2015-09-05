@@ -568,5 +568,31 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+
+        [Test]
+        public void When_override_breaks_inheritance_it_must_be_reported()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .InGlobalScope(@"
+                    namespace N
+                    {
+                        public class B
+                        {
+                            [NotNull]
+                            public virtual string P { get; set; }
+                        }
+
+                        public class C : B
+                        {
+                            <annotate/> public new string [|P|] { get; set; }
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source);
+        }
     }
 }
