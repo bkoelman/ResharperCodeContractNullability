@@ -15,6 +15,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithoutNullabilityAttributes()
                 .InGlobalScope(@"
                     class C
                     {
@@ -35,31 +36,14 @@ namespace CodeContractNullability.Test.Specs
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InGlobalNamespace())
                 .InGlobalScope(@"
-                    class C
+                    namespace N
                     {
-                        <annotate/> int? [|f|];
+                        class C
+                        {
+                            <annotate/> int? [|f|];
+                        }
                     }
                 ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityFix(source);
-        }
-
-        [Test]
-        public void When_attributes_are_in_custom_namespace_they_must_be_found()
-        {
-            // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .InCodeNamespace("Example.Custom.Space"))
-                .InGlobalScope(@"
-                    class C
-                    {
-                        <annotate/> int? [|f|];
-                    }
-                ")
-                .ExpectingImportForNamespace("Example.Custom.Space")
                 .Build();
 
             // Act and assert
@@ -71,18 +55,12 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
+                    .InCodeNamespace("NA"))
                 .InGlobalScope(@"
                     class C
                     {
                         <annotate/> int? [|f|];
-                    }
-
-                    namespace NA
-                    {
-                        internal class NotNullAttribute : Attribute { }
-                        internal class CanBeNullAttribute : Attribute { }
-                        internal class ItemNotNullAttribute : Attribute { }
-                        internal class ItemCanBeNullAttribute : Attribute { }
                     }
                 ")
                 .ExpectingImportForNamespace("NA")
@@ -93,10 +71,11 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_some_attributes_are_private_they_must_not_be_found()
+        public void When_some_attributes_are_private_none_must_be_found()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithoutNullabilityAttributes()
                 .InGlobalScope(@"
                     class C
                     {
@@ -118,25 +97,43 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_some_attributes_are_public_nested_in_private_class_they_must_not_be_found()
+        public void When_attributes_are_public_nested_they_must_be_found()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
+                    .NestedInTypes(new[]
+                    {
+                        "public class X",
+                        "public class Nested"
+                    }))
+                .InGlobalScope(@"
+                    class C
+                    {
+                        <annotate/> int? [|f|];
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source);
+        }
+
+        [Test]
+        public void When_attributes_are_public_nested_in_private_class_they_must_not_be_found()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
+                    .NestedInTypes(new[]
+                    {
+                        "public class X",
+                        "private class Nested"
+                    }))
                 .InGlobalScope(@"
                     class C
                     {
                         int? f;
-                    }
-
-                    public class X
-                    {
-                        private class Nested
-                        {
-                            private class NotNullAttribute : Attribute { }
-                            internal class CanBeNullAttribute : Attribute { }
-                            private class ItemNotNullAttribute : Attribute { }
-                            internal class ItemCanBeNullAttribute : Attribute { }
-                        }
                     }
                 ")
                 .Build();
@@ -150,6 +147,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithoutNullabilityAttributes()
                 .WithReference(typeof (JetBrainsNotNullAttribute).Assembly)
                 .InGlobalScope(@"
                     class C
@@ -169,10 +167,11 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithoutNullabilityAttributes()
                 .WithReferenceToExternalAssemblyFor(@"
                     using System;
 
-                    namespace External
+                    namespace OtherAssembly
                     {
                         public class NotNullAttribute : Attribute { }
                         public class CanBeNullAttribute : Attribute { }
@@ -185,7 +184,7 @@ namespace CodeContractNullability.Test.Specs
                         <annotate/> int? [|f|];
                     }
                 ")
-                .ExpectingImportForNamespace("External")
+                .ExpectingImportForNamespace("OtherAssembly")
                 .Build();
 
             // Act and assert
@@ -197,10 +196,11 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithoutNullabilityAttributes()
                 .WithReferenceToExternalAssemblyFor(@"
                     using System;
 
-                    namespace External
+                    namespace OtherAssembly
                     {
                         internal class NotNullAttribute : Attribute { }
                         internal class CanBeNullAttribute : Attribute { }

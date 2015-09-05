@@ -15,18 +15,18 @@ namespace CodeContractNullability.Test
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
             [NotNull] string codeNamespaceImport)
-            : base(text, filename, externalAnnotationsMap, references, codeNamespaceImport, false)
+            : base(text, filename, externalAnnotationsMap, references, null, codeNamespaceImport, false)
         {
             Guard.NotNull(sourceExpected, nameof(sourceExpected));
 
             this.sourceExpected = sourceExpected;
         }
 
-        public override string GetExpectedTextFor(string fixText)
+        public override string GetExpectedTextForAttribute(string attributeName)
         {
-            Guard.NotNull(fixText, nameof(fixText));
+            Guard.NotNull(attributeName, nameof(attributeName));
 
-            return sourceExpected.Replace(FixMarker, fixText);
+            return sourceExpected.Replace(FixMarker, "[" + attributeName + "]");
         }
     }
 }

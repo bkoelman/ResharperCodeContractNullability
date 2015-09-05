@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -8,6 +9,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
     {
         [NotNull]
         public string CodeNamespace { get; }
+
+        public IList<string> NestedTypes { get; }
 
         public bool Imported { get; }
 
@@ -23,6 +26,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
                     {
                         textBuilder.AppendLine();
                         textBuilder.AppendLine("namespace " + CodeNamespace);
+                        textBuilder.AppendLine("{");
+                    }
+
+                    foreach (string nestedType in NestedTypes)
+                    {
+                        textBuilder.AppendLine(nestedType);
                         textBuilder.AppendLine("{");
                     }
 
@@ -51,6 +60,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
     [System.Diagnostics.Conditional(""JETBRAINS_ANNOTATIONS"")]
     public sealed class ItemCanBeNullAttribute : System.Attribute { }
 ");
+
+                    for (int index = 0; index < NestedTypes.Count; index++)
+                    {
+                        textBuilder.AppendLine("}");
+                    }
+
                     if (!string.IsNullOrEmpty(CodeNamespace))
                     {
                         textBuilder.AppendLine("}");
@@ -60,11 +75,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
         }
 
-        public NullabilityAttributesDefinition([NotNull] string codeNamespace, bool imported)
+        public NullabilityAttributesDefinition([NotNull] string codeNamespace, IList<string> nestedTypes, bool imported)
         {
             Guard.NotNull(codeNamespace, nameof(codeNamespace));
 
             CodeNamespace = codeNamespace;
+            NestedTypes = nestedTypes;
             Imported = imported;
         }
     }

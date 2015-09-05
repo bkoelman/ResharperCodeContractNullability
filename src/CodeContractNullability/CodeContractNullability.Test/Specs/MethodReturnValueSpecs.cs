@@ -18,7 +18,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
                     void M() { }
                 ")
@@ -33,8 +32,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     class C
                     {
@@ -53,8 +50,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     class C
                     {
@@ -73,7 +68,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -98,7 +92,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
                     int M() { throw new NotImplementedException(); }
                 ")
@@ -113,7 +106,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
@@ -131,7 +123,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (BindingFlags).Namespace)
                 .InDefaultClass(@"
                     BindingFlags M() { throw new NotImplementedException(); }
@@ -147,7 +138,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
                     <annotate/> int? [|M|]() { throw new NotImplementedException(); }
                 ")
@@ -162,7 +152,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
@@ -180,7 +169,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InDefaultClass(@"
                     <annotate/> string [|M|]() { throw new NotImplementedException(); }
                 ")
@@ -195,7 +183,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
@@ -212,7 +199,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (DebuggerNonUserCodeAttribute).Namespace)
                 .InDefaultClass(@"
                     [DebuggerNonUserCode]
@@ -229,7 +215,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (Task).Namespace)
                 .InDefaultClass(@"
                     async void M() { throw new NotImplementedException(); }
@@ -245,7 +230,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (Task).Namespace)
                 .InDefaultClass(@"
                     <annotate/> async Task [|M|]() { throw new NotImplementedException(); }
@@ -261,7 +245,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .Using(typeof (Task<>).Namespace)
                 .InDefaultClass(@"
                     <annotate/> async Task<string> [|M|]() { throw new NotImplementedException(); }
@@ -277,8 +260,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     class C1
                     {
@@ -308,8 +289,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     class C1
                     {
@@ -339,8 +318,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     class B
                     {
@@ -367,7 +344,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -400,8 +376,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     interface I
                     {
@@ -426,7 +400,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -457,8 +430,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     interface I
                     {
@@ -483,7 +454,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -516,8 +486,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     interface I
                     {
@@ -544,8 +512,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     interface I
                     {
@@ -576,8 +542,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -612,7 +576,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .WithHeader(@"
 //------------------------------------------------------------------------------
 // <auto-generated>
@@ -638,7 +601,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
                 .WithReference(typeof (ConditionalAttribute).Assembly)
                 .Using(typeof (ConditionalAttribute).Namespace)
                 .InGlobalScope(@"
@@ -662,8 +624,6 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder()
-                    .Imported())
                 .InGlobalScope(@"
                     namespace N
                     {

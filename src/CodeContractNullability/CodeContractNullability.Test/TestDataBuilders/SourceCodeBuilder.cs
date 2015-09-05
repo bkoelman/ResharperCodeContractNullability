@@ -34,7 +34,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private string codeNamespaceImportExpected = string.Empty;
 
         [CanBeNull]
-        private NullabilityAttributesDefinition nullabilityAttributes;
+        private NullabilityAttributesDefinition nullabilityAttributes =
+            new NullabilityAttributesBuilder().InGlobalNamespace().Build();
 
         [NotNull]
         protected abstract string GetSourceCode();
@@ -59,7 +60,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
             string sourceText = GetCompleteSourceText();
 
             return new ParsedSourceCode(sourceText, sourceFilename, externalAnnotationsBuilder.Build(),
-                ImmutableHashSet.Create(references.ToArray()), codeNamespaceImportExpected, true);
+                ImmutableHashSet.Create(references.ToArray()), nullabilityAttributes?.NestedTypes,
+                codeNamespaceImportExpected, true);
         }
 
         private void ApplyNullability()
@@ -143,6 +145,11 @@ namespace CodeContractNullability.Test.TestDataBuilders
         internal void _WithNullability([NotNull] NullabilityAttributesBuilder builder)
         {
             nullabilityAttributes = builder.Build();
+        }
+
+        internal void _WithoutNullability()
+        {
+            nullabilityAttributes = null;
         }
 
         internal void _ExpectingImportForNamespace([NotNull] string codeNamespace)
@@ -254,6 +261,15 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(builder, nameof(builder));
 
             source._WithNullability(builder);
+            return source;
+        }
+
+        public static TBuilder WithoutNullabilityAttributes<TBuilder>([NotNull] this TBuilder source)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(source, nameof(source));
+
+            source._WithoutNullability();
             return source;
         }
 

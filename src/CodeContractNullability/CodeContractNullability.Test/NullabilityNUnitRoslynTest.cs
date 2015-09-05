@@ -37,8 +37,8 @@ namespace CodeContractNullability.Test
         {
             Guard.NotNull(source, nameof(source));
 
-            string fixNotNull = source.GetExpectedTextFor("[NotNull]");
-            string fixCanBeNull = source.GetExpectedTextFor("[CanBeNull]");
+            string fixNotNull = source.GetExpectedTextForAttribute("NotNull");
+            string fixCanBeNull = source.GetExpectedTextForAttribute("CanBeNull");
 
             AnalyzerTestContext analyzeTextContext = new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp)
                 .WithReferences(source.References)

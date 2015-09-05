@@ -40,10 +40,13 @@ namespace CodeContractNullability.Test
 
         public bool ReIndentExpected { get; }
 
+        [NotNull]
+        private readonly string attributePrefix;
+
         public ParsedSourceCode([NotNull] string text, [NotNull] string filename,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            [NotNull] string codeNamespaceImport, bool reIndent)
+            [CanBeNull] IList<string> nestedTypes, [NotNull] string codeNamespaceImport, bool reIndent)
         {
             Guard.NotNull(text, nameof(text));
             Guard.NotNull(filename, nameof(filename));
@@ -51,12 +54,32 @@ namespace CodeContractNullability.Test
             Guard.NotNull(references, nameof(references));
             Guard.NotNull(codeNamespaceImport, nameof(codeNamespaceImport));
 
+            attributePrefix = ExtractAttributePrefix(nestedTypes);
+
             Filename = filename;
             ExternalAnnotationsMap = externalAnnotationsMap;
             References = references;
             CodeNamespaceImport = codeNamespaceImport;
             ReIndentExpected = reIndent;
             this.text = Parse(text);
+        }
+
+        [NotNull]
+        private static string ExtractAttributePrefix([CanBeNull] IList<string> nestedTypes)
+        {
+            var attributePrefixBuilder = new StringBuilder();
+            if (nestedTypes != null)
+            {
+                foreach (string nestedType in nestedTypes)
+                {
+                    int lastSpaceIndex = nestedType.LastIndexOf(' ');
+                    string typeName = lastSpaceIndex != -1 ? nestedType.Substring(lastSpaceIndex + 1) : nestedType;
+
+                    attributePrefixBuilder.Append(typeName);
+                    attributePrefixBuilder.Append('.');
+                }
+            }
+            return attributePrefixBuilder.ToString();
         }
 
         [NotNull]
@@ -128,9 +151,11 @@ namespace CodeContractNullability.Test
         }
 
         [NotNull]
-        public virtual string GetExpectedTextFor([NotNull] string fixText)
+        public virtual string GetExpectedTextForAttribute([NotNull] string attributeName)
         {
-            Guard.NotNull(fixText, nameof(fixText));
+            Guard.NotNull(attributeName, nameof(attributeName));
+
+            attributeName = GetAttributeNameWithPrefix(attributeName);
 
             if (!importPoints.Any() && !codeFixPoints.Any())
             {
@@ -138,9 +163,15 @@ namespace CodeContractNullability.Test
             }
 
             // Assumption: import points are always located above fix points.
-            string text1 = GetTextWithFixPointsExpanded(text, fixText);
+            string text1 = GetTextWithFixPointsExpanded(text, attributeName);
             string text2 = GetTextWithImportPointsExpanded(text1);
             return text2;
+        }
+
+        [NotNull]
+        private string GetAttributeNameWithPrefix([NotNull] string attributeName)
+        {
+            return "[" + attributePrefix + attributeName + "]";
         }
 
         [NotNull]
