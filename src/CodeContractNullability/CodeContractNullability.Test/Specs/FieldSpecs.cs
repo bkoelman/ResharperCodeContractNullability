@@ -248,7 +248,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof(EventHandler).Namespace)
+                .Using(typeof (EventHandler).Namespace)
                 .InDefaultClass(@"
                     public event EventHandler E
                     {

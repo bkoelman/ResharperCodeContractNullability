@@ -136,12 +136,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
             externalAnnotationsBuilder = builder;
         }
 
-        internal void _WithNullability([NotNull] NullabilityAttributesBuilder builder)
+        internal void _WithNullabilityAttributes([NotNull] NullabilityAttributesBuilder builder)
         {
             nullabilityAttributes = builder.Build();
         }
 
-        internal void _WithoutNullability()
+        internal void _WithoutNullabilityAttributes()
         {
             nullabilityAttributes = null;
         }
@@ -251,7 +251,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(builder, nameof(builder));
 
-            source._WithNullability(builder);
+            source._WithNullabilityAttributes(builder);
             return source;
         }
 
@@ -261,7 +261,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             Guard.NotNull(source, nameof(source));
 
-            source._WithoutNullability();
+            source._WithoutNullabilityAttributes();
             return source;
         }
 
