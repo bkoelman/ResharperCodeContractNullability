@@ -174,7 +174,7 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
-                    IEnumerable<string> M() { throw new NotImplementedException(); }                        
+                    IEnumerable<string> M() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -271,9 +271,9 @@ namespace CodeContractNullability.Test.Specs
                         [ItemNotNull]
                         public virtual IList<string> M() { throw new NotImplementedException(); }
                     }
-                        
+
                     class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -298,7 +298,7 @@ namespace CodeContractNullability.Test.Specs
                         [ItemCanBeNull]
                         IList<string> M();
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -323,7 +323,7 @@ namespace CodeContractNullability.Test.Specs
                         [ItemCanBeNull]
                         IList<string> M();
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -350,7 +350,7 @@ namespace CodeContractNullability.Test.Specs
                         [ItemNotNull]
                         IList<string> M();
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -377,7 +377,7 @@ namespace CodeContractNullability.Test.Specs
                         [ItemNotNull]
                         IList<string> M();
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface

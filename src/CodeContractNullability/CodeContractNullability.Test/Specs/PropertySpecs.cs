@@ -49,7 +49,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_property_is_externally_annotated_with_not_nullable_it_must_be_skipped()
+        public void When_property_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -224,9 +224,9 @@ namespace CodeContractNullability.Test.Specs
                         [NotNull]
                         public virtual string P { get; set; }
                     }
-                        
+
                     class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -251,9 +251,9 @@ namespace CodeContractNullability.Test.Specs
                         {
                             public virtual string P { get; set; }
                         }
-                        
+
                         class D1 : B { }
-                        
+
                         class D2 : D1
                         {
                             // implicitly inherits decoration from base class
@@ -282,7 +282,7 @@ namespace CodeContractNullability.Test.Specs
                         [CanBeNull]
                         string P { get; set; }
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -307,7 +307,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             string P { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -336,7 +336,7 @@ namespace CodeContractNullability.Test.Specs
                         [CanBeNull]
                         string P { get; set; }
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -361,7 +361,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             string P { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -420,7 +420,7 @@ namespace CodeContractNullability.Test.Specs
                             [CanBeNull]
                             int? this[char p] { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -458,7 +458,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             string P { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -497,15 +497,15 @@ namespace CodeContractNullability.Test.Specs
 //------------------------------------------------------------------------------
 ")
                 .InDefaultClass(@"
-                    string this[int index] 
-                    { 
-                        get 
-                        { 
-                            throw new NotImplementedException(); 
+                    string this[int index]
+                    {
+                        get
+                        {
+                            throw new NotImplementedException();
                         }
                         set
-                        { 
-                            throw new NotImplementedException(); 
+                        {
+                            throw new NotImplementedException();
                         }
                     }
                 ")

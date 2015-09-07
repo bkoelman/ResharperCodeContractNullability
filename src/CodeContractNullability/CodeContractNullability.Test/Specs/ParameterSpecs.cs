@@ -244,7 +244,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
-                    void M([CompilerGenerated] string p) { }                        
+                    void M([CompilerGenerated] string p) { }
                 ")
                 .Build();
 
@@ -262,9 +262,9 @@ namespace CodeContractNullability.Test.Specs
                     {
                         public virtual void M([NotNull] string p) { }
                     }
-                        
+
                     class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -287,9 +287,9 @@ namespace CodeContractNullability.Test.Specs
                     {
                         public abstract int this[[NotNull] string p] { get; set; }
                     }
-                        
+
                     abstract class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -316,7 +316,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         protected B([NotNull] string p) { }
                     }
-                        
+
                     class D : B
                     {
                         public D(<annotate/> string [|p|]) : base(p) { }
@@ -363,9 +363,9 @@ namespace CodeContractNullability.Test.Specs
                         {
                             public virtual void M(string p) { }
                         }
-                        
+
                         class D1 : B { }
-                        
+
                         class D2 : D1
                         {
                             // implicitly inherits decoration from base class
@@ -397,9 +397,9 @@ namespace CodeContractNullability.Test.Specs
                         {
                             public abstract int this[string p] { get; set; }
                         }
-                        
+
                         abstract class D1 : B { }
-                        
+
                         class D2 : D1
                         {
                             // implicitly inherits decoration from base class
@@ -433,12 +433,12 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([CanBeNull] string p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
                         public void M(string p) { }
-                            
+
                         // unrelated overload
                         public void M([CanBeNull] object p) { }
                     }
@@ -461,7 +461,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             void M(string p);
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -494,7 +494,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             int this[string p] { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -530,7 +530,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([CanBeNull] string p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -595,7 +595,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([NotNull] string p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -626,7 +626,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             int this[string p] { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -670,7 +670,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             void M(string p);
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -704,7 +704,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([NotNull] string p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -712,7 +712,7 @@ namespace CodeContractNullability.Test.Specs
 
                         // requires explicit decoration
                         public void M([NotNull] string p) { }
-                        
+
                         // unrelated overload
                         public void M([NotNull] object p) { }
                     }
@@ -737,7 +737,7 @@ namespace CodeContractNullability.Test.Specs
                         {
                             void M(string p);
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface

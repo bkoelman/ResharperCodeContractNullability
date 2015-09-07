@@ -230,9 +230,9 @@ namespace CodeContractNullability.Test.Specs
                         [ItemNotNull]
                         public virtual IEnumerable<string> P { get; set; }
                     }
-                        
+
                     class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -257,7 +257,7 @@ namespace CodeContractNullability.Test.Specs
                         [ItemCanBeNull]
                         IList<string> P { get; set; }
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -282,7 +282,7 @@ namespace CodeContractNullability.Test.Specs
                         [ItemCanBeNull]
                         IEnumerable<string> P { get; set; }
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -338,7 +338,7 @@ namespace CodeContractNullability.Test.Specs
                             [ItemCanBeNull]
                             IEnumerable<int?> this[char p] { get; set; }
                         }
-                        
+
                         class C : I
                         {
                             // implicitly inherits decoration from interface
@@ -380,15 +380,15 @@ namespace CodeContractNullability.Test.Specs
 //------------------------------------------------------------------------------
 ")
                 .InDefaultClass(@"
-                    IEnumerable<string> this[int index] 
-                    { 
-                        get 
-                        { 
-                            throw new NotImplementedException(); 
+                    IEnumerable<string> this[int index]
+                    {
+                        get
+                        {
+                            throw new NotImplementedException();
                         }
                         set
-                        { 
-                            throw new NotImplementedException(); 
+                        {
+                            throw new NotImplementedException();
                         }
                     }
                 ")

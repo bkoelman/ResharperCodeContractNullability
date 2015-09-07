@@ -249,7 +249,7 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof (IEnumerable<>).Namespace)
                 .Using(typeof (CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
-                    void M([CompilerGenerated] IEnumerable<string> p) { }                        
+                    void M([CompilerGenerated] IEnumerable<string> p) { }
                 ")
                 .Build();
 
@@ -268,9 +268,9 @@ namespace CodeContractNullability.Test.Specs
                     {
                         public virtual void M([ItemNotNull] IEnumerable<string> p) { }
                     }
-                        
+
                     class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -294,9 +294,9 @@ namespace CodeContractNullability.Test.Specs
                     {
                         public abstract int this[[ItemNotNull] IEnumerable<string> p] { get; set; }
                     }
-                        
+
                     abstract class D1 : B { }
-                        
+
                     class D2 : D1
                     {
                         // implicitly inherits decoration from base class
@@ -324,7 +324,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         protected B([ItemNotNull] IEnumerable<string> p) { }
                     }
-                        
+
                     class D : B
                     {
                         public D(<annotate/> IEnumerable<string> [|p|]) : base(p) { }
@@ -347,12 +347,12 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([ItemCanBeNull] IEnumerable<string> p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
                         public void M(IEnumerable<string> p) { }
-                            
+
                         // unrelated overload
                         public void M([ItemCanBeNull] IEnumerable<object> p) { }
                     }
@@ -376,7 +376,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([ItemCanBeNull] IEnumerable<string> p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -400,7 +400,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([ItemNotNull] IEnumerable<string> p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -431,7 +431,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         void M([ItemNotNull] IEnumerable<string> p);
                     }
-                        
+
                     class C : I
                     {
                         // implicitly inherits decoration from interface
@@ -439,7 +439,7 @@ namespace CodeContractNullability.Test.Specs
 
                         // requires explicit decoration
                         public void M([ItemNotNull] IEnumerable<string> p) { }
-                        
+
                         // unrelated overload
                         public void M([ItemNotNull] IEnumerable<object> p) { }
                     }
