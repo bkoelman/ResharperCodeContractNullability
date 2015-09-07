@@ -13,9 +13,8 @@ namespace CodeContractNullability.Test
 
         public ExactSourceCode([NotNull] string text, [NotNull] string sourceExpected, [NotNull] string filename,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
-            [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            [NotNull] string codeNamespaceImport)
-            : base(text, filename, externalAnnotationsMap, references, null, codeNamespaceImport, false)
+            [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references, [NotNull] string codeNamespaceImport)
+            : base(text, filename, externalAnnotationsMap, references, new string[0], codeNamespaceImport, false)
         {
             Guard.NotNull(sourceExpected, nameof(sourceExpected));
 

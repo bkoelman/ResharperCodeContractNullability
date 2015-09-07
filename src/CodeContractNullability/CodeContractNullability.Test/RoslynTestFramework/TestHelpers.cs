@@ -75,35 +75,32 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private static Document GetDocument([NotNull] string code, [NotNull] string languageName,
             [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references, [NotNull] string fileName)
         {
-            return new AdhocWorkspace()
-                .AddProject("TestProject", languageName)
-                .WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-                .AddMetadataReferences(references)
-                .AddDocument(fileName, code);
+            return
+                new AdhocWorkspace().AddProject("TestProject", languageName)
+                    .WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
+                    .AddMetadataReferences(references)
+                    .AddDocument(fileName, code);
         }
 
         [NotNull]
         [ItemNotNull]
         public static IList<string> RemoveMarkupFrom([NotNull] [ItemNotNull] IList<string> expected,
-            [NotNull] string language,
-            bool reformat, [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references,
-            [NotNull] string fileName)
+            [NotNull] string language, bool reformat,
+            [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references, [NotNull] string fileName)
         {
             Guard.NotNull(expected, nameof(expected));
             Guard.NotNull(language, nameof(language));
             Guard.NotNull(references, nameof(references));
             Guard.NotNull(fileName, nameof(fileName));
 
-            return expected.Select(text =>
-                RemoveMarkupFrom(text, language, reformat, references, fileName)).ToList();
+            return expected.Select(text => RemoveMarkupFrom(text, language, reformat, references, fileName)).ToList();
         }
 
         [NotNull]
         private static string RemoveMarkupFrom([NotNull] string expected, [NotNull] string language, bool reformat,
             [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references, [NotNull] string fileName)
         {
-            Document document =
-                GetDocumentAndSpansFromMarkup(expected, language, references, fileName).Document;
+            Document document = GetDocumentAndSpansFromMarkup(expected, language, references, fileName).Document;
             SyntaxNode syntaxRoot = document.GetSyntaxRootAsync().Result;
 
             if (reformat)

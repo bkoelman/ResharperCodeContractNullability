@@ -9,12 +9,13 @@ namespace CodeContractNullability.Test.TestDataBuilders
         [NotNull]
         private string codeNamespace = "Namespace.For.JetBrains.Annotation.Attributes";
 
-        private bool imported;
+        [NotNull]
+        [ItemNotNull]
         private readonly List<string> nestedTypes = new List<string>();
 
         public NullabilityAttributesDefinition Build()
         {
-            return new NullabilityAttributesDefinition(codeNamespace, nestedTypes, imported);
+            return new NullabilityAttributesDefinition(codeNamespace, nestedTypes);
         }
 
         [NotNull]
@@ -33,13 +34,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public NullabilityAttributesBuilder Imported()
-        {
-            imported = true;
-            return this;
-        }
-
-        public NullabilityAttributesBuilder NestedInTypes([NotNull] IEnumerable<string> scopes)
+        public NullabilityAttributesBuilder NestedInTypes([NotNull] [ItemNotNull] IEnumerable<string> scopes)
         {
             Guard.NotNull(scopes, nameof(scopes));
 

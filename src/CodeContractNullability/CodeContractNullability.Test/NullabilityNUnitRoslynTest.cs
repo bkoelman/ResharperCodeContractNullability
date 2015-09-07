@@ -43,8 +43,8 @@ namespace CodeContractNullability.Test
             AnalyzerTestContext analyzeTextContext = new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp)
                 .WithReferences(source.References)
                 .WithFileName(source.Filename);
-            var fixTestContext = new FixProviderTestContext(analyzeTextContext,
-                new[] { fixNotNull, fixCanBeNull }, source.ReIndentExpected);
+            var fixTestContext = new FixProviderTestContext(analyzeTextContext, new[] { fixNotNull, fixCanBeNull },
+                source.ReIndentExpected);
 
             AssertDiagnosticsWithCodeFixes(fixTestContext);
         }

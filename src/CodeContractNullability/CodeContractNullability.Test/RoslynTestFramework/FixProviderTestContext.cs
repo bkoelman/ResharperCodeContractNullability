@@ -17,8 +17,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         public bool ReformatExpected { get; }
 
         public FixProviderTestContext([NotNull] AnalyzerTestContext analyzerTestContext,
-            [NotNull] [ItemNotNull] IEnumerable<string> expected,
-            bool reformatExpected = true)
+            [NotNull] [ItemNotNull] IEnumerable<string> expected, bool reformatExpected = true)
         {
             Guard.NotNull(analyzerTestContext, nameof(analyzerTestContext));
             Guard.NotNull(expected, nameof(expected));

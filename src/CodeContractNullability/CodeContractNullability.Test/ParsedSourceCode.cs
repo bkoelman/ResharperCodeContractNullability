@@ -46,38 +46,35 @@ namespace CodeContractNullability.Test
         public ParsedSourceCode([NotNull] string text, [NotNull] string filename,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            [CanBeNull] IList<string> nestedTypes, [NotNull] string codeNamespaceImport, bool reIndent)
+            [ItemNotNull] [NotNull] IList<string> nestedTypes, [NotNull] string codeNamespaceImport, bool reIndent)
         {
             Guard.NotNull(text, nameof(text));
             Guard.NotNull(filename, nameof(filename));
             Guard.NotNull(externalAnnotationsMap, nameof(externalAnnotationsMap));
             Guard.NotNull(references, nameof(references));
+            Guard.NotNull(nestedTypes, nameof(nestedTypes));
             Guard.NotNull(codeNamespaceImport, nameof(codeNamespaceImport));
 
-            attributePrefix = ExtractAttributePrefix(nestedTypes);
-
+            this.text = Parse(text);
             Filename = filename;
             ExternalAnnotationsMap = externalAnnotationsMap;
             References = references;
+            attributePrefix = ExtractAttributePrefix(nestedTypes);
             CodeNamespaceImport = codeNamespaceImport;
             ReIndentExpected = reIndent;
-            this.text = Parse(text);
         }
 
         [NotNull]
-        private static string ExtractAttributePrefix([CanBeNull] IList<string> nestedTypes)
+        private static string ExtractAttributePrefix([NotNull] [ItemNotNull] IList<string> nestedTypes)
         {
             var attributePrefixBuilder = new StringBuilder();
-            if (nestedTypes != null)
+            foreach (string nestedType in nestedTypes)
             {
-                foreach (string nestedType in nestedTypes)
-                {
-                    int lastSpaceIndex = nestedType.LastIndexOf(' ');
-                    string typeName = lastSpaceIndex != -1 ? nestedType.Substring(lastSpaceIndex + 1) : nestedType;
+                int lastSpaceIndex = nestedType.LastIndexOf(' ');
+                string typeName = lastSpaceIndex != -1 ? nestedType.Substring(lastSpaceIndex + 1) : nestedType;
 
-                    attributePrefixBuilder.Append(typeName);
-                    attributePrefixBuilder.Append('.');
-                }
+                attributePrefixBuilder.Append(typeName);
+                attributePrefixBuilder.Append('.');
             }
             return attributePrefixBuilder.ToString();
         }

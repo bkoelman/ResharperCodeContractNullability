@@ -10,9 +10,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
         [NotNull]
         public string CodeNamespace { get; }
 
+        [NotNull]
+        [ItemNotNull]
         public IList<string> NestedTypes { get; }
-
-        public bool Imported { get; }
 
         [NotNull]
         public string SourceText
@@ -75,13 +75,13 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
         }
 
-        public NullabilityAttributesDefinition([NotNull] string codeNamespace, IList<string> nestedTypes, bool imported)
+        public NullabilityAttributesDefinition([NotNull] string codeNamespace,
+            [NotNull] [ItemNotNull] IList<string> nestedTypes)
         {
             Guard.NotNull(codeNamespace, nameof(codeNamespace));
 
             CodeNamespace = codeNamespace;
             NestedTypes = nestedTypes;
-            Imported = imported;
         }
     }
 }

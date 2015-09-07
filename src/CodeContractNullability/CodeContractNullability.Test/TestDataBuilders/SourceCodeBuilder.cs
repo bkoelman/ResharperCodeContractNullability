@@ -44,8 +44,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         [ItemNotNull]
-        public static readonly ImmutableHashSet<MetadataReference> DefaultReferences = ImmutableHashSet.Create(
-            new MetadataReference[]
+        public static readonly ImmutableHashSet<MetadataReference> DefaultReferences =
+            ImmutableHashSet.Create(new MetadataReference[]
             {
                 /* mscorlib.dll */
                 MetadataReference.CreateFromFile(typeof (object).Assembly.Location),
@@ -59,23 +59,17 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
             string sourceText = GetCompleteSourceText();
 
+            IList<string> nestedTypes = nullabilityAttributes?.NestedTypes ?? new string[0];
+
             return new ParsedSourceCode(sourceText, sourceFilename, externalAnnotationsBuilder.Build(),
-                ImmutableHashSet.Create(references.ToArray()), nullabilityAttributes?.NestedTypes,
-                codeNamespaceImportExpected, true);
+                ImmutableHashSet.Create(references.ToArray()), nestedTypes, codeNamespaceImportExpected, true);
         }
 
         private void ApplyNullability()
         {
             if (!string.IsNullOrEmpty(nullabilityAttributes?.CodeNamespace))
             {
-                if (nullabilityAttributes.Imported)
-                {
-                    _Using(nullabilityAttributes.CodeNamespace);
-                }
-                else
-                {
-                    _ExpectingImportForNamespace(nullabilityAttributes.CodeNamespace);
-                }
+                _ExpectingImportForNamespace(nullabilityAttributes.CodeNamespace);
             }
         }
 
@@ -202,8 +196,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder WithReferenceToExternalAssemblyFor<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string code)
-            where TBuilder : SourceCodeBuilder
+            [NotNull] string code) where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(code, nameof(code));
@@ -242,8 +235,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder ExternallyAnnotated<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] ExternalAnnotationsBuilder builder)
-            where TBuilder : SourceCodeBuilder
+            [NotNull] ExternalAnnotationsBuilder builder) where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(builder, nameof(builder));
@@ -254,8 +246,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder WithNullabilityAttributes<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] NullabilityAttributesBuilder builder)
-            where TBuilder : SourceCodeBuilder
+            [NotNull] NullabilityAttributesBuilder builder) where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(builder, nameof(builder));
@@ -264,6 +255,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             return source;
         }
 
+        [NotNull]
         public static TBuilder WithoutNullabilityAttributes<TBuilder>([NotNull] this TBuilder source)
             where TBuilder : SourceCodeBuilder
         {
@@ -275,8 +267,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder ExpectingImportForNamespace<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string expectedImportText)
-            where TBuilder : SourceCodeBuilder
+            [NotNull] string expectedImportText) where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(expectedImportText, nameof(expectedImportText));

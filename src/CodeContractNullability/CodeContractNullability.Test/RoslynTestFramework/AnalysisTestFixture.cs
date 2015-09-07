@@ -125,8 +125,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
         [ItemNotNull]
         private ImmutableArray<CodeAction> GetCodeFixesForDiagnostic([NotNull] Diagnostic diagnostic,
-            [NotNull] Document document,
-            [NotNull] CodeFixProvider fixProvider)
+            [NotNull] Document document, [NotNull] CodeFixProvider fixProvider)
         {
             ImmutableArray<CodeAction>.Builder builder = ImmutableArray.CreateBuilder<CodeAction>();
             Action<CodeAction, ImmutableArray<Diagnostic>> registerCodeFix = (a, _) => builder.Add(a);

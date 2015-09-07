@@ -35,8 +35,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         public ImmutableList<MetadataReference> References { get; }
 
         private AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName,
-            [NotNull] string fileName,
-            [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references)
+            [NotNull] string fileName, [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references)
         {
             MarkupCode = markupCode;
             LanguageName = languageName;

@@ -151,6 +151,7 @@ namespace CodeContractNullability.SymbolAnalysis
             INamedTypeSymbol conditionalAttributeType =
                 compilation.GetTypeByMetadataName(typeof (ConditionalAttribute).FullName);
 
+            // ReSharper disable once PossibleUnintendedReferenceComparison
             if (attribute.AttributeClass == conditionalAttributeType)
             {
                 object ctorValue = attribute.ConstructorArguments.First().Value;
