@@ -57,7 +57,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof (List<>).Namespace)
                 .InDefaultClass(@"
-                    public void M(List<int> someValue) { }
+                    public void M(List<int> p) { }
                 ")
                 .Build();
 

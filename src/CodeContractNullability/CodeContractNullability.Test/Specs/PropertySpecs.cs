@@ -155,7 +155,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    <annotate/> string [|P|] { get; }
+                    <annotate/> string [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -441,7 +441,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityDiagnostic(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]

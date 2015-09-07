@@ -653,7 +653,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityDiagnostic(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]

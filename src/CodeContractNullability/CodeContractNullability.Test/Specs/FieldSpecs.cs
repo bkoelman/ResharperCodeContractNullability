@@ -235,7 +235,26 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof (EventHandler).Namespace)
                 .InDefaultClass(@"
-                    public event EventHandler e;
+                    public event EventHandler E;
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_field_is_event_handler_with_accessors_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof(EventHandler).Namespace)
+                .InDefaultClass(@"
+                    public event EventHandler E
+                    {
+                        add { throw new NotImplementedException(); }
+                        remove { throw new NotImplementedException(); }
+                    }
                 ")
                 .Build();
 
@@ -255,7 +274,7 @@ namespace CodeContractNullability.Test.Specs
 
                     class C
                     {
-                        public event EventHandler<DerivedEventArgs> e;
+                        public event EventHandler<DerivedEventArgs> E;
                     }
                 ")
                 .Build();

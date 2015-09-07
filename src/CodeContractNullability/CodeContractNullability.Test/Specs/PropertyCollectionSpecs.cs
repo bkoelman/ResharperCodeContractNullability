@@ -142,7 +142,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof (IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> IEnumerable<string> [|P|] { get; }
+                    <annotate/> IEnumerable<string> [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -359,7 +359,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyItemNullabilityFix(source);
         }
 
         [Test]
