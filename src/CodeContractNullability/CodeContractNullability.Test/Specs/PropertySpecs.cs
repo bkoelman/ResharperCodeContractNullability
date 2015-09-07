@@ -196,7 +196,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_return_type_of_index_property_is_reference_type_it_must_be_reported_and_fixed()
+        public void When_indexer_property_type_is_reference_type_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
@@ -408,7 +408,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Test]
         public void
-            When_return_value_of_indexer_property_in_implicit_interface_is_not_annotated_it_must_be_reported_and_fixed()
+            When_indexer_property_type_in_implicit_interface_is_not_annotated_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
