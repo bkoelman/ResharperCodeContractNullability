@@ -79,6 +79,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             [NotNull] [ItemNotNull] IList<string> nestedTypes)
         {
             Guard.NotNull(codeNamespace, nameof(codeNamespace));
+            Guard.NotNull(nestedTypes, nameof(nestedTypes));
 
             CodeNamespace = codeNamespace;
             NestedTypes = nestedTypes;
