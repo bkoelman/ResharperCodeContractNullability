@@ -38,10 +38,13 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             DocumentWithSpans documentWithSpans = TestHelpers.GetDocumentAndSpansFromMarkup(context.MarkupCode,
                 context.LanguageName, context.References, context.FileName);
 
-            ImmutableArray<Diagnostic> diagnostics = GetDiagnosticsForDocument(documentWithSpans.Document);
-            IList<TextSpan> spans = documentWithSpans.TextSpans;
+            ImmutableArray<Diagnostic> diagnostics =
+                GetDiagnosticsForDocument(documentWithSpans.Document)
+                    .OrderBy(d => d.Location.SourceSpan)
+                    .ToImmutableArray();
+            ImmutableArray<TextSpan> spans = documentWithSpans.TextSpans.OrderBy(s => s).ToImmutableArray();
 
-            diagnostics.Should().HaveCount(spans.Count);
+            diagnostics.Should().HaveCount(spans.Length);
 
             for (int index = 0; index < diagnostics.Length; index++)
             {

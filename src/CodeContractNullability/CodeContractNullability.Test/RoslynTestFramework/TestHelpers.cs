@@ -75,11 +75,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private static Document GetDocument([NotNull] string code, [NotNull] string languageName,
             [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references, [NotNull] string fileName)
         {
-            return
-                new AdhocWorkspace().AddProject("TestProject", languageName)
-                    .WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-                    .AddMetadataReferences(references)
-                    .AddDocument(fileName, code);
+            return new AdhocWorkspace()
+                .AddProject("TestProject", languageName)
+                .WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
+                .AddMetadataReferences(references)
+                .AddDocument(fileName, code);
         }
 
         [NotNull]

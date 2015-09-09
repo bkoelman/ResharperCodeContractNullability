@@ -13,7 +13,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <typeparam name="TSymbol">
     /// The symbol type of the class member to analyze.
     /// </typeparam>
-    public abstract class BaseAnalyzer<TSymbol>
+    public abstract class BaseSymbolAnalyzer<TSymbol>
         where TSymbol : class, ISymbol
     {
         private readonly SymbolAnalysisContext context;
@@ -21,7 +21,7 @@ namespace CodeContractNullability.SymbolAnalysis
         [NotNull]
         private readonly GeneratedCodeDocumentCache generatedCodeCache;
 
-        protected BaseAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
+        protected BaseSymbolAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));

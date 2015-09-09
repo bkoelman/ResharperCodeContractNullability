@@ -8,7 +8,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <summary>
     /// Performs analysis of a field.
     /// </summary>
-    public class FieldAnalyzer : BaseAnalyzer<IFieldSymbol>
+    public class FieldAnalyzer : BaseSymbolAnalyzer<IFieldSymbol>
     {
         public FieldAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)

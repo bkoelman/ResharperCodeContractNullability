@@ -8,7 +8,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <summary>
     /// Performs analysis of a property.
     /// </summary>
-    public class PropertyAnalyzer : BaseAnalyzer<IPropertySymbol>
+    public class PropertyAnalyzer : BaseSymbolAnalyzer<IPropertySymbol>
     {
         public PropertyAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
