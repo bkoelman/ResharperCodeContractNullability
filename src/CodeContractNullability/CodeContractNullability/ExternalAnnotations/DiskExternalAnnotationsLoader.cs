@@ -73,10 +73,10 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 if (File.Exists(CachePath))
                 {
-                    var serializer = new DataContractSerializer(typeof (ExternalAnnotationsCache));
+                    var serializer = new DataContractSerializer(typeof(ExternalAnnotationsCache));
                     using (FileStream stream = File.OpenRead(CachePath))
                     {
-                        return (ExternalAnnotationsCache) serializer.ReadObject(stream);
+                        return (ExternalAnnotationsCache)serializer.ReadObject(stream);
                     }
                 }
             }
@@ -105,7 +105,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             EnsureDirectoryExists();
 
-            var serializer = new DataContractSerializer(typeof (ExternalAnnotationsCache));
+            var serializer = new DataContractSerializer(typeof(ExternalAnnotationsCache));
             using (FileStream stream = File.Create(CachePath))
             {
                 serializer.WriteObject(stream, cache);
@@ -150,8 +150,8 @@ namespace CodeContractNullability.ExternalAnnotations
 
             var pathsToTry = new[]
             {
-                Path.Combine(localAppDataFolder, @"JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations"),
-                Path.Combine(localAppDataFolder, @"JetBrains\ReSharper\vAny\packages")
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper9ForVisualStudio2015),
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper8)
             };
 
             foreach (string path in pathsToTry)
@@ -194,6 +194,14 @@ namespace CodeContractNullability.ExternalAnnotations
                     HighestLastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
                 }
             }
+        }
+
+        private static class ExternalAnnotationFolders
+        {
+            public const string Resharper9ForVisualStudio2015 =
+                @"JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations";
+
+            public const string Resharper8 = @"JetBrains\ReSharper\vAny\packages";
         }
     }
 }
