@@ -4,7 +4,7 @@ This Visual Studio analyzer supports you in consequently annotating your codebas
 
 ## Get started
 
-* You need [Visual Studio](https://www.visualstudio.com/) 2015 and [Resharper](https://www.jetbrains.com/resharper/) v9 or higher to use this analyzer. See [here](https://github.com/bkoelman/ResharperCodeContractNullabilityFxCop/) if you use Visual Studio 2013 or lower.
+* You need [Visual Studio](https://www.visualstudio.com/) 2015 and [Resharper](https://www.jetbrains.com/resharper/) v9 to use this analyzer. See [here](https://github.com/bkoelman/ResharperCodeContractNullabilityFxCop/) if you use Visual Studio 2013 or lower.
 
 * From the NuGet package manager console:
 
