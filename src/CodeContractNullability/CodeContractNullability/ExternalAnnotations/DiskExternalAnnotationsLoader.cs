@@ -24,6 +24,9 @@ namespace CodeContractNullability.ExternalAnnotations
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 @"CodeContractNullabilityAnalyzer\external-annotations-cache.xml");
 
+        // Prevents IOException (process cannot access file) when host executes analyzers in parallel.
+        private static readonly object LockObject = new object();
+
         [NotNull]
         public static ExternalAnnotationsMap Create()
         {
@@ -37,7 +40,7 @@ namespace CodeContractNullability.ExternalAnnotations
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to load Resharper external annotations.", ex);
+                throw new Exception($"Failed to load Resharper external annotations: {ex.Message}", ex);
             }
 
             throw new Exception("Failed to load Resharper external annotations.");
@@ -46,17 +49,21 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         private static ExternalAnnotationsMap GetCached()
         {
-            ExternalAnnotationsCache cached = TryGetCacheFromDisk();
-            DateTime highestLastWriteTimeUtcOnDisk = cached != null ? GetHighestLastWriteTimeUtc() : DateTime.MinValue;
-
-            if (cached == null || cached.LastWriteTimeUtc < highestLastWriteTimeUtcOnDisk)
+            lock (LockObject)
             {
-                ExternalAnnotationsMap newExternalAnnotations = ScanForMemberExternalAnnotations();
-                cached = new ExternalAnnotationsCache(highestLastWriteTimeUtcOnDisk, newExternalAnnotations);
-                SaveToDisk(cached);
-            }
+                ExternalAnnotationsCache cached = TryGetCacheFromDisk();
+                DateTime highestLastWriteTimeUtcOnDisk = cached != null
+                    ? GetHighestLastWriteTimeUtc()
+                    : DateTime.MinValue;
 
-            return cached.ExternalAnnotations;
+                if (cached == null || cached.LastWriteTimeUtc < highestLastWriteTimeUtcOnDisk)
+                {
+                    cached = ScanForMemberExternalAnnotations();
+                    SaveToDisk(cached);
+                }
+
+                return cached.ExternalAnnotations;
+            }
         }
 
         [CanBeNull]
@@ -85,17 +92,13 @@ namespace CodeContractNullability.ExternalAnnotations
 
         private static DateTime GetHighestLastWriteTimeUtc()
         {
-            DateTime highestLastWriteTimeUtc = DateTime.MinValue;
+            var recorder = new HighestLastWriteTimeUtcRecorder();
             foreach (string path in EnumerateAnnotationFiles())
             {
-                var fileInfo = new FileInfo(path);
-                if (fileInfo.LastWriteTimeUtc > highestLastWriteTimeUtc)
-                {
-                    highestLastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
-                }
+                recorder.VisitFile(path);
             }
 
-            return highestLastWriteTimeUtc;
+            return recorder.HighestLastWriteTimeUtc;
         }
 
         private static void SaveToDisk([NotNull] ExternalAnnotationsCache cache)
@@ -119,13 +122,16 @@ namespace CodeContractNullability.ExternalAnnotations
         }
 
         [NotNull]
-        private static ExternalAnnotationsMap ScanForMemberExternalAnnotations()
+        private static ExternalAnnotationsCache ScanForMemberExternalAnnotations()
         {
             var result = new ExternalAnnotationsMap();
             var parser = new ExternalAnnotationDocumentParser();
+            var recorder = new HighestLastWriteTimeUtcRecorder();
 
             foreach (string path in EnumerateAnnotationFiles())
             {
+                recorder.VisitFile(path);
+
                 using (StreamReader reader = File.OpenText(path))
                 {
                     parser.ProcessDocument(reader, result);
@@ -133,7 +139,7 @@ namespace CodeContractNullability.ExternalAnnotations
             }
 
             Compact(result);
-            return result;
+            return new ExternalAnnotationsCache(recorder.HighestLastWriteTimeUtc, result);
         }
 
         [NotNull]
@@ -174,6 +180,20 @@ namespace CodeContractNullability.ExternalAnnotations
         private static bool HasNullabilityDefined([NotNull] MemberNullabilityInfo info)
         {
             return info.HasNullabilityDefined || info.ParametersNullability.Count > 0;
+        }
+
+        private sealed class HighestLastWriteTimeUtcRecorder
+        {
+            public DateTime HighestLastWriteTimeUtc { get; private set; }
+
+            public void VisitFile(string path)
+            {
+                var fileInfo = new FileInfo(path);
+                if (fileInfo.LastWriteTimeUtc > HighestLastWriteTimeUtc)
+                {
+                    HighestLastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
+                }
+            }
         }
     }
 }
