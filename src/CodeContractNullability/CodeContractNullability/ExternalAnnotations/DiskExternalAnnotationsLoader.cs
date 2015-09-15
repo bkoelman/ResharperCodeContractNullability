@@ -25,6 +25,7 @@ namespace CodeContractNullability.ExternalAnnotations
                 @"CodeContractNullabilityAnalyzer\external-annotations-cache.xml");
 
         // Prevents IOException (process cannot access file) when host executes analyzers in parallel.
+        [NotNull]
         private static readonly object LockObject = new object();
 
         [NotNull]
@@ -73,10 +74,10 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 if (File.Exists(CachePath))
                 {
-                    var serializer = new DataContractSerializer(typeof(ExternalAnnotationsCache));
+                    var serializer = new DataContractSerializer(typeof (ExternalAnnotationsCache));
                     using (FileStream stream = File.OpenRead(CachePath))
                     {
-                        return (ExternalAnnotationsCache)serializer.ReadObject(stream);
+                        return (ExternalAnnotationsCache) serializer.ReadObject(stream);
                     }
                 }
             }
@@ -105,7 +106,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             EnsureDirectoryExists();
 
-            var serializer = new DataContractSerializer(typeof(ExternalAnnotationsCache));
+            var serializer = new DataContractSerializer(typeof (ExternalAnnotationsCache));
             using (FileStream stream = File.Create(CachePath))
             {
                 serializer.WriteObject(stream, cache);
@@ -186,7 +187,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             public DateTime HighestLastWriteTimeUtc { get; private set; }
 
-            public void VisitFile(string path)
+            public void VisitFile([NotNull] string path)
             {
                 var fileInfo = new FileInfo(path);
                 if (fileInfo.LastWriteTimeUtc > HighestLastWriteTimeUtc)
