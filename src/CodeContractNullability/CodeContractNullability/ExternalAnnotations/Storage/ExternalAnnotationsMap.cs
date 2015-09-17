@@ -13,7 +13,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
         Namespace = ExternalAnnotationsCache.CacheNamespace)]
     public class ExternalAnnotationsMap : Dictionary<string, MemberNullabilityInfo>
     {
-        public bool Contains<TSymbol>([NotNull] TSymbol symbol, bool appliesToItem) where TSymbol : class, ISymbol
+        public bool Contains([NotNull] ISymbol symbol, bool appliesToItem)
         {
             Guard.NotNull(symbol, nameof(symbol));
 
@@ -23,6 +23,8 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
                 // include ItemNotNull / ItemCanBeNull elements. But we likely need to add support for them in the future.
                 return false;
             }
+
+            symbol = symbol.OriginalDefinition ?? symbol;
 
             if (symbol is IParameterSymbol)
             {

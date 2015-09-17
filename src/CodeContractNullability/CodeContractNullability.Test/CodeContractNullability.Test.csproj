@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExactSourceCode.cs" />
+    <Compile Include="GitHubIssueAttribute.cs" />
     <Compile Include="ItemNullabilityNUnitRoslynTest.cs" />
     <Compile Include="NullabilityNUnitRoslynTest.cs" />
     <Compile Include="ParsedSourceCode.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="RoslynTestFramework\TestHelpers.cs" />
     <Compile Include="RoslynTestFramework\Verify.cs" />
     <Compile Include="Specs\AttributeDiscoverySpecs.cs" />
+    <Compile Include="Specs\Bugfixes.cs" />
     <Compile Include="Specs\ExternalAnnotationMemberNamingSpecs.cs" />
     <Compile Include="Specs\FieldCollectionSpecs.cs" />
     <Compile Include="Specs\FieldSpecs.cs" />
