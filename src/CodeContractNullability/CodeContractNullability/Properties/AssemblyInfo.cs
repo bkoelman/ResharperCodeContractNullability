@@ -37,5 +37,5 @@ using System.Runtime.InteropServices;
 // NOTE: Also update in CodeContractNullability.nuspec and source.extension.vsixmanifest
 // =====
 
-[assembly: AssemblyVersion("1.0.1")]
+[assembly: AssemblyVersion("1.0.1.0")]
 [assembly: AssemblyFileVersion("1.0.1.0")]

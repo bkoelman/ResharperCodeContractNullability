@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>ResharperCodeContractNullability</id>
-    <version>1.0.1</version>
+    <version>0.0.0</version>
     <title>Resharper Code Contract Nullability</title>
     <authors>Bart Koelman</authors>
     <owners>Bart Koelman</owners>
