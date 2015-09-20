@@ -11,12 +11,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull
-      attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html
+      attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html You need
+      Visual Studio 2015 and Resharper v9 to use this analyzer. See package "ResharperCodeContractNullabilityFxCop" if
+      you use Visual Studio 2013 or lower.
     </description>
-    <releaseNotes>
-      Added support for [ItemNotNull] and [ItemCanBeNull] on Lazy&lt;T&gt; and Task&lt;T&gt; (new in
-      ReSharper v9.2)
-    </releaseNotes>
+    <releaseNotes>Bugfixes in deployment, caching and reporting correctness.</releaseNotes>
     <copyright>Apache License, Version 2.0</copyright>
     <language>en-us</language>
     <tags>
