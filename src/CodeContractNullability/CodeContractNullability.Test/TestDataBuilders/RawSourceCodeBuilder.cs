@@ -23,9 +23,14 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(text, nameof(text));
             Guard.NotNull(expected, nameof(expected));
 
-            sourceText = text;
-            expectedText = expected;
+            sourceText = NormalizeLineBreaks(text);
+            expectedText = NormalizeLineBreaks(expected);
             return this;
+        }
+
+        private static string NormalizeLineBreaks(string text)
+        {
+            return text.Replace("\n", "\r\n").Replace("\r\r", "\r");
         }
 
         [NotNull]
