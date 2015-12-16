@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using JetBrains.Annotations;
 
 namespace CodeContractNullability.Utilities
@@ -16,23 +15,24 @@ namespace CodeContractNullability.Utilities
     {
         [NotNull]
         [ItemNotNull]
-        private readonly Lazy<TInterface> lazyInstance;
+        private readonly Func<TInterface> createDefaultInstanceFactory;
 
         [CanBeNull]
         private TInterface specificInstance;
 
+        [CanBeNull]
+        private TInterface activeInstance;
+
         public ExtensionPoint([NotNull] Func<TInterface> createDefaultInstance)
         {
             Guard.NotNull(createDefaultInstance, nameof(createDefaultInstance));
-
-            lazyInstance = new Lazy<TInterface>(() => specificInstance ?? Instantiate(createDefaultInstance),
-                LazyThreadSafetyMode.None);
+            createDefaultInstanceFactory = createDefaultInstance;
         }
 
         [NotNull]
-        private TInterface Instantiate([NotNull] Func<TInterface> createDefaultInstance)
+        private static TInterface InstantiateNotNull([NotNull] Func<TInterface> valueFactory)
         {
-            TInterface result = createDefaultInstance();
+            TInterface result = valueFactory();
             if (result == null)
             {
                 throw new Exception($"Failed to create instance of {typeof (TInterface)}.");
@@ -43,7 +43,11 @@ namespace CodeContractNullability.Utilities
         [NotNull]
         public TInterface GetCached()
         {
-            return lazyInstance.Value;
+            if (activeInstance == null)
+            {
+                activeInstance = specificInstance ?? InstantiateNotNull(createDefaultInstanceFactory);
+            }
+            return activeInstance;
         }
 
         public void Override([NotNull] TInterface instance)
