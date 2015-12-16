@@ -22,6 +22,9 @@
       resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul
       rinul
     </tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework="" />
+    </frameworkAssemblies>
   </metadata>
   <!-- The convention for analyzers is to put language agnostic dlls in analyzers\dotnet and language specific analyzers in either analyzers\dotnet\cs or analyzers\dotnet\vb -->
   <files>
