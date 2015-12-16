@@ -76,7 +76,7 @@
     </PropertyGroup>
   </Target>
   <Target Name="UpdateVsixVersion" AfterTargets="GetSemanticVersionFromOutputAssembly;CopyVsixManifestFile" BeforeTargets="AfterBuild">
-    <Message Text= "Updating VSIX version to $(SemanticVersion)" />
+    <Message Text="Updating VSIX version to $(SemanticVersion)" />
     <XmlPoke
       XmlInputPath="source.extension.vsixmanifest"
       Query="/n:PackageManifest/n:Metadata/n:Identity/@Version"
