@@ -37,6 +37,10 @@
     <Compile Include="CodeContractItemNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
+    <Compile Include="ExternalAnnotations\AssemblyExternalAnnotationsLoader.cs" />
+    <Compile Include="ExternalAnnotations\CachingExternalAnnotationsResolver.cs" />
+    <Compile Include="ExternalAnnotations\IExternalAnnotationsResolver.cs" />
+    <Compile Include="ExternalAnnotations\SimpleExternalAnnotationsResolver.cs" />
     <Compile Include="SymbolAnalysis\FieldAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\BaseSymbolAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />
@@ -63,7 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NullabilityAttributes\SimpleNullabilityAttributeProvider.cs" />
     <Compile Include="SymbolAnalysis\SymbolExtensions.cs" />
-    <Compile Include="ExternalAnnotations\DiskExternalAnnotationsLoader.cs" />
+    <Compile Include="ExternalAnnotations\FolderExternalAnnotationsLoader.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

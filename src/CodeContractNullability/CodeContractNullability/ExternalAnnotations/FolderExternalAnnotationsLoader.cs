@@ -17,7 +17,7 @@ namespace CodeContractNullability.ExternalAnnotations
     /// derives from such a built-in type, we need to have those definitions available because Resharper reports nullability
     /// annotation as unneeded when a base type is already decorated.
     /// </remarks>
-    public static class DiskExternalAnnotationsLoader
+    public static class FolderExternalAnnotationsLoader
     {
         [NotNull]
         private static readonly string CachePath =
@@ -149,21 +149,26 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-            var pathsToTry = new[]
+            var foldersToScan = new[]
             {
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper9ForVisualStudio2015),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper8)
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper9ExtensionsForVisualStudio2015)
             };
 
-            foreach (string path in pathsToTry)
+            var fileSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (string folder in foldersToScan)
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(folder))
                 {
-                    return Directory.EnumerateFiles(path, "*.xml", SearchOption.AllDirectories);
+                    foreach (string path in Directory.EnumerateFiles(folder, "*.xml", SearchOption.AllDirectories))
+                    {
+                        fileSet.Add(path);
+                    }
                 }
             }
 
-            return new string[0];
+            return fileSet;
         }
 
         private static void Compact([NotNull] ExternalAnnotationsMap externalAnnotations)
@@ -202,7 +207,8 @@ namespace CodeContractNullability.ExternalAnnotations
             public const string Resharper9ForVisualStudio2015 =
                 @"JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations";
 
-            public const string Resharper8 = @"JetBrains\ReSharper\vAny\packages";
+            public const string Resharper9ExtensionsForVisualStudio2015 =
+                @"JetBrains\Installations\ReSharperPlatformVs14\Extensions";
         }
     }
 }

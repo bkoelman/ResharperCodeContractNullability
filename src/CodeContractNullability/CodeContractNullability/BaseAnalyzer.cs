@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using CodeContractNullability.ExternalAnnotations;
-using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.NullabilityAttributes;
 using CodeContractNullability.SymbolAnalysis;
 using CodeContractNullability.Utilities;
@@ -43,8 +42,8 @@ namespace CodeContractNullability
             new ExtensionPoint<INullabilityAttributeProvider>(() => new CachingNullabilityAttributeProvider());
 
         [NotNull]
-        public ExtensionPoint<ExternalAnnotationsMap> ExternalAnnotationsRegistry { get; } =
-            new ExtensionPoint<ExternalAnnotationsMap>(DiskExternalAnnotationsLoader.Create);
+        public ExtensionPoint<IExternalAnnotationsResolver> ExternalAnnotationsResolver { get; } =
+            new ExtensionPoint<IExternalAnnotationsResolver>(() => new CachingExternalAnnotationsResolver());
 
         protected BaseAnalyzer(bool appliesToItem)
         {
@@ -77,9 +76,11 @@ namespace CodeContractNullability
                 return;
             }
 
-            ExternalAnnotationsMap externalAnnotations = ExternalAnnotationsRegistry.GetCached();
+            IExternalAnnotationsResolver resolver = ExternalAnnotationsResolver.GetCached();
+            resolver.EnsureScanned();
+
             var generatedCodeCache = new GeneratedCodeDocumentCache();
-            var info = new SymbolAnalysisInfo(nullSymbols, externalAnnotations, generatedCodeCache);
+            var info = new SymbolAnalysisInfo(nullSymbols, resolver, generatedCodeCache);
 
             context.RegisterSymbolAction(c => AnalyzeField(c, info), SymbolKind.Field);
             context.RegisterSymbolAction(c => AnalyzeProperty(c, info), SymbolKind.Property);
@@ -136,13 +137,13 @@ namespace CodeContractNullability
             public ImmutableDictionary<string, string> Properties { get; }
 
             [NotNull]
-            public ExternalAnnotationsMap ExternalAnnotations { get; }
+            public IExternalAnnotationsResolver ExternalAnnotations { get; }
 
             [NotNull]
             public GeneratedCodeDocumentCache GeneratedCodeCache { get; }
 
             public SymbolAnalysisInfo([NotNull] NullabilityAttributeSymbols nullSymbols,
-                [NotNull] ExternalAnnotationsMap externalAnnotations,
+                [NotNull] IExternalAnnotationsResolver externalAnnotations,
                 [NotNull] GeneratedCodeDocumentCache generatedCodeCache)
             {
                 Guard.NotNull(nullSymbols, nameof(nullSymbols));

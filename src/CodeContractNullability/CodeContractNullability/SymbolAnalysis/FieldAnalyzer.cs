@@ -1,4 +1,4 @@
-using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.ExternalAnnotations;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -10,7 +10,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// </summary>
     public class FieldAnalyzer : BaseSymbolAnalyzer<IFieldSymbol>
     {
-        public FieldAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
+        public FieldAnalyzer(SymbolAnalysisContext context, [NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
             : base(context, externalAnnotations, generatedCodeCache, appliesToItem)
         {

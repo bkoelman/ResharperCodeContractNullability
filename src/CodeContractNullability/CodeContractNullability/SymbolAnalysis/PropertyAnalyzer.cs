@@ -1,4 +1,4 @@
-using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.ExternalAnnotations;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -10,7 +10,8 @@ namespace CodeContractNullability.SymbolAnalysis
     /// </summary>
     public class PropertyAnalyzer : BaseSymbolAnalyzer<IPropertySymbol>
     {
-        public PropertyAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
+        public PropertyAnalyzer(SymbolAnalysisContext context,
+            [NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
             : base(context, externalAnnotations, generatedCodeCache, appliesToItem)
         {
@@ -26,8 +27,8 @@ namespace CodeContractNullability.SymbolAnalysis
             IPropertySymbol baseMember = Symbol.OverriddenProperty;
             while (baseMember != null)
             {
-                if (baseMember.HasNullabilityAnnotation(AppliesToItem) ||
-                    ExternalAnnotations.Contains(baseMember, AppliesToItem) || HasAnnotationInInterface(baseMember))
+                if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember) ||
+                    HasAnnotationInInterface(baseMember))
                 {
                     return true;
                 }
