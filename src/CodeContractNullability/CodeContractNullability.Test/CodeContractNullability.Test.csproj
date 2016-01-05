@@ -140,6 +140,7 @@
     <Compile Include="ExactSourceCode.cs" />
     <Compile Include="GitHubIssueAttribute.cs" />
     <Compile Include="ItemNullabilityNUnitRoslynTest.cs" />
+    <Compile Include="NullabilityAnalysisTestFixture.cs" />
     <Compile Include="NullabilityNUnitRoslynTest.cs" />
     <Compile Include="ParsedSourceCode.cs" />
     <Compile Include="RoslynTestFramework\AnalysisTestFixture.cs" />

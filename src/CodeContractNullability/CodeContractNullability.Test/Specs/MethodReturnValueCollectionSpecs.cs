@@ -31,7 +31,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -256,7 +256,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -283,7 +283,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -308,7 +308,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -333,7 +333,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -362,7 +362,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -391,7 +391,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -417,7 +417,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -431,7 +431,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -446,7 +446,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -461,7 +461,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -493,7 +493,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityDiagnostic(source);
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Test]
@@ -520,7 +520,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyItemNullabilityFix(source);
+            VerifyNullabilityFix(source);
         }
     }
 }

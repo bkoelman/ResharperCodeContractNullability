@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -21,7 +21,11 @@ namespace CodeContractNullability.SymbolAnalysis
         [NotNull]
         private readonly GeneratedCodeDocumentCache generatedCodeCache;
 
-        protected BaseSymbolAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
+        [NotNull]
+        private readonly IExternalAnnotationsResolver externalAnnotations;
+
+        protected BaseSymbolAnalyzer(SymbolAnalysisContext context,
+            [NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));
@@ -29,13 +33,10 @@ namespace CodeContractNullability.SymbolAnalysis
 
             this.context = context;
             this.generatedCodeCache = generatedCodeCache;
-            ExternalAnnotations = externalAnnotations;
+            this.externalAnnotations = externalAnnotations;
             AppliesToItem = appliesToItem;
             Symbol = (TSymbol) (context.Symbol.OriginalDefinition ?? context.Symbol);
         }
-
-        [NotNull]
-        protected ExternalAnnotationsMap ExternalAnnotations { get; }
 
         protected bool AppliesToItem { get; }
 
@@ -111,7 +112,7 @@ namespace CodeContractNullability.SymbolAnalysis
         private void AnalyzeFor([NotNull] DiagnosticDescriptor descriptor,
             [NotNull] ImmutableDictionary<string, string> properties)
         {
-            if (ExternalAnnotations.Contains(Symbol, AppliesToItem))
+            if (externalAnnotations.HasAnnotationForSymbol(Symbol, AppliesToItem, context.Compilation))
             {
                 return;
             }
@@ -160,8 +161,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     // ReSharper disable once PossibleUnintendedReferenceComparison
                     if (implementer == symbol)
                     {
-                        if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) ||
-                            ExternalAnnotations.Contains(ifaceMember, AppliesToItem))
+                        if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceMember))
                         {
                             return true;
                         }
@@ -178,5 +178,10 @@ namespace CodeContractNullability.SymbolAnalysis
 
         [NotNull]
         protected abstract ITypeSymbol GetSymbolType();
+
+        protected bool HasExternalAnnotationFor([NotNull] ISymbol symbol)
+        {
+            return externalAnnotations.HasAnnotationForSymbol(symbol, AppliesToItem, context.Compilation);
+        }
     }
 }

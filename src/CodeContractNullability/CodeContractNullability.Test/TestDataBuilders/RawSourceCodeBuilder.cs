@@ -28,7 +28,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
             return this;
         }
 
-        private static string NormalizeLineBreaks(string text)
+        [NotNull]
+        private static string NormalizeLineBreaks([NotNull] string text)
         {
             return text.Replace("\n", "\r\n").Replace("\r\r", "\r");
         }

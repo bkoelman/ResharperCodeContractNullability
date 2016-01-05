@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Immutable;
-using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.ExternalAnnotations;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -12,7 +12,8 @@ namespace CodeContractNullability.SymbolAnalysis
     /// </summary>
     public class ParameterAnalyzer : BaseSymbolAnalyzer<IParameterSymbol>
     {
-        public ParameterAnalyzer(SymbolAnalysisContext context, [NotNull] ExternalAnnotationsMap externalAnnotations,
+        public ParameterAnalyzer(SymbolAnalysisContext context,
+            [NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
             : base(context, externalAnnotations, generatedCodeCache, appliesToItem)
         {
@@ -44,8 +45,7 @@ namespace CodeContractNullability.SymbolAnalysis
             IParameterSymbol baseParameter = TryGetBaseParameterFor(Symbol);
             while (baseParameter != null)
             {
-                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) ||
-                    ExternalAnnotations.Contains(baseParameter, AppliesToItem) ||
+                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseParameter) ||
                     HasAnnotationInInterface(baseParameter))
                 {
                     return true;
@@ -98,7 +98,7 @@ namespace CodeContractNullability.SymbolAnalysis
                         IParameterSymbol ifaceParameter = ifaceParameters[parameterIndex];
 
                         if (ifaceParameter.HasNullabilityAnnotation(AppliesToItem) ||
-                            ExternalAnnotations.Contains(ifaceParameter, AppliesToItem))
+                            HasExternalAnnotationFor(ifaceParameter))
                         {
                             return true;
                         }
