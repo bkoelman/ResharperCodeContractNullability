@@ -151,8 +151,8 @@ namespace CodeContractNullability.ExternalAnnotations
 
             var foldersToScan = new[]
             {
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper9ForVisualStudio2015),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.Resharper9ExtensionsForVisualStudio2015)
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015)
             };
 
             var fileSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -204,10 +204,10 @@ namespace CodeContractNullability.ExternalAnnotations
 
         private static class ExternalAnnotationFolders
         {
-            public const string Resharper9ForVisualStudio2015 =
+            public const string ResharperForVisualStudio2015 =
                 @"JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations";
 
-            public const string Resharper9ExtensionsForVisualStudio2015 =
+            public const string ResharperExtensionsForVisualStudio2015 =
                 @"JetBrains\Installations\ReSharperPlatformVs14\Extensions";
         }
     }
