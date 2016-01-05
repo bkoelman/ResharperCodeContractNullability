@@ -147,10 +147,13 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         private static IEnumerable<string> EnumerateAnnotationFiles()
         {
+            string programFilesX86Folder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
             string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
             var foldersToScan = new[]
             {
+                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
+                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015),
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015)
             };
