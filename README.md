@@ -20,4 +20,6 @@ Alternatively, you can install as a Visual Studio Extension from the [Visual Stu
 
 Instead of adding the JetBrains package, you can [put the annotation definitions directly in your source code](https://www.jetbrains.com/resharper/help/Code_Analysis__Annotations_in_Source_Code.html). In that case, it's recommended to set the `conditional` option checked.
 
+To make analysis work over multiple projects in your solution, define the `JETBRAINS_ANNOTATIONS` conditional compilation symbol in your project properties.
+
 ![Analyzer in action](https://github.com/bkoelman/ResharperCodeContractNullability/blob/gh-pages/images/analyzer-in-action.png)
