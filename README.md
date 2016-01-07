@@ -23,3 +23,13 @@ Instead of adding the JetBrains package, you can [put the annotation definitions
 To make analysis work over multiple projects in your solution, define the `JETBRAINS_ANNOTATIONS` conditional compilation symbol in your project properties.
 
 ![Analyzer in action](https://github.com/bkoelman/ResharperCodeContractNullability/blob/gh-pages/images/analyzer-in-action.png)
+
+## Trying out the latest build
+
+After each commit, a new prerelease NuGet package is automatically published to MyGet. To try it out, follow the next steps:
+
+* In Visual Studio: Tools, Options, NuGet Package Manager, Package Sources
+    * Click **+**
+    * Name: **MyGet**, Source: **http://www.myget.org/F/resharpercodecontractnullability**
+    * Click **Update**, **Ok**
+* In Visual Studio, select **MyGet** as package source in the GUI or Package Manager Console.
