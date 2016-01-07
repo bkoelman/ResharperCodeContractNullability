@@ -35,7 +35,7 @@ namespace CodeContractNullability.SymbolAnalysis
             this.generatedCodeCache = generatedCodeCache;
             this.externalAnnotations = externalAnnotations;
             AppliesToItem = appliesToItem;
-            Symbol = (TSymbol) (context.Symbol.OriginalDefinition ?? context.Symbol);
+            Symbol = (TSymbol) context.Symbol;
         }
 
         protected bool AppliesToItem { get; }
@@ -158,8 +158,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 {
                     ISymbol implementer = symbol.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
 
-                    // ReSharper disable once PossibleUnintendedReferenceComparison
-                    if (implementer == symbol)
+                    if (symbol.Equals(implementer))
                     {
                         if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceMember))
                         {

@@ -58,21 +58,26 @@ namespace CodeContractNullability.SymbolAnalysis
             var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
 
             INamedTypeSymbol genericSequenceType = compilation.GetTypeByMetadataName(typeof (IEnumerable<>).FullName);
-            foreach (INamedTypeSymbol type in typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol))
+            if (genericSequenceType != null)
             {
-                // ReSharper disable once PossibleUnintendedReferenceComparison
-                if (type.ConstructedFrom == genericSequenceType)
+                foreach (INamedTypeSymbol type in typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol))
                 {
-                    return type.TypeArguments.Single();
+                    if (genericSequenceType.Equals(type.ConstructedFrom))
+                    {
+                        return type.TypeArguments.Single();
+                    }
                 }
             }
 
             INamedTypeSymbol nonGenericSequenceType = compilation.GetTypeByMetadataName(typeof (IEnumerable).FullName);
-
-            // ReSharper disable once PossibleUnintendedReferenceComparison
-            if (typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol).Any(type => type == nonGenericSequenceType))
+            if (nonGenericSequenceType != null)
             {
-                return compilation.GetTypeByMetadataName("System.Object");
+                if (
+                    typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol)
+                        .Any(type => nonGenericSequenceType.Equals(type)))
+                {
+                    return compilation.GetTypeByMetadataName("System.Object");
+                }
             }
 
             return null;
@@ -89,12 +94,10 @@ namespace CodeContractNullability.SymbolAnalysis
             INamedTypeSymbol taskType = compilation.GetTypeByMetadataName(typeof (Task<>).FullName);
 
             var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
-            if (namedTypeSymbol != null)
+            if (namedTypeSymbol?.ConstructedFrom != null)
             {
-                // ReSharper disable PossibleUnintendedReferenceComparison
-                bool isMatch = namedTypeSymbol.ConstructedFrom == lazyType ||
-                    namedTypeSymbol.ConstructedFrom == taskType;
-                // ReSharper restore PossibleUnintendedReferenceComparison
+                bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(lazyType) ||
+                    namedTypeSymbol.ConstructedFrom.Equals(taskType);
 
                 if (isMatch)
                 {
@@ -114,10 +117,13 @@ namespace CodeContractNullability.SymbolAnalysis
             INamedTypeSymbol compilerGeneratedAttributeType =
                 compilation.GetTypeByMetadataName(typeof (CompilerGeneratedAttribute).FullName);
 
-            ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
+            if (compilerGeneratedAttributeType != null)
+            {
+                ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
+                return attributes.Any(attr => compilerGeneratedAttributeType.Equals(attr.AttributeClass));
+            }
 
-            // ReSharper disable once PossibleUnintendedReferenceComparison
-            return attributes.Any(attr => attr.AttributeClass == compilerGeneratedAttributeType);
+            return false;
         }
 
         public static bool HasDebuggerNonUserCodeAnnotation([NotNull] this ISymbol memberSymbol,
@@ -129,10 +135,13 @@ namespace CodeContractNullability.SymbolAnalysis
             INamedTypeSymbol debuggerNonUserCodeAttributeType =
                 compilation.GetTypeByMetadataName(typeof (DebuggerNonUserCodeAttribute).FullName);
 
-            ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
+            if (debuggerNonUserCodeAttributeType != null)
+            {
+                ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
+                return attributes.Any(attr => debuggerNonUserCodeAttributeType.Equals(attr.AttributeClass));
+            }
 
-            // ReSharper disable once PossibleUnintendedReferenceComparison
-            return attributes.Any(attr => attr.AttributeClass == debuggerNonUserCodeAttributeType);
+            return false;
         }
 
         public static bool HasResharperConditionalAnnotation([NotNull] this ISymbol symbol,
@@ -151,11 +160,13 @@ namespace CodeContractNullability.SymbolAnalysis
             INamedTypeSymbol conditionalAttributeType =
                 compilation.GetTypeByMetadataName(typeof (ConditionalAttribute).FullName);
 
-            // ReSharper disable once PossibleUnintendedReferenceComparison
-            if (attribute.AttributeClass == conditionalAttributeType)
+            if (conditionalAttributeType != null)
             {
-                object ctorValue = attribute.ConstructorArguments.First().Value;
-                return (string) ctorValue == "JETBRAINS_ANNOTATIONS";
+                if (conditionalAttributeType.Equals(attribute.AttributeClass))
+                {
+                    object ctorValue = attribute.ConstructorArguments.First().Value;
+                    return (string) ctorValue == "JETBRAINS_ANNOTATIONS";
+                }
             }
 
             return false;
