@@ -148,13 +148,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GetSemanticVersionFromOutputAssembly">
-    <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
-      <Output TaskParameter="Assemblies" ItemName="AnalyzerAssemblyInfo" />
-    </GetAssemblyIdentity>
     <PropertyGroup>
-      <Pattern>(\d+)\.(\d+).(\d+)</Pattern>
-      <In>%(AnalyzerAssemblyInfo.Version)</In>
-      <SemanticVersion>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern)))</SemanticVersion>
+      <In>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs'))</In>
+      <Pattern>\[assembly:\s*AssemblyInformationalVersion\(@?"(?&lt;SemanticVersionString&gt;[0-9A-Za-z-.]+)"\)\]</Pattern>
+      <SemanticVersion>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern), System.Text.RegularExpressions.RegexOptions.Multiline).Groups["SemanticVersionString"].Value)</SemanticVersion>
     </PropertyGroup>
   </Target>
   <Target Name="GetSemanticVersionFromCurrentTime">
@@ -170,7 +167,7 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
