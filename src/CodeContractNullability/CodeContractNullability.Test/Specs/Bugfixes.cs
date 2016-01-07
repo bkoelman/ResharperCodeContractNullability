@@ -76,5 +76,37 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+
+        [Test]
+        [GitHubIssue(13)]
+        public void
+            When_parameter_in_nongeneric_class_that_derives_from_generic_base_class_that_implements_annotated_generic_interface_it_must_be_skipped
+            ()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .InGlobalScope(@"
+                    public interface IErrorDemoInterface<T>
+                    {
+                        void DoSomething([NotNull] T text);
+                    }
+                    public class ErrorDemoBase<T> : IErrorDemoInterface<T>
+                    {
+                        public virtual void DoSomething(T text)
+                        {
+                        }
+                    }
+                    public class ErrorDemo : ErrorDemoBase<string>
+                    {
+                        public override void DoSomething(string text)
+                        {
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
     }
 }

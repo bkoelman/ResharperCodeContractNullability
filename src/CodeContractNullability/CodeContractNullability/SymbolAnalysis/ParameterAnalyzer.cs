@@ -88,8 +88,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 {
                     ISymbol implementer = parameter.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
 
-                    // ReSharper disable once PossibleUnintendedReferenceComparison
-                    if (implementer == containingMember)
+                    if (containingMember.Equals(implementer))
                     {
                         ImmutableArray<IParameterSymbol> parameters = GetParametersFor(containingMember);
                         int parameterIndex = parameters.IndexOf(parameter);
