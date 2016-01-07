@@ -26,9 +26,9 @@ To make analysis work over multiple projects in your solution, define the `JETBR
 
 ## Trying out the latest build
 
-After each commit, a new prerelease NuGet package is automatically published to MyGet. To try it out, follow the next steps:
+After each commit, a new prerelease NuGet package is automatically published to [MyGet](http://www.myget.org). To try it out, follow the next steps:
 
-* In Visual Studio: Tools, Options, NuGet Package Manager, Package Sources
+* In Visual Studio: **Tools**, **Options**, **NuGet Package Manager**, **Package Sources**
     * Click **+**
     * Name: **MyGet**, Source: **http://www.myget.org/F/resharpercodecontractnullability**
     * Click **Update**, **Ok**
