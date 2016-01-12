@@ -15,7 +15,7 @@
       Visual Studio 2015 and Resharper v9 to use this analyzer. See package "ResharperCodeContractNullabilityFxCop" if
       you use Visual Studio 2013 or lower.
     </description>
-    <releaseNotes>Improved support for External Annotation files; fixed a race condition in VS2015 Update1.</releaseNotes>
+    <releaseNotes>Bugfix in analysis of partially generic type hierarchy; support Resharper installation in 'All Users' mode.</releaseNotes>
     <copyright>Apache License, Version 2.0</copyright>
     <language>en-us</language>
     <tags>
