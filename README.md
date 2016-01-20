@@ -33,3 +33,11 @@ After each commit, a new prerelease NuGet package is automatically published to 
     * Name: **MyGet**, Source: **http://www.myget.org/F/resharpercodecontractnullability**
     * Click **Update**, **Ok**
 * In Visual Studio, select **MyGet** as package source in the GUI or Package Manager Console.
+
+## Running on your build server
+
+This assumes your project uses ResharperCodeContractNullability (via NuGet), but Resharper is not installed on your build server. To make the analyzer run there, make sure to install External Annotations on the server as a pre-build step:
+
+
+* ```nuget install JetBrains.ExternalAnnotations -Version 10.0.15```
+* ```xcopy JetBrains.ExternalAnnotations.10.0.15\*.xml "%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations" /s /i /r /y /q```
