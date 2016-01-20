@@ -93,8 +93,8 @@
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -163,7 +163,7 @@
     For easier debugging of NuGet install/uninstall scripts, change DependsOnTargets below to "GetSemanticVersionFromCurrentTime".
   -->
   <Target Name="AfterBuild" DependsOnTargets="GetSemanticVersionFromOutputAssembly">
-    <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.2.8.6\tools\NuGet.exe&quot; pack CodeContractNullability.nuspec -NoPackageAnalysis -OutputDirectory . -version $(SemanticVersion)" WorkingDirectory="$(OutDir)" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
+    <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.3.3.0\tools\NuGet.exe&quot; pack CodeContractNullability.nuspec -NoPackageAnalysis -OutputDirectory . -version $(SemanticVersion)" WorkingDirectory="$(OutDir)" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
