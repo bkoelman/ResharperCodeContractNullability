@@ -15,23 +15,17 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
         public string Type { get; private set; }
 
         [DataMember(Name = "n")]
-        private int InnerHasNullabilityDefined { get; set; }
-
-        public bool HasNullabilityDefined
-        {
-            get
-            {
-                return InnerHasNullabilityDefined != 0;
-            }
-            set
-            {
-                InnerHasNullabilityDefined = value ? 1 : 0;
-            }
-        }
+        public bool HasNullabilityDefined { get; set; }
 
         [DataMember(Name = "p")]
         [NotNull]
         public ParameterNullabilityMap ParametersNullability { get; private set; }
+
+        // ReSharper disable once NotNullMemberIsNotInitialized
+        // Reason: This ctor is only needed for MsgPack serializer.
+        public MemberNullabilityInfo()
+        {
+        }
 
         public MemberNullabilityInfo([NotNull] string type)
         {
