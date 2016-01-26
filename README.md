@@ -18,7 +18,7 @@ This Visual Studio analyzer supports you in consequently annotating your codebas
 
 Alternatively, you can install as a Visual Studio Extension from the [Visual Studio Gallery](https://visualstudiogallery.msdn.microsoft.com/97bdc5f4-f209-4441-a313-2c6e92631eaf).
 
-Instead of adding the JetBrains package, you can [put the annotation definitions directly in your source code](https://www.jetbrains.com/resharper/help/Code_Analysis__Annotations_in_Source_Code.html). In that case, it's recommended to set the `conditional` option checked.
+Instead of adding the JetBrains package, you can [put the annotation definitions directly in your source code](https://www.jetbrains.com/resharper/help/Code_Analysis__Annotations_in_Source_Code.html). In that case, it's [recommended](http://blog.jetbrains.com/dotnet/2015/08/12/how-to-use-jetbrains-annotations-to-improve-resharper-inspections/) to set the `conditional` and/or `internal` options checked.
 
 To make analysis work over multiple projects in your solution, define the `JETBRAINS_ANNOTATIONS` conditional compilation symbol in your project properties.
 
