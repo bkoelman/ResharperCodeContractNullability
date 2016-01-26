@@ -76,7 +76,11 @@ namespace CodeContractNullability.SymbolAnalysis
                     typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol)
                         .Any(type => nonGenericSequenceType.Equals(type)))
                 {
-                    return compilation.GetTypeByMetadataName("System.Object");
+                    INamedTypeSymbol stringType = compilation.GetTypeByMetadataName(typeof (string).FullName);
+                    if (!typeSymbol.Equals(stringType))
+                    {
+                        return compilation.GetTypeByMetadataName(typeof (object).FullName);
+                    }
                 }
             }
 
