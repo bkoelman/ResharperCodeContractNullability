@@ -46,9 +46,12 @@
     <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\ParameterAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\PropertyAnalyzer.cs" />
+    <Compile Include="SymbolAnalysis\SymbolAnalyzerFactory.cs" />
     <Compile Include="SyntaxNodeExtensions.cs" />
     <Compile Include="NullabilityAttributes\CompilationAttributeScanner.cs" />
     <Compile Include="CodeContractNullabilityAnalyzer.cs" />
+    <Compile Include="FrameworkTypeCache.cs" />
+    <Compile Include="Utilities\CodeTimer.cs" />
     <Compile Include="Utilities\EnumerableExtensions.cs" />
     <Compile Include="Utilities\ExtensionPoint.cs" />
     <Compile Include="ExternalAnnotations\Storage\ExternalAnnotationsMap.cs" />
@@ -91,8 +94,13 @@
   <ItemGroup>
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\ResharperCodeContractNullability.1.0.4\analyzers\dotnet\cs\CodeContractNullability.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MsgPack, Version=0.6.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MsgPack.Cli.0.6.7\lib\net45\MsgPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>

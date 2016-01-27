@@ -80,39 +80,50 @@ namespace CodeContractNullability
             resolver.EnsureScanned();
 
             var generatedCodeCache = new GeneratedCodeDocumentCache();
-            var info = new SymbolAnalysisInfo(nullSymbols, resolver, generatedCodeCache);
+            var typeCache = new FrameworkTypeCache(context.Compilation);
+            var factory = new SymbolAnalyzerFactory(resolver, generatedCodeCache, typeCache, appliesToItem);
 
-            context.RegisterSymbolAction(c => AnalyzeField(c, info), SymbolKind.Field);
-            context.RegisterSymbolAction(c => AnalyzeProperty(c, info), SymbolKind.Property);
-            context.RegisterSymbolAction(c => AnalyzeMethod(c, info), SymbolKind.Method);
-            context.RegisterSyntaxNodeAction(c => AnalyzeParameterSyntax(c, info), SyntaxKind.Parameter);
+            ImmutableDictionary<string, string> properties = nullSymbols.GetMetadataNamesAsProperties();
+
+            context.RegisterSymbolAction(c => AnalyzeField(c, factory, properties), SymbolKind.Field);
+            context.RegisterSymbolAction(c => AnalyzeProperty(c, factory, properties), SymbolKind.Property);
+            context.RegisterSymbolAction(c => AnalyzeMethod(c, factory, properties), SymbolKind.Method);
+            context.RegisterSyntaxNodeAction(c => AnalyzeParameter(SyntaxToSymbolContext(c), factory, properties),
+                SyntaxKind.Parameter);
         }
 
-        private void AnalyzeField(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
+        private void AnalyzeField(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,
+            [NotNull] ImmutableDictionary<string, string> properties)
         {
-            var analyzer = new FieldAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache, appliesToItem);
-            analyzer.Analyze(ruleForField, info.Properties);
+            FieldAnalyzer analyzer = factory.GetFieldAnalyzer(context);
+            analyzer.Analyze(ruleForField, properties);
         }
 
-        private void AnalyzeProperty(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
+        private void AnalyzeProperty(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,
+            [NotNull] ImmutableDictionary<string, string> properties)
         {
-            var analyzer = new PropertyAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache,
-                appliesToItem);
-            analyzer.Analyze(ruleForProperty, info.Properties);
+            PropertyAnalyzer analyzer = factory.GetPropertyAnalyzer(context);
+            analyzer.Analyze(ruleForProperty, properties);
         }
 
-        private void AnalyzeMethod(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
+        private void AnalyzeMethod(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,
+            [NotNull] ImmutableDictionary<string, string> properties)
         {
-            var analyzer = new MethodReturnValueAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache,
-                appliesToItem);
-            analyzer.Analyze(ruleForMethodReturnValue, info.Properties);
+            MethodReturnValueAnalyzer analyzer = factory.GetMethodReturnValueAnalyzer(context);
+            analyzer.Analyze(ruleForMethodReturnValue, properties);
         }
 
-        private void AnalyzeParameterSyntax(SyntaxNodeAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
+        private void AnalyzeParameter(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,
+            [NotNull] ImmutableDictionary<string, string> properties)
         {
-            ISymbol symbol = context.SemanticModel.GetDeclaredSymbol(context.Node);
-            SymbolAnalysisContext symbolContext = SyntaxToSymbolContext(context, symbol);
-            AnalyzeParameter(symbolContext, info);
+            ParameterAnalyzer analyzer = factory.GetParameterAnalyzer(context);
+            analyzer.Analyze(ruleForParameter, properties);
+        }
+
+        private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext syntaxContext)
+        {
+            ISymbol symbol = syntaxContext.SemanticModel.GetDeclaredSymbol(syntaxContext.Node);
+            return SyntaxToSymbolContext(syntaxContext, symbol);
         }
 
         private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext context,
@@ -122,38 +133,6 @@ namespace CodeContractNullability
 
             return new SymbolAnalysisContext(symbol, context.SemanticModel.Compilation, context.Options,
                 context.ReportDiagnostic, x => true, context.CancellationToken);
-        }
-
-        private void AnalyzeParameter(SymbolAnalysisContext context, [NotNull] SymbolAnalysisInfo info)
-        {
-            var analyzer = new ParameterAnalyzer(context, info.ExternalAnnotations, info.GeneratedCodeCache,
-                appliesToItem);
-            analyzer.Analyze(ruleForParameter, info.Properties);
-        }
-
-        private sealed class SymbolAnalysisInfo
-        {
-            [NotNull]
-            public ImmutableDictionary<string, string> Properties { get; }
-
-            [NotNull]
-            public IExternalAnnotationsResolver ExternalAnnotations { get; }
-
-            [NotNull]
-            public GeneratedCodeDocumentCache GeneratedCodeCache { get; }
-
-            public SymbolAnalysisInfo([NotNull] NullabilityAttributeSymbols nullSymbols,
-                [NotNull] IExternalAnnotationsResolver externalAnnotations,
-                [NotNull] GeneratedCodeDocumentCache generatedCodeCache)
-            {
-                Guard.NotNull(nullSymbols, nameof(nullSymbols));
-                Guard.NotNull(externalAnnotations, nameof(externalAnnotations));
-                Guard.NotNull(generatedCodeCache, nameof(generatedCodeCache));
-
-                Properties = nullSymbols.GetMetadataNamesAsProperties();
-                ExternalAnnotations = externalAnnotations;
-                GeneratedCodeCache = generatedCodeCache;
-            }
         }
     }
 }

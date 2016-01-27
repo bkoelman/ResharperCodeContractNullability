@@ -22,19 +22,26 @@ namespace CodeContractNullability.SymbolAnalysis
         private readonly GeneratedCodeDocumentCache generatedCodeCache;
 
         [NotNull]
+        private readonly FrameworkTypeCache typeCache;
+
+        [NotNull]
         private readonly IExternalAnnotationsResolver externalAnnotations;
 
         protected BaseSymbolAnalyzer(SymbolAnalysisContext context,
             [NotNull] IExternalAnnotationsResolver externalAnnotations,
-            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
+            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
+            bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));
             Guard.NotNull(generatedCodeCache, nameof(generatedCodeCache));
+            Guard.NotNull(typeCache, nameof(typeCache));
 
             this.context = context;
-            this.generatedCodeCache = generatedCodeCache;
             this.externalAnnotations = externalAnnotations;
+            this.generatedCodeCache = generatedCodeCache;
+            this.typeCache = typeCache;
             AppliesToItem = appliesToItem;
+
             Symbol = (TSymbol) context.Symbol;
         }
 
@@ -81,8 +88,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
             if (AppliesToItem)
             {
-                symbolType = symbolType.TryGetItemTypeForSequenceOrCollection(context.Compilation) ??
-                    symbolType.TryGetItemTypeForLazyOrGenericTask(context.Compilation);
+                symbolType = symbolType.TryGetItemTypeForSequenceOrCollection(typeCache) ??
+                    symbolType.TryGetItemTypeForLazyOrGenericTask(typeCache);
             }
 
             return symbolType;
@@ -90,13 +97,13 @@ namespace CodeContractNullability.SymbolAnalysis
 
         private bool IsSafeToIgnore()
         {
-            if (Symbol.HasCompilerGeneratedAnnotation(context.Compilation) ||
-                Symbol.HasDebuggerNonUserCodeAnnotation(context.Compilation) || Symbol.IsImplicitlyDeclared)
+            if (Symbol.HasCompilerGeneratedAnnotation(typeCache) || Symbol.HasDebuggerNonUserCodeAnnotation(typeCache) ||
+                Symbol.IsImplicitlyDeclared)
             {
                 return true;
             }
 
-            if (Symbol.HasResharperConditionalAnnotation(context.Compilation))
+            if (Symbol.HasResharperConditionalAnnotation(typeCache))
             {
                 return true;
             }

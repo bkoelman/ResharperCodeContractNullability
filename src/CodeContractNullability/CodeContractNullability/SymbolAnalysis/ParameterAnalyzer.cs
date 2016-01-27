@@ -14,8 +14,9 @@ namespace CodeContractNullability.SymbolAnalysis
     {
         public ParameterAnalyzer(SymbolAnalysisContext context,
             [NotNull] IExternalAnnotationsResolver externalAnnotations,
-            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, bool appliesToItem)
-            : base(context, externalAnnotations, generatedCodeCache, appliesToItem)
+            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
+            bool appliesToItem)
+            : base(context, externalAnnotations, generatedCodeCache, typeCache, appliesToItem)
         {
         }
 

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
+﻿using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -50,36 +44,33 @@ namespace CodeContractNullability.SymbolAnalysis
 
         [CanBeNull]
         public static ITypeSymbol TryGetItemTypeForSequenceOrCollection([NotNull] this ITypeSymbol typeSymbol,
-            [NotNull] Compilation compilation)
+            [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(typeSymbol, nameof(typeSymbol));
-            Guard.NotNull(compilation, nameof(compilation));
+            Guard.NotNull(typeCache, nameof(typeCache));
 
             var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
 
-            INamedTypeSymbol genericSequenceType = compilation.GetTypeByMetadataName(typeof (IEnumerable<>).FullName);
-            if (genericSequenceType != null)
+            if (typeCache.EnumerableOfT != null)
             {
                 foreach (INamedTypeSymbol type in typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol))
                 {
-                    if (genericSequenceType.Equals(type.ConstructedFrom))
+                    if (typeCache.EnumerableOfT.Equals(type.ConstructedFrom))
                     {
                         return type.TypeArguments.Single();
                     }
                 }
             }
 
-            INamedTypeSymbol nonGenericSequenceType = compilation.GetTypeByMetadataName(typeof (IEnumerable).FullName);
-            if (nonGenericSequenceType != null)
+            if (typeCache.Enumerable != null)
             {
                 if (
                     typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol)
-                        .Any(type => nonGenericSequenceType.Equals(type)))
+                        .Any(type => typeCache.Enumerable.Equals(type)))
                 {
-                    INamedTypeSymbol stringType = compilation.GetTypeByMetadataName(typeof (string).FullName);
-                    if (!typeSymbol.Equals(stringType))
+                    if (!typeSymbol.Equals(typeCache.String))
                     {
-                        return compilation.GetTypeByMetadataName(typeof (object).FullName);
+                        return typeCache.Object;
                     }
                 }
             }
@@ -89,19 +80,16 @@ namespace CodeContractNullability.SymbolAnalysis
 
         [CanBeNull]
         public static ITypeSymbol TryGetItemTypeForLazyOrGenericTask([NotNull] this ITypeSymbol typeSymbol,
-            [NotNull] Compilation compilation)
+            [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(typeSymbol, nameof(typeSymbol));
-            Guard.NotNull(compilation, nameof(compilation));
-
-            INamedTypeSymbol lazyType = compilation.GetTypeByMetadataName(typeof (Lazy<>).FullName);
-            INamedTypeSymbol taskType = compilation.GetTypeByMetadataName(typeof (Task<>).FullName);
+            Guard.NotNull(typeCache, nameof(typeCache));
 
             var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
             if (namedTypeSymbol?.ConstructedFrom != null)
             {
-                bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(lazyType) ||
-                    namedTypeSymbol.ConstructedFrom.Equals(taskType);
+                bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(typeCache.LazyOfT) ||
+                    namedTypeSymbol.ConstructedFrom.Equals(typeCache.TaskOfT);
 
                 if (isMatch)
                 {
@@ -113,60 +101,51 @@ namespace CodeContractNullability.SymbolAnalysis
         }
 
         public static bool HasCompilerGeneratedAnnotation([NotNull] this ISymbol memberSymbol,
-            [NotNull] Compilation compilation)
+            [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
-            Guard.NotNull(compilation, nameof(compilation));
+            Guard.NotNull(typeCache, nameof(typeCache));
 
-            INamedTypeSymbol compilerGeneratedAttributeType =
-                compilation.GetTypeByMetadataName(typeof (CompilerGeneratedAttribute).FullName);
-
-            if (compilerGeneratedAttributeType != null)
+            if (typeCache.CompilerGeneratedAttribute != null)
             {
                 ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
-                return attributes.Any(attr => compilerGeneratedAttributeType.Equals(attr.AttributeClass));
+                return attributes.Any(attr => typeCache.CompilerGeneratedAttribute.Equals(attr.AttributeClass));
             }
 
             return false;
         }
 
         public static bool HasDebuggerNonUserCodeAnnotation([NotNull] this ISymbol memberSymbol,
-            [NotNull] Compilation compilation)
+            [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
-            Guard.NotNull(compilation, nameof(compilation));
+            Guard.NotNull(typeCache, nameof(typeCache));
 
-            INamedTypeSymbol debuggerNonUserCodeAttributeType =
-                compilation.GetTypeByMetadataName(typeof (DebuggerNonUserCodeAttribute).FullName);
-
-            if (debuggerNonUserCodeAttributeType != null)
+            if (typeCache.DebuggerNonUserCodeAttribute != null)
             {
                 ImmutableArray<AttributeData> attributes = memberSymbol.GetAttributes();
-                return attributes.Any(attr => debuggerNonUserCodeAttributeType.Equals(attr.AttributeClass));
+                return attributes.Any(attr => typeCache.DebuggerNonUserCodeAttribute.Equals(attr.AttributeClass));
             }
 
             return false;
         }
 
         public static bool HasResharperConditionalAnnotation([NotNull] this ISymbol symbol,
-            [NotNull] Compilation compilation)
+            [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(symbol, nameof(symbol));
-            Guard.NotNull(compilation, nameof(compilation));
+            Guard.NotNull(typeCache, nameof(typeCache));
 
             ImmutableArray<AttributeData> attributes = symbol.ContainingType.GetAttributes();
-            return attributes.Any(attr => IsResharperConditionalAttribute(attr, compilation));
+            return attributes.Any(attr => IsResharperConditionalAttribute(attr, typeCache));
         }
 
         private static bool IsResharperConditionalAttribute([NotNull] AttributeData attribute,
-            [NotNull] Compilation compilation)
+            [NotNull] FrameworkTypeCache typeCache)
         {
-            INamedTypeSymbol conditionalAttributeType =
-                compilation.GetTypeByMetadataName(typeof (ConditionalAttribute).FullName);
-
-            if (conditionalAttributeType != null)
+            if (typeCache.ConditionalAttribute != null)
             {
-                if (conditionalAttributeType.Equals(attribute.AttributeClass))
+                if (typeCache.ConditionalAttribute.Equals(attribute.AttributeClass))
                 {
                     object ctorValue = attribute.ConstructorArguments.First().Value;
                     return (string) ctorValue == "JETBRAINS_ANNOTATIONS";

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -11,8 +12,18 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
     /// </summary>
     [CollectionDataContract(Name = "annotations", ItemName = "e", KeyName = "k", ValueName = "v",
         Namespace = ExternalAnnotationsCache.CacheNamespace)]
+    [Serializable]
     public class ExternalAnnotationsMap : Dictionary<string, MemberNullabilityInfo>
     {
+        public ExternalAnnotationsMap()
+        {
+        }
+
+        protected ExternalAnnotationsMap([NotNull] SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
         public bool Contains([NotNull] ISymbol symbol, bool appliesToItem)
         {
             Guard.NotNull(symbol, nameof(symbol));
