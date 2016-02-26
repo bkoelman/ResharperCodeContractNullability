@@ -30,6 +30,11 @@ namespace CodeContractNullability.SymbolAnalysis
                 return false;
             }
 
+            if (!AppliesToItem && Symbol.IsAsync)
+            {
+                return false;
+            }
+
             return base.RequiresAnnotation();
         }
 
