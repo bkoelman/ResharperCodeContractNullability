@@ -226,13 +226,43 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_method_is_async_task_it_must_be_reported_and_fixed()
+        public void When_method_is_async_task_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof (Task).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> async Task [|M|]() { throw new NotImplementedException(); }
+                    async Task M() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_method_is_async_generic_task_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task<>).Namespace)
+                .InDefaultClass(@"
+                    async Task<string> M() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_method_return_value_is_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> Task [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -241,13 +271,13 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_method_is_async_generic_task_it_must_be_reported_and_fixed()
+        public void When_method_return_value_is_generic_task_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof (Task<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> async Task<string> [|M|]() { throw new NotImplementedException(); }
+                    <annotate/> Task<string> [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 

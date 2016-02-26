@@ -16,6 +16,20 @@ namespace CodeContractNullability.Test.Specs
     internal class MethodReturnValueCollectionSpecs : ItemNullabilityNUnitRoslynTest
     {
         [Test]
+        public void When_method_returns_void_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .InDefaultClass(@"
+                    void M() { }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
         public void When_return_value_is_annotated_with_item_not_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -197,6 +211,81 @@ namespace CodeContractNullability.Test.Specs
 
             // Act and assert
             VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_method_is_async_void_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task).Namespace)
+                .InDefaultClass(@"
+                    async void M() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_method_is_async_task_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task).Namespace)
+                .InDefaultClass(@"
+                    async Task M() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_method_is_async_generic_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> async Task<string> [|M|]() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source);
+        }
+
+        [Test]
+        public void When_method_return_value_is_task_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task).Namespace)
+                .InDefaultClass(@"
+                    Task M() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
+        public void When_method_return_value_is_generic_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof (Task<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> Task<string> [|M|]() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source);
         }
 
         [Test]
@@ -447,21 +536,6 @@ namespace CodeContractNullability.Test.Specs
 
             // Act and assert
             VerifyNullabilityDiagnostic(source);
-        }
-
-        [Test]
-        public void When_return_value_type_is_generic_task_it_must_be_reported_and_fixed()
-        {
-            // Arrange
-            ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task<>).Namespace)
-                .InDefaultClass(@"
-                    <annotate/> Task<string> [|M|]() { throw new NotImplementedException(); }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityFix(source);
         }
 
         [Test]
