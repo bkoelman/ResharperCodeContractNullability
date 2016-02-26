@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MsgPack, Version=0.6.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MsgPack.Cli.0.6.7\lib\net45\MsgPack.dll</HintPath>
+      <HintPath>..\..\packages\MsgPack.Cli.0.6.8\lib\net45\MsgPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -179,7 +179,7 @@
     <Exec Command="&quot;$(SolutionDir)packages\NuGet.CommandLine.3.3.0\tools\NuGet.exe&quot; install JetBrains.ExternalAnnotations -Version 10.0.15 -OutputDirectory &quot;$(SolutionDir)packages&quot;" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
-    <Message Importance="High" Text="Copying External Annotations to: &quot;%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations&quot;"/>
+    <Message Importance="High" Text="Copying External Annotations to: &quot;%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations&quot;" />
     <Exec Command="xcopy &quot;$(SolutionDir)packages\JetBrains.ExternalAnnotations.10.0.15\DotFiles\ExternalAnnotations\*.xml&quot; &quot;%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations&quot; /s /i /r /y /q" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
