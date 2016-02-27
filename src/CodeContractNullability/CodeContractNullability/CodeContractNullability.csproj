@@ -32,18 +32,22 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnalyzerSettings.cs" />
     <Compile Include="BaseAnalyzer.cs" />
     <Compile Include="BaseCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
+    <Compile Include="DisableReportOnNullableValueTypesCodeFixProvider.cs" />
     <Compile Include="ExternalAnnotations\AssemblyExternalAnnotationsLoader.cs" />
     <Compile Include="ExternalAnnotations\CachingExternalAnnotationsResolver.cs" />
     <Compile Include="ExternalAnnotations\IExternalAnnotationsResolver.cs" />
     <Compile Include="ExternalAnnotations\SimpleExternalAnnotationsResolver.cs" />
+    <Compile Include="SettingsProvider.cs" />
     <Compile Include="SymbolAnalysis\FieldAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\BaseSymbolAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />
+    <Compile Include="SymbolAnalysis\AnalysisScope.cs" />
     <Compile Include="SymbolAnalysis\ParameterAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\PropertyAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\SymbolAnalyzerFactory.cs" />

@@ -14,6 +14,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
     public abstract class SourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
+        private AnalyzerSettings settings = new AnalyzerSettingsBuilder().Build();
+
+        [NotNull]
         [ItemNotNull]
         private readonly HashSet<string> namespaceImports = new HashSet<string> { "System" };
 
@@ -61,7 +64,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
             IList<string> nestedTypes = nullabilityAttributes?.NestedTypes ?? new string[0];
 
-            return new ParsedSourceCode(sourceText, sourceFilename, externalAnnotationsBuilder.Build(),
+            return new ParsedSourceCode(sourceText, sourceFilename, settings, externalAnnotationsBuilder.Build(),
                 ImmutableHashSet.Create(references.ToArray()), nestedTypes, codeNamespaceImportExpected, true);
         }
 
@@ -109,6 +112,11 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
 
             return sourceBuilder.ToString();
+        }
+
+        internal void _WithSettings([NotNull] AnalyzerSettingsBuilder settingsBuilder)
+        {
+            settings = settingsBuilder.Build();
         }
 
         internal void _Using([NotNull] string codeNamespace)
@@ -159,6 +167,17 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
     public static class SourceCodeBuilderExtensions
     {
+        [NotNull]
+        public static TBuilder WithSettings<TBuilder>([NotNull] this TBuilder source,
+            [NotNull] AnalyzerSettingsBuilder settingsBuilder)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(settingsBuilder, nameof(settingsBuilder));
+
+            source._WithSettings(settingsBuilder);
+            return source;
+        }
+
         [NotNull]
         public static TBuilder Using<TBuilder>([NotNull] this TBuilder source, [CanBeNull] string codeNamespace)
             where TBuilder : SourceCodeBuilder

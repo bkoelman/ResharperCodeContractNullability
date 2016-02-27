@@ -15,6 +15,8 @@ namespace CodeContractNullability
     /// </summary>
     public abstract class BaseAnalyzer : DiagnosticAnalyzer
     {
+        public const string DisableReportOnNullableValueTypesDiagnosticId = "XNUL";
+
         protected const string Category = "Nullability";
         private readonly bool appliesToItem;
 
@@ -33,9 +35,33 @@ namespace CodeContractNullability
         [NotNull]
         protected abstract DiagnosticDescriptor CreateRuleFor([NotNull] string memberTypePascalCase);
 
+        [NotNull]
+        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule =
+            new DiagnosticDescriptor(DisableReportOnNullableValueTypesDiagnosticId, null,
+                @"IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.",
+                "Configuration", DiagnosticSeverity.Hidden, true, @"
+At this time, the code fix is not able to fully configure the newly-created ResharperCodeContractNullability.config file 
+for use. This is tracked in bug report https://github.com/dotnet/roslyn/issues/4655. In the mean time, users must manually 
+perform the following additional steps after applying this code fix.
+
+1. Right click the project in [Solution Explorer] and select [Unload Project]. If you are asked to save changes, click [Yes].
+2. Right click the unloaded project in [Solution Explorer] and select [Edit ProjectName.csproj].
+3. Locate the following item in the project file:
+
+    <None Include=""ResharperCodeContractNullability.config"" />
+
+4. Change the definition to the following:
+
+    <AdditionalFiles Include=""ResharperCodeContractNullability.config"" />
+
+5. Save and close the project file.
+6. Right click the unloaded project in [Solution Explorer] and select [Reload Project].");
+
         [ItemNotNull]
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-            => ImmutableArray.Create(ruleForField, ruleForProperty, ruleForMethodReturnValue, ruleForParameter);
+            =>
+                ImmutableArray.Create(ruleForField, ruleForProperty, ruleForMethodReturnValue, ruleForParameter,
+                    disableReportOnNullableValueTypesRule);
 
         [NotNull]
         public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
@@ -68,6 +94,8 @@ namespace CodeContractNullability
         {
             Guard.NotNull(context, nameof(context));
 
+            AnalyzerSettings settings = SettingsProvider.LoadSettings(context.Options, context.CancellationToken);
+
             NullabilityAttributeSymbols nullSymbols =
                 NullabilityAttributeProvider.GetCached().GetSymbols(context.Compilation, context.CancellationToken);
             if (nullSymbols == null)
@@ -81,7 +109,11 @@ namespace CodeContractNullability
 
             var generatedCodeCache = new GeneratedCodeDocumentCache();
             var typeCache = new FrameworkTypeCache(context.Compilation);
-            var factory = new SymbolAnalyzerFactory(resolver, generatedCodeCache, typeCache, appliesToItem);
+
+            var nullabilityContext = new AnalysisScope(resolver, generatedCodeCache, typeCache, settings,
+                disableReportOnNullableValueTypesRule, appliesToItem);
+
+            var factory = new SymbolAnalyzerFactory(nullabilityContext);
 
             ImmutableDictionary<string, string> properties = nullSymbols.GetMetadataNamesAsProperties();
 

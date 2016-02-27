@@ -29,6 +29,9 @@ namespace CodeContractNullability.Test
         public string Filename { get; }
 
         [NotNull]
+        public AnalyzerSettings Settings { get; }
+
+        [NotNull]
         public ExternalAnnotationsMap ExternalAnnotationsMap { get; }
 
         [NotNull]
@@ -43,13 +46,14 @@ namespace CodeContractNullability.Test
         [NotNull]
         private readonly string attributePrefix;
 
-        public ParsedSourceCode([NotNull] string text, [NotNull] string filename,
+        public ParsedSourceCode([NotNull] string text, [NotNull] string filename, [NotNull] AnalyzerSettings settings,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
             [ItemNotNull] [NotNull] IList<string> nestedTypes, [NotNull] string codeNamespaceImport, bool reIndent)
         {
             Guard.NotNull(text, nameof(text));
             Guard.NotNull(filename, nameof(filename));
+            Guard.NotNull(settings, nameof(settings));
             Guard.NotNull(externalAnnotationsMap, nameof(externalAnnotationsMap));
             Guard.NotNull(references, nameof(references));
             Guard.NotNull(nestedTypes, nameof(nestedTypes));
@@ -57,6 +61,7 @@ namespace CodeContractNullability.Test
 
             this.text = Parse(text);
             Filename = filename;
+            Settings = settings;
             ExternalAnnotationsMap = externalAnnotationsMap;
             References = references;
             attributePrefix = ExtractAttributePrefix(nestedTypes);

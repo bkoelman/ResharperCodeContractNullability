@@ -29,15 +29,30 @@ namespace CodeContractNullability.SymbolAnalysis
             return typeName == "ItemCanBeNullAttribute" || typeName == "ItemNotNullAttribute";
         }
 
-        public static bool TypeCanContainNull([NotNull] this ITypeSymbol typeSymbol)
+        public static bool TypeCanContainNull([NotNull] this ITypeSymbol typeSymbol,
+            bool disableReportOnNullableValueTypes)
         {
             Guard.NotNull(typeSymbol, nameof(typeSymbol));
 
-            bool isVoidType = typeSymbol.SpecialType == SpecialType.System_Void;
-            return !isVoidType && (IsSystemNullableType(typeSymbol) || !typeSymbol.IsValueType);
+            if (IsVoidType(typeSymbol))
+            {
+                return false;
+            }
+
+            if (IsSystemNullableType(typeSymbol))
+            {
+                return !disableReportOnNullableValueTypes;
+            }
+
+            return !typeSymbol.IsValueType;
         }
 
-        private static bool IsSystemNullableType([NotNull] ITypeSymbol typeSymbol)
+        private static bool IsVoidType([NotNull] ITypeSymbol typeSymbol)
+        {
+            return typeSymbol.SpecialType == SpecialType.System_Void;
+        }
+
+        public static bool IsSystemNullableType([NotNull] this ITypeSymbol typeSymbol)
         {
             return typeSymbol.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
         }

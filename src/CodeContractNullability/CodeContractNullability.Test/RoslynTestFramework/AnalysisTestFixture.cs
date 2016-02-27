@@ -39,8 +39,9 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 context.LanguageName, context.References, context.FileName);
 
             ImmutableArray<Diagnostic> diagnostics =
-                GetDiagnosticsForDocument(documentWithSpans.Document)
+                GetDiagnosticsForDocument(documentWithSpans.Document, context.Options)
                     .OrderBy(d => d.Location.SourceSpan)
+                    .Where(d => d.Id == DiagnosticId)
                     .ToImmutableArray();
             ImmutableArray<TextSpan> spans = documentWithSpans.TextSpans.OrderBy(s => s).ToImmutableArray();
 
@@ -51,7 +52,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 Diagnostic diagnostic = diagnostics[index];
                 TextSpan span = spans[index];
 
-                diagnostic.Id.Should().Be(DiagnosticId);
                 diagnostic.Location.IsInSource.Should().BeTrue();
                 diagnostic.Location.SourceSpan.Should().Be(span);
             }
@@ -60,12 +60,13 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         [ItemNotNull]
-        private ImmutableArray<Diagnostic> GetDiagnosticsForDocument([NotNull] Document document)
+        private ImmutableArray<Diagnostic> GetDiagnosticsForDocument([NotNull] Document document,
+            [NotNull] AnalyzerOptions options)
         {
             ImmutableArray<DiagnosticAnalyzer> analyzers = ImmutableArray.Create(CreateAnalyzer());
             Compilation compilation = document.Project.GetCompilationAsync().Result;
-            CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(analyzers,
-                cancellationToken: CancellationToken.None);
+            CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(analyzers, options,
+                CancellationToken.None);
 
             ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(CancellationToken.None);
             ValidateCompilerDiagnostics(compilerDiagnostics);

@@ -73,7 +73,6 @@ namespace CodeContractNullability.NullabilityAttributes
             [NotNull] ImmutableDictionary<string, string> properties)
         {
             Guard.NotNull(properties, nameof(properties));
-            Guard.HasCount(properties, nameof(properties), 4);
 
             return new NullabilityAttributeMetadataNames(properties[KeyNotNull], properties[KeyCanBeNull],
                 properties[KeyItemNotNull], properties[KeyItemCanBeNull]);
