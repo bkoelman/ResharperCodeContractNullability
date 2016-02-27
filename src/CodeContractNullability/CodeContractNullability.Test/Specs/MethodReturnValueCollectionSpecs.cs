@@ -132,6 +132,23 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
+        public void When_return_value_type_is_collection_of_nullable_but_analysis_is_disabled_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .DisableReportOnNullableValueTypes)
+                .Using(typeof (IList<>).Namespace)
+                .InDefaultClass(@"
+                    IList<int?> M() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
         public void When_return_value_type_is_collection_of_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange

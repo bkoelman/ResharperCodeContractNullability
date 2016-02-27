@@ -25,21 +25,26 @@ namespace CodeContractNullability.SymbolAnalysis
         private readonly FrameworkTypeCache typeCache;
 
         [NotNull]
+        private readonly AnalyzerSettings settings;
+
+        [NotNull]
         private readonly IExternalAnnotationsResolver externalAnnotations;
 
         protected BaseSymbolAnalyzer(SymbolAnalysisContext context,
             [NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
-            bool appliesToItem)
+            [NotNull] AnalyzerSettings settings, bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));
             Guard.NotNull(generatedCodeCache, nameof(generatedCodeCache));
             Guard.NotNull(typeCache, nameof(typeCache));
+            Guard.NotNull(settings, nameof(settings));
 
             this.context = context;
             this.externalAnnotations = externalAnnotations;
             this.generatedCodeCache = generatedCodeCache;
             this.typeCache = typeCache;
+            this.settings = settings;
             AppliesToItem = appliesToItem;
 
             Symbol = (TSymbol) context.Symbol;
@@ -68,7 +73,7 @@ namespace CodeContractNullability.SymbolAnalysis
             }
 
             ITypeSymbol symbolType = GetEffectiveSymbolType();
-            if (symbolType == null || !symbolType.TypeCanContainNull())
+            if (symbolType == null || !symbolType.TypeCanContainNull(settings.DisableReportOnNullableValueTypes))
             {
                 return;
             }

@@ -68,6 +68,9 @@ namespace CodeContractNullability
         {
             Guard.NotNull(context, nameof(context));
 
+            var settingsReader = new SettingsReader(context.Options);
+            AnalyzerSettings settings = settingsReader.GetSettings(context.CancellationToken);
+
             NullabilityAttributeSymbols nullSymbols =
                 NullabilityAttributeProvider.GetCached().GetSymbols(context.Compilation, context.CancellationToken);
             if (nullSymbols == null)
@@ -81,7 +84,7 @@ namespace CodeContractNullability
 
             var generatedCodeCache = new GeneratedCodeDocumentCache();
             var typeCache = new FrameworkTypeCache(context.Compilation);
-            var factory = new SymbolAnalyzerFactory(resolver, generatedCodeCache, typeCache, appliesToItem);
+            var factory = new SymbolAnalyzerFactory(resolver, generatedCodeCache, typeCache, settings, appliesToItem);
 
             ImmutableDictionary<string, string> properties = nullSymbols.GetMetadataNamesAsProperties();
 

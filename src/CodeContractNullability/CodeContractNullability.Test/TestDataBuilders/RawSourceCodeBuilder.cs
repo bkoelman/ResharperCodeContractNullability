@@ -14,7 +14,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
         public ParsedSourceCode Build()
         {
             return new ExactSourceCode(sourceText, expectedText, SourceCodeBuilder.DefaultFilename,
-                new ExternalAnnotationsBuilder().Build(), SourceCodeBuilder.DefaultReferences, string.Empty);
+                new AnalyzerSettingsBuilder().Build(), new ExternalAnnotationsBuilder().Build(),
+                SourceCodeBuilder.DefaultReferences, string.Empty);
         }
 
         [NotNull]

@@ -13,8 +13,8 @@ namespace CodeContractNullability.SymbolAnalysis
         public PropertyAnalyzer(SymbolAnalysisContext context,
             [NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
-            bool appliesToItem)
-            : base(context, externalAnnotations, generatedCodeCache, typeCache, appliesToItem)
+            [NotNull] AnalyzerSettings settings, bool appliesToItem)
+            : base(context, externalAnnotations, generatedCodeCache, typeCache, settings, appliesToItem)
         {
         }
 

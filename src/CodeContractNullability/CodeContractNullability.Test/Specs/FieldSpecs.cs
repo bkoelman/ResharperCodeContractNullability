@@ -158,6 +158,22 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
+        public void When_field_type_is_nullable_but_analysis_is_disabled_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .DisableReportOnNullableValueTypes)
+                .InDefaultClass(@"
+                    int? f;
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Test]
         public void When_field_type_is_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange

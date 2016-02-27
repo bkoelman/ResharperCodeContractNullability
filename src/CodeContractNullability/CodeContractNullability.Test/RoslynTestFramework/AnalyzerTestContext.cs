@@ -5,6 +5,7 @@ using System.Reflection;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.Test.RoslynTestFramework
 {
@@ -34,17 +35,22 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [ItemNotNull]
         public ImmutableList<MetadataReference> References { get; }
 
+        [CanBeNull]
+        public AnalyzerOptions Options { get; }
+
         private AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName,
-            [NotNull] string fileName, [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references)
+            [NotNull] string fileName, [CanBeNull] AnalyzerOptions options,
+            [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references)
         {
             MarkupCode = markupCode;
             LanguageName = languageName;
             FileName = fileName;
+            Options = options;
             References = references;
         }
 
         public AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName)
-            : this(markupCode, languageName, DefaultFileName, DefaultReferences)
+            : this(markupCode, languageName, DefaultFileName, null, DefaultReferences)
         {
             Guard.NotNull(markupCode, nameof(markupCode));
             Guard.NotNull(languageName, nameof(languageName));
@@ -55,7 +61,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         {
             Guard.NotNull(fileName, nameof(fileName));
 
-            return new AnalyzerTestContext(MarkupCode, LanguageName, fileName, References);
+            return new AnalyzerTestContext(MarkupCode, LanguageName, fileName, Options, References);
         }
 
         [NotNull]
@@ -64,7 +70,15 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             Guard.NotNull(references, nameof(references));
 
             ImmutableList<MetadataReference> referenceList = ImmutableList.CreateRange(references);
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, referenceList);
+            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, Options, referenceList);
+        }
+
+        [NotNull]
+        public AnalyzerTestContext WithOptions([NotNull] AnalyzerOptions options)
+        {
+            Guard.NotNull(options, nameof(options));
+
+            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, options, References);
         }
     }
 }
