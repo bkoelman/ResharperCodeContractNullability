@@ -25,7 +25,6 @@ namespace CodeContractNullability.ExternalAnnotations
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 @"ResharperCodeContractNullability\external-annotations.cache");
 
-        // Prevents IOException (process cannot access file) when host executes analyzers in parallel.
         [NotNull]
         private static readonly object LockObject = new object();
 
@@ -45,12 +44,14 @@ namespace CodeContractNullability.ExternalAnnotations
                 throw new Exception($"Failed to load Resharper external annotations: {ex.Message}", ex);
             }
 
-            throw new Exception("Failed to load Resharper external annotations.");
+            string folders = string.Join(";", GetFoldersToScan().Select(folder => "\"" + folder + "\""));
+            throw new Exception("Failed to load Resharper external annotations. Scanned folders: " + folders);
         }
 
         [NotNull]
         private static ExternalAnnotationsMap GetCached()
         {
+            // The lock prevents IOException (process cannot access file) when host executes analyzers in parallel.
             lock (LockObject)
             {
                 ExternalAnnotationsCache cached = TryGetCacheFromDisk();
@@ -162,20 +163,9 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         private static IEnumerable<string> EnumerateAnnotationFiles()
         {
-            string programFilesX86Folder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
-            string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            var foldersToScan = new[]
-            {
-                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
-                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015)
-            };
-
             var fileSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (string folder in foldersToScan)
+            foreach (string folder in GetFoldersToScan())
             {
                 if (Directory.Exists(folder))
                 {
@@ -187,6 +177,22 @@ namespace CodeContractNullability.ExternalAnnotations
             }
 
             return fileSet;
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        private static IEnumerable<string> GetFoldersToScan()
+        {
+            string programFilesX86Folder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+            string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            return new[]
+            {
+                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
+                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015),
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015)
+            };
         }
 
         private static void Compact([NotNull] ExternalAnnotationsMap externalAnnotations)
