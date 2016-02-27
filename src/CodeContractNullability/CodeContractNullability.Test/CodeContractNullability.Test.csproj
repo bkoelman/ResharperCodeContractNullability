@@ -135,6 +135,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReportOnNullableValueTypesNUnitRoslynTest.cs" />
     <Compile Include="ExactSourceCode.cs" />
     <Compile Include="GitHubIssueAttribute.cs" />
     <Compile Include="ItemNullabilityNUnitRoslynTest.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Specs\ParameterSpecs.cs" />
     <Compile Include="Specs\PropertyCollectionSpecs.cs" />
     <Compile Include="Specs\PropertySpecs.cs" />
+    <Compile Include="Specs\ReportOnNullableValueTypesSpecs.cs" />
     <Compile Include="Specs\TokenTriviaSpecs.cs" />
     <Compile Include="TestDataBuilders\AnalyzerSettingsBuilder.cs" />
     <Compile Include="TestDataBuilders\ClassSourceCodeBuilder.cs" />

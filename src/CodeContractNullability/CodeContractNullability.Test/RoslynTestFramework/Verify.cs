@@ -15,6 +15,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         public static void CodeAction([NotNull] CodeAction codeAction, [NotNull] Document document,
             [NotNull] string expectedCode)
         {
+            if (codeAction.GetType().Name == "SolutionChangeAction")
+            {
+                return;
+            }
+
             Guard.NotNull(codeAction, nameof(codeAction));
             Guard.NotNull(document, nameof(document));
             Guard.NotNull(expectedCode, nameof(expectedCode));

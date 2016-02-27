@@ -52,7 +52,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return typeSymbol.SpecialType == SpecialType.System_Void;
         }
 
-        private static bool IsSystemNullableType([NotNull] ITypeSymbol typeSymbol)
+        public static bool IsSystemNullableType([NotNull] this ITypeSymbol typeSymbol)
         {
             return typeSymbol.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
         }

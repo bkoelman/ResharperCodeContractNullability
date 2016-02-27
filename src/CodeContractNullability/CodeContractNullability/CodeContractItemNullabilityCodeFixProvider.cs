@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 namespace CodeContractNullability
 {
     /// <summary>
-    /// Provides code fixes for diagnostics reported by <see cref="CodeContractItemNullabilityCodeFixProvider" />.
+    /// Provides code fixes for diagnostics reported by <see cref="CodeContractItemNullabilityAnalyzer" />.
     /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(CodeContractItemNullabilityCodeFixProvider))]
     [Shared]

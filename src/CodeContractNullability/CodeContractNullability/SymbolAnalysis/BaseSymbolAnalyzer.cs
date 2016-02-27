@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -19,38 +18,19 @@ namespace CodeContractNullability.SymbolAnalysis
         private readonly SymbolAnalysisContext context;
 
         [NotNull]
-        private readonly GeneratedCodeDocumentCache generatedCodeCache;
+        private readonly AnalysisScope scope;
 
-        [NotNull]
-        private readonly FrameworkTypeCache typeCache;
-
-        [NotNull]
-        private readonly AnalyzerSettings settings;
-
-        [NotNull]
-        private readonly IExternalAnnotationsResolver externalAnnotations;
-
-        protected BaseSymbolAnalyzer(SymbolAnalysisContext context,
-            [NotNull] IExternalAnnotationsResolver externalAnnotations,
-            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
-            [NotNull] AnalyzerSettings settings, bool appliesToItem)
+        protected BaseSymbolAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
         {
-            Guard.NotNull(externalAnnotations, nameof(externalAnnotations));
-            Guard.NotNull(generatedCodeCache, nameof(generatedCodeCache));
-            Guard.NotNull(typeCache, nameof(typeCache));
-            Guard.NotNull(settings, nameof(settings));
+            Guard.NotNull(scope, nameof(scope));
 
             this.context = context;
-            this.externalAnnotations = externalAnnotations;
-            this.generatedCodeCache = generatedCodeCache;
-            this.typeCache = typeCache;
-            this.settings = settings;
-            AppliesToItem = appliesToItem;
+            this.scope = scope;
 
-            Symbol = (TSymbol) context.Symbol;
+            Symbol = (TSymbol) this.context.Symbol;
         }
 
-        protected bool AppliesToItem { get; }
+        protected bool AppliesToItem => scope.AppliesToItem;
 
         [NotNull]
         protected TSymbol Symbol { get; }
@@ -73,7 +53,7 @@ namespace CodeContractNullability.SymbolAnalysis
             }
 
             ITypeSymbol symbolType = GetEffectiveSymbolType();
-            if (symbolType == null || !symbolType.TypeCanContainNull(settings.DisableReportOnNullableValueTypes))
+            if (symbolType == null || !symbolType.TypeCanContainNull(scope.Settings.DisableReportOnNullableValueTypes))
             {
                 return;
             }
@@ -93,8 +73,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
             if (AppliesToItem)
             {
-                symbolType = symbolType.TryGetItemTypeForSequenceOrCollection(typeCache) ??
-                    symbolType.TryGetItemTypeForLazyOrGenericTask(typeCache);
+                symbolType = symbolType.TryGetItemTypeForSequenceOrCollection(scope.TypeCache) ??
+                    symbolType.TryGetItemTypeForLazyOrGenericTask(scope.TypeCache);
             }
 
             return symbolType;
@@ -102,18 +82,18 @@ namespace CodeContractNullability.SymbolAnalysis
 
         private bool IsSafeToIgnore()
         {
-            if (Symbol.HasCompilerGeneratedAnnotation(typeCache) || Symbol.HasDebuggerNonUserCodeAnnotation(typeCache) ||
-                Symbol.IsImplicitlyDeclared)
+            if (Symbol.HasCompilerGeneratedAnnotation(scope.TypeCache) ||
+                Symbol.HasDebuggerNonUserCodeAnnotation(scope.TypeCache) || Symbol.IsImplicitlyDeclared)
             {
                 return true;
             }
 
-            if (Symbol.HasResharperConditionalAnnotation(typeCache))
+            if (Symbol.HasResharperConditionalAnnotation(scope.TypeCache))
             {
                 return true;
             }
 
-            if (generatedCodeCache.IsInGeneratedCodeDocument(Symbol, context.CancellationToken))
+            if (scope.GeneratedCodeCache.IsInGeneratedCodeDocument(Symbol, context.CancellationToken))
             {
                 return true;
             }
@@ -124,16 +104,36 @@ namespace CodeContractNullability.SymbolAnalysis
         private void AnalyzeFor([NotNull] DiagnosticDescriptor descriptor,
             [NotNull] ImmutableDictionary<string, string> properties)
         {
-            if (externalAnnotations.HasAnnotationForSymbol(Symbol, AppliesToItem, context.Compilation))
+            if (scope.ExternalAnnotations.HasAnnotationForSymbol(Symbol, AppliesToItem, context.Compilation))
             {
                 return;
             }
 
             if (RequiresAnnotation())
             {
-                Diagnostic diagnostic = CreateDiagnosticFor(descriptor, properties);
-                context.ReportDiagnostic(diagnostic);
+                Diagnostic nullabilityDiagnostic = CreateDiagnosticFor(descriptor, properties);
+                context.ReportDiagnostic(nullabilityDiagnostic);
+
+                if (ShouldSuggestDisableReportOnNullableValueTypes())
+                {
+                    Diagnostic disableDiagnostic = CreateDiagnosticFor(scope.DisableReportOnNullableValueTypesRule,
+                        ImmutableDictionary<string, string>.Empty);
+                    context.ReportDiagnostic(disableDiagnostic);
+                }
             }
+        }
+
+        private bool ShouldSuggestDisableReportOnNullableValueTypes()
+        {
+            if (!scope.Settings.DisableReportOnNullableValueTypes)
+            {
+                ITypeSymbol symbolType = GetEffectiveSymbolType();
+                if (symbolType != null && symbolType.IsSystemNullableType())
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         protected virtual bool RequiresAnnotation()
@@ -192,7 +192,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected bool HasExternalAnnotationFor([NotNull] ISymbol symbol)
         {
-            return externalAnnotations.HasAnnotationForSymbol(symbol, AppliesToItem, context.Compilation);
+            return scope.ExternalAnnotations.HasAnnotationForSymbol(symbol, AppliesToItem, context.Compilation);
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Immutable;
-using CodeContractNullability.ExternalAnnotations;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -12,11 +11,8 @@ namespace CodeContractNullability.SymbolAnalysis
     /// </summary>
     public class ParameterAnalyzer : BaseSymbolAnalyzer<IParameterSymbol>
     {
-        public ParameterAnalyzer(SymbolAnalysisContext context,
-            [NotNull] IExternalAnnotationsResolver externalAnnotations,
-            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
-            [NotNull] AnalyzerSettings settings, bool appliesToItem)
-            : base(context, externalAnnotations, generatedCodeCache, typeCache, settings, appliesToItem)
+        public ParameterAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
+            : base(context, scope)
         {
         }
 

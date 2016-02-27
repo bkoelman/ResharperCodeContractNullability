@@ -169,7 +169,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
     {
         [NotNull]
         public static TBuilder WithSettings<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] AnalyzerSettingsBuilder settingsBuilder) 
+            [NotNull] AnalyzerSettingsBuilder settingsBuilder)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(settingsBuilder, nameof(settingsBuilder));

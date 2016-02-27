@@ -41,6 +41,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             ImmutableArray<Diagnostic> diagnostics =
                 GetDiagnosticsForDocument(documentWithSpans.Document, context.Options)
                     .OrderBy(d => d.Location.SourceSpan)
+                    .Where(d => d.Id == DiagnosticId)
                     .ToImmutableArray();
             ImmutableArray<TextSpan> spans = documentWithSpans.TextSpans.OrderBy(s => s).ToImmutableArray();
 
@@ -51,7 +52,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 Diagnostic diagnostic = diagnostics[index];
                 TextSpan span = spans[index];
 
-                diagnostic.Id.Should().Be(DiagnosticId);
                 diagnostic.Location.IsInSource.Should().BeTrue();
                 diagnostic.Location.SourceSpan.Should().Be(span);
             }

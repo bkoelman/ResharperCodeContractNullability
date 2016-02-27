@@ -21,7 +21,7 @@ namespace CodeContractNullability.Test
         [NotNull]
         protected abstract string CanBeNullAttributeName { get; }
 
-        protected void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source)
+        protected virtual void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source)
         {
             Guard.NotNull(source, nameof(source));
 
@@ -37,7 +37,7 @@ namespace CodeContractNullability.Test
             AssertDiagnostics(analyzerTextContext);
         }
 
-        protected void VerifyNullabilityFix([NotNull] ParsedSourceCode source)
+        protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source)
         {
             Guard.NotNull(source, nameof(source));
 
