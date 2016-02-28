@@ -141,9 +141,10 @@ namespace CodeContractNullability
                         cancellationToken).ConfigureAwait(false);
 
             // Simplify and reformat all annotated nodes.
-            Document simplified = await SimplifyAsync(documentWithImport, cancellationToken).ConfigureAwait(false);
-            SyntaxNode formatted = await FormatAsync(simplified, cancellationToken).ConfigureAwait(false);
-            return simplified.WithSyntaxRoot(formatted);
+            Document simplified =
+                await Simplifier.ReduceAsync(documentWithImport, null, cancellationToken).ConfigureAwait(false);
+            Document formatted = await Formatter.FormatAsync(simplified, null, cancellationToken).ConfigureAwait(false);
+            return formatted;
         }
 
         private void RegisterCodeFixFor([NotNull] Func<CancellationToken, Task<Document>> applyFixAction,
@@ -151,23 +152,6 @@ namespace CodeContractNullability
         {
             CodeAction codeAction = CodeAction.Create(description, applyFixAction, description);
             context.RegisterCodeFix(codeAction, diagnostic);
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        private static async Task<Document> SimplifyAsync([NotNull] Document document,
-            CancellationToken cancellationToken)
-        {
-            return await Simplifier.ReduceAsync(document, cancellationToken: cancellationToken).ConfigureAwait(false);
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        private static async Task<SyntaxNode> FormatAsync([NotNull] Document document,
-            CancellationToken cancellationToken)
-        {
-            SyntaxNode root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-            return Formatter.Format(root, document.Project.Solution.Workspace);
         }
     }
 }
