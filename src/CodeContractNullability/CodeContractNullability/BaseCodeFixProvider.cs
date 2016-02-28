@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis.Simplification;
 
 namespace CodeContractNullability
@@ -125,6 +126,8 @@ namespace CodeContractNullability
         private async Task<Document> WithAttributeAsync([NotNull] INamedTypeSymbol attribute,
             [NotNull] Document document, [NotNull] SyntaxNode syntaxNode, CancellationToken cancellationToken)
         {
+            OptionSet options = document.Project.Solution.Workspace.Options;
+
             DocumentEditor editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
             // Add NotNull/CanBeNull/ItemNotNull/ItemCanBeNull attribute.
@@ -137,13 +140,14 @@ namespace CodeContractNullability
             // Add namespace import.
             Document documentWithImport =
                 await
-                    ImportAdder.AddImportsAsync(documentWithAttribute, NamespaceImportAnnotation, null,
+                    ImportAdder.AddImportsAsync(documentWithAttribute, NamespaceImportAnnotation, options,
                         cancellationToken).ConfigureAwait(false);
 
             // Simplify and reformat all annotated nodes.
             Document simplified =
-                await Simplifier.ReduceAsync(documentWithImport, null, cancellationToken).ConfigureAwait(false);
-            Document formatted = await Formatter.FormatAsync(simplified, null, cancellationToken).ConfigureAwait(false);
+                await Simplifier.ReduceAsync(documentWithImport, options, cancellationToken).ConfigureAwait(false);
+            Document formatted =
+                await Formatter.FormatAsync(simplified, options, cancellationToken).ConfigureAwait(false);
             return formatted;
         }
 
