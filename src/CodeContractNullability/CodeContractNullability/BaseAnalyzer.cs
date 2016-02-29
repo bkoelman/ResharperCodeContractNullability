@@ -37,7 +37,8 @@ namespace CodeContractNullability
 
         [NotNull]
         private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule =
-            new DiagnosticDescriptor(DisableReportOnNullableValueTypesDiagnosticId, null,
+            new DiagnosticDescriptor(DisableReportOnNullableValueTypesDiagnosticId,
+                "Suggest to disable reporting on nullable value types.",
                 @"IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.",
                 "Configuration", DiagnosticSeverity.Hidden, true, @"
 At this time, the code fix is not able to fully configure the newly-created ResharperCodeContractNullability.config file 
