@@ -56,7 +56,8 @@ perform the following additional steps after applying this code fix.
     <AdditionalFiles Include=""ResharperCodeContractNullability.config"" />
 
 5. Save and close the project file.
-6. Right click the unloaded project in [Solution Explorer] and select [Reload Project].");
+6. Right click the unloaded project in [Solution Explorer] and select [Reload Project].",
+                "https://github.com/bkoelman/ResharperCodeContractNullability/tree/master/docs/XNUL_SuggestToDisableReportingOnNullableValueTypes.md");
 
         [ItemNotNull]
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
