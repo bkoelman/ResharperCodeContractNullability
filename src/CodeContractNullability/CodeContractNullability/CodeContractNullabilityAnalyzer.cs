@@ -26,7 +26,7 @@ namespace CodeContractNullability
 
             return new DiagnosticDescriptor(DiagnosticId, title, messageFormat, Category, DiagnosticSeverity.Warning,
                 true, description,
-                "https://github.com/bkoelman/ResharperCodeContractNullability/tree/master/docs/RNUL_MemberIsMissingNullabilityAnnotation.md");
+                "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/RNUL_MemberIsMissingNullabilityAnnotation.md");
         }
     }
 }
