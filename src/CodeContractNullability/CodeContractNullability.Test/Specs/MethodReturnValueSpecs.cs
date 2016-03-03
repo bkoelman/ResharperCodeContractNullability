@@ -227,7 +227,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_method_is_async_void_it_must_be_skipped()
+        public void When_async_method_returns_void_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
@@ -242,7 +242,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_method_is_async_task_it_must_be_skipped()
+        public void When_async_method_returns_task_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
@@ -257,7 +257,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Test]
-        public void When_method_is_async_generic_task_it_must_be_skipped()
+        public void When_async_method_returns_generic_task_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
