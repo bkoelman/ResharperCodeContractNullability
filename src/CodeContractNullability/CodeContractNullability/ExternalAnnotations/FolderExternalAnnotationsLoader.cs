@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -77,7 +76,7 @@ namespace CodeContractNullability.ExternalAnnotations
                     using (new CodeTimer("ExternalAnnotationsCache:Create"))
                     {
                         cached = ScanForMemberExternalAnnotations();
-                        SaveToDisk(cached);
+                        TrySaveToDisk(cached);
                     }
                 }
 
@@ -108,10 +107,10 @@ namespace CodeContractNullability.ExternalAnnotations
                     }
                 }
             }
-            catch (IOException)
+            catch (UnauthorizedAccessException)
             {
             }
-            catch (XmlException)
+            catch (IOException)
             {
             }
 
@@ -137,18 +136,25 @@ namespace CodeContractNullability.ExternalAnnotations
             }
         }
 
-        private static void SaveToDisk([NotNull] ExternalAnnotationsCache cache)
+        private static void TrySaveToDisk([NotNull] ExternalAnnotationsCache cache)
         {
-            EnsureDirectoryExists();
-
-            MessagePackSerializer<ExternalAnnotationsCache> serializer =
-                SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
-            using (FileStream stream = File.Create(CachePath))
+            try
             {
-                using (new CodeTimer("ExternalAnnotationsCache:Write"))
+                EnsureDirectoryExists();
+
+                MessagePackSerializer<ExternalAnnotationsCache> serializer =
+                    SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
+                using (FileStream stream = File.Create(CachePath))
                 {
-                    serializer.Pack(stream, cache);
+                    using (new CodeTimer("ExternalAnnotationsCache:Write"))
+                    {
+                        serializer.Pack(stream, cache);
+                    }
                 }
+            }
+            catch (IOException)
+            {
+                // When MSBuild runs in parallel, another process may be writing the cache file at the same time.
             }
         }
 
