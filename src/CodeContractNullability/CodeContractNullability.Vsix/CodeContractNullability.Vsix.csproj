@@ -90,7 +90,11 @@
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\tools\uninstall.ps1" />
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\CodeContractNullability.nuspec" />
       <VsixSourceItem Remove="$(SolutionDir)packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll" />
+      <VsixSourceItem Remove="$(SolutionDir)packages\MsgPack.Cli.0.6.8\lib\net45\MsgPack.dll" />
     </ItemGroup>
+    <!--
+        <Message Text="VsixSourceItem collection now contains: @(VsixSourceItem)" Importance="High" />
+    -->
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
