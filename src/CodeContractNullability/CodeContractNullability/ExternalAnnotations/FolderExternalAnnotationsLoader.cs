@@ -33,19 +33,32 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             try
             {
-                ExternalAnnotationsMap map = GetCached();
-                if (map.Count > 0)
-                {
-                    return map;
-                }
+                return GetCached();
+            }
+            catch (MissingExternalAnnotationsException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to load Resharper external annotations: {ex.Message}", ex);
+                throw GetErrorForMissingExternalAnnotations(ex);
             }
+        }
 
-            string folders = string.Join(";", GetFoldersToScan().Select(folder => "\"" + folder + "\""));
-            throw new Exception("Failed to load Resharper external annotations. Scanned folders: " + folders);
+        [NotNull]
+        private static Exception GetErrorForMissingExternalAnnotations([CanBeNull] Exception error = null)
+        {
+            IEnumerable<string> folderSet = GetFoldersToScan();
+            string folders = string.Join(";", folderSet.Select(SurroundWithDoubleQuotes));
+
+            string message = "Failed to load Resharper external annotations. Scanned folders: " + folders;
+            return new MissingExternalAnnotationsException(message, error);
+        }
+
+        [NotNull]
+        private static string SurroundWithDoubleQuotes([NotNull] string path)
+        {
+            return "\"" + path + "\"";
         }
 
         [NotNull]
@@ -64,8 +77,8 @@ namespace CodeContractNullability.ExternalAnnotations
                     using (new CodeTimer("ExternalAnnotationsCache:Create"))
                     {
                         cached = ScanForMemberExternalAnnotations();
+                        SaveToDisk(cached);
                     }
-                    SaveToDisk(cached);
                 }
 
                 return cached.ExternalAnnotations;
@@ -85,7 +98,12 @@ namespace CodeContractNullability.ExternalAnnotations
                     {
                         using (new CodeTimer("ExternalAnnotationsCache:Read"))
                         {
-                            return serializer.Unpack(stream);
+                            ExternalAnnotationsCache result = serializer.Unpack(stream);
+
+                            if (result.ExternalAnnotations.Any())
+                            {
+                                return result;
+                            }
                         }
                     }
                 }
@@ -108,6 +126,11 @@ namespace CodeContractNullability.ExternalAnnotations
                 foreach (string path in EnumerateAnnotationFiles())
                 {
                     recorder.VisitFile(path);
+                }
+
+                if (!recorder.HasSeenFiles)
+                {
+                    throw GetErrorForMissingExternalAnnotations();
                 }
 
                 return recorder.HighestLastWriteTimeUtc;
@@ -156,6 +179,12 @@ namespace CodeContractNullability.ExternalAnnotations
             }
 
             Compact(result);
+
+            if (!result.Any())
+            {
+                throw GetErrorForMissingExternalAnnotations();
+            }
+
             return new ExternalAnnotationsCache(recorder.HighestLastWriteTimeUtc, result);
         }
 
@@ -215,6 +244,8 @@ namespace CodeContractNullability.ExternalAnnotations
         private sealed class HighestLastWriteTimeUtcRecorder
         {
             public DateTime HighestLastWriteTimeUtc { get; private set; }
+
+            public bool HasSeenFiles => HighestLastWriteTimeUtc > DateTime.MinValue;
 
             public void VisitFile([NotNull] string path)
             {
