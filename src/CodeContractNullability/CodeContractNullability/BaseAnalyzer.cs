@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.NullabilityAttributes;
 using CodeContractNullability.SymbolAnalysis;
@@ -73,6 +74,7 @@ perform the following additional steps after applying this code fix.
         public ExtensionPoint<IExternalAnnotationsResolver> ExternalAnnotationsResolver { get; } =
             new ExtensionPoint<IExternalAnnotationsResolver>(() => new CachingExternalAnnotationsResolver());
 
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected BaseAnalyzer(bool appliesToItem)
         {
             this.appliesToItem = appliesToItem;
