@@ -25,18 +25,17 @@ namespace CodeContractNullability.Test
             throw new NotSupportedException($"Use {nameof(VerifyDiagnosticWithFix)} from tests.");
         }
 
-        protected virtual void VerifyDiagnosticWithFix([NotNull] ParsedSourceCode source)
+        protected void VerifyDiagnosticWithFix([NotNull] ParsedSourceCode source)
         {
             Guard.NotNull(source, nameof(source));
 
             AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
 
-            AnalyzerTestContext analyzeTextContext = new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp)
+            AnalyzerTestContext analyzeContext = new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp, options)
                 .WithReferences(source.References)
-                .WithFileName(source.Filename)
-                .WithOptions(options);
+                .WithFileName(source.Filename);
 
-            var fixTestContext = new FixProviderTestContext(analyzeTextContext, new[] { string.Empty },
+            var fixTestContext = new FixProviderTestContext(analyzeContext, new[] { string.Empty },
                 source.ReIndentExpected);
 
             AssertDiagnosticsWithCodeFixes(fixTestContext);

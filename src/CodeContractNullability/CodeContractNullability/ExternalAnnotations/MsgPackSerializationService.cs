@@ -59,6 +59,11 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 using (Stream imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
+                    if (imageStream == null)
+                    {
+                        throw new InvalidOperationException("Failed to load MsgPack from embedded resource.");
+                    }
+
                     var assemblyData = new byte[imageStream.Length];
                     imageStream.Read(assemblyData, 0, assemblyData.Length);
 

@@ -8,13 +8,13 @@ namespace CodeContractNullability
     [Serializable]
     public sealed class AnalyzerSettings
     {
-        internal const string SettingsNamespace = "ResharperCodeContractNullabilitySettings";
+        private const string SettingsNamespace = "ResharperCodeContractNullabilitySettings";
 
         [DataMember(Name = "disableReportOnNullableValueTypes")]
         public bool DisableReportOnNullableValueTypes { get; private set; }
 
         [NotNull]
-        public static AnalyzerSettings Default = new AnalyzerSettings();
+        public static readonly AnalyzerSettings Default = new AnalyzerSettings();
 
         public AnalyzerSettings()
         {

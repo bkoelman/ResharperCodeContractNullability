@@ -21,20 +21,20 @@ namespace CodeContractNullability.Test
         [NotNull]
         protected abstract string CanBeNullAttributeName { get; }
 
-        protected virtual void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source)
+        protected void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source)
         {
             Guard.NotNull(source, nameof(source));
 
             externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
 
+            string text = source.GetText();
             AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
 
-            AnalyzerTestContext analyzerTextContext = new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp)
+            AnalyzerTestContext analyzerContext = new AnalyzerTestContext(text, LanguageNames.CSharp, options)
                 .WithReferences(source.References)
-                .WithFileName(source.Filename)
-                .WithOptions(options);
+                .WithFileName(source.Filename);
 
-            AssertDiagnostics(analyzerTextContext);
+            AssertDiagnostics(analyzerContext);
         }
 
         protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source)
@@ -44,17 +44,17 @@ namespace CodeContractNullability.Test
             string fixNotNull = source.GetExpectedTextForAttribute(NotNullAttributeName);
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);
 
+            string text = source.GetText();
             AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
 
-            AnalyzerTestContext analyzeTextContext = new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp)
+            AnalyzerTestContext analyzerContext = new AnalyzerTestContext(text, LanguageNames.CSharp, options)
                 .WithReferences(source.References)
-                .WithFileName(source.Filename)
-                .WithOptions(options);
+                .WithFileName(source.Filename);
 
-            var fixTestContext = new FixProviderTestContext(analyzeTextContext, new[] { fixNotNull, fixCanBeNull },
+            var fixContext = new FixProviderTestContext(analyzerContext, new[] { fixNotNull, fixCanBeNull },
                 source.ReIndentExpected);
 
-            AssertDiagnosticsWithCodeFixes(fixTestContext);
+            AssertDiagnosticsWithCodeFixes(fixContext);
         }
 
         protected override DiagnosticAnalyzer CreateAnalyzer()

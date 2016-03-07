@@ -35,11 +35,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [ItemNotNull]
         public ImmutableList<MetadataReference> References { get; }
 
-        [CanBeNull]
+        [NotNull]
         public AnalyzerOptions Options { get; }
 
         private AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName,
-            [NotNull] string fileName, [CanBeNull] AnalyzerOptions options,
+            [NotNull] string fileName, [NotNull] AnalyzerOptions options,
             [NotNull] [ItemNotNull] ImmutableList<MetadataReference> references)
         {
             MarkupCode = markupCode;
@@ -49,11 +49,13 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             References = references;
         }
 
-        public AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName)
-            : this(markupCode, languageName, DefaultFileName, null, DefaultReferences)
+        public AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName,
+            [NotNull] AnalyzerOptions options)
+            : this(markupCode, languageName, DefaultFileName, options, DefaultReferences)
         {
             Guard.NotNull(markupCode, nameof(markupCode));
             Guard.NotNull(languageName, nameof(languageName));
+            Guard.NotNull(options, nameof(options));
         }
 
         [NotNull]
@@ -71,14 +73,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
             ImmutableList<MetadataReference> referenceList = ImmutableList.CreateRange(references);
             return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, Options, referenceList);
-        }
-
-        [NotNull]
-        public AnalyzerTestContext WithOptions([NotNull] AnalyzerOptions options)
-        {
-            Guard.NotNull(options, nameof(options));
-
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, options, References);
         }
     }
 }

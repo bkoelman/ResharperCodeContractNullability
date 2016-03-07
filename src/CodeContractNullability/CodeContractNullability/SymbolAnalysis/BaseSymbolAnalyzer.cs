@@ -20,6 +20,11 @@ namespace CodeContractNullability.SymbolAnalysis
         [NotNull]
         private readonly AnalysisScope scope;
 
+        [NotNull]
+        protected TSymbol Symbol { get; }
+
+        protected bool AppliesToItem => scope.AppliesToItem;
+
         protected BaseSymbolAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
         {
             Guard.NotNull(scope, nameof(scope));
@@ -29,11 +34,6 @@ namespace CodeContractNullability.SymbolAnalysis
 
             Symbol = (TSymbol) this.context.Symbol;
         }
-
-        protected bool AppliesToItem => scope.AppliesToItem;
-
-        [NotNull]
-        protected TSymbol Symbol { get; }
 
         public void Analyze([NotNull] DiagnosticDescriptor descriptor,
             [NotNull] ImmutableDictionary<string, string> properties)

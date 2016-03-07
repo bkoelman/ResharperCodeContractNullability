@@ -33,7 +33,6 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
 
             Type = type;
             ParametersNullability = new ParameterNullabilityMap();
-            HasNullabilityDefined = false;
         }
     }
 }
