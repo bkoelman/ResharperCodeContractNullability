@@ -17,11 +17,11 @@ namespace CodeContractNullability
     public class DisableReportOnNullableValueTypesCodeFixProvider : CodeFixProvider
     {
         [ItemNotNull]
-        public override sealed ImmutableArray<string> FixableDiagnosticIds
+        public sealed override ImmutableArray<string> FixableDiagnosticIds
             => ImmutableArray.Create(BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId);
 
         [NotNull]
-        public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
+        public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             await Task.Yield();
 

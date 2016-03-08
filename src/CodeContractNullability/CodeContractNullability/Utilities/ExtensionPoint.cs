@@ -14,7 +14,6 @@ namespace CodeContractNullability.Utilities
         where TInterface : class
     {
         [NotNull]
-        [ItemNotNull]
         private readonly Func<TInterface> createDefaultInstanceFactory;
 
         [CanBeNull]
@@ -35,7 +34,7 @@ namespace CodeContractNullability.Utilities
             TInterface result = valueFactory();
             if (result == null)
             {
-                throw new Exception($"Failed to create instance of {typeof (TInterface)}.");
+                throw new Exception($"Failed to create instance of {typeof(TInterface)}.");
             }
             return result;
         }
