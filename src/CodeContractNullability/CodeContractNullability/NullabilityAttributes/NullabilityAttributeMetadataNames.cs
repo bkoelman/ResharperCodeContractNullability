@@ -46,15 +46,29 @@ namespace CodeContractNullability.NullabilityAttributes
         {
             Guard.NotNull(compilation, nameof(compilation));
 
-            INamedTypeSymbol notNullSymbol = compilation.GetTypeByMetadataName(NotNull);
-            INamedTypeSymbol canBeNullSymbol = compilation.GetTypeByMetadataName(CanBeNull);
-            INamedTypeSymbol itemNotNullSymbol = compilation.GetTypeByMetadataName(ItemNotNull);
-            INamedTypeSymbol itemCanBeNullSymbol = compilation.GetTypeByMetadataName(ItemCanBeNull);
+            INamedTypeSymbol notNullSymbol = GetVisibleAttribute(NotNull, compilation);
+            INamedTypeSymbol canBeNullSymbol = GetVisibleAttribute(CanBeNull, compilation);
+            INamedTypeSymbol itemNotNullSymbol = GetVisibleAttribute(ItemNotNull, compilation);
+            INamedTypeSymbol itemCanBeNullSymbol = GetVisibleAttribute(ItemCanBeNull, compilation);
 
             return notNullSymbol != null && canBeNullSymbol != null && itemNotNullSymbol != null &&
                 itemCanBeNullSymbol != null
                 ? new NullabilityAttributeSymbols(notNullSymbol, canBeNullSymbol, itemNotNullSymbol, itemCanBeNullSymbol)
                 : null;
+        }
+
+        [CanBeNull]
+        private INamedTypeSymbol GetVisibleAttribute([NotNull] string fullTypeName, [NotNull] Compilation compilation)
+        {
+            INamedTypeSymbol attributeSymbol = compilation.GetTypeByMetadataName(fullTypeName);
+            return attributeSymbol != null && IsDefinedInSameAssembly(attributeSymbol, compilation.Assembly)
+                ? attributeSymbol
+                : null;
+        }
+
+        private bool IsDefinedInSameAssembly([NotNull] INamedTypeSymbol type, [NotNull] IAssemblySymbol assembly)
+        {
+            return type.ContainingAssembly.Equals(assembly);
         }
 
         [NotNull]
