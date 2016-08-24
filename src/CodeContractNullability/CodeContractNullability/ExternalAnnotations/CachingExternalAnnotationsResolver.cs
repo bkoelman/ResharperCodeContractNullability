@@ -73,6 +73,11 @@ namespace CodeContractNullability.ExternalAnnotations
         private FileSystemWatcher CreateAssemblyAnnotationsFileWatcher([NotNull] string path)
         {
             string directoryName = Path.GetDirectoryName(path);
+            if (directoryName == null)
+            {
+                throw new InvalidOperationException($"Internal error: failed to extract directory from path '{path}'.");
+            }
+
             string filter = Path.GetFileName(path);
             var assemblyAnnotationsFileWatcher = new FileSystemWatcher(directoryName, filter);
 
@@ -98,8 +103,14 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         private static FileSystemEventArgs OldValuesFrom([NotNull] RenamedEventArgs e)
         {
-            string directory = Path.GetDirectoryName(e.OldFullPath);
-            return new FileSystemEventArgs(e.ChangeType, directory, e.OldName);
+            string directoryName = Path.GetDirectoryName(e.OldFullPath);
+            if (directoryName == null)
+            {
+                throw new InvalidOperationException(
+                    $"Internal error: failed to extract directory from path '{e.OldFullPath}'.");
+            }
+
+            return new FileSystemEventArgs(e.ChangeType, directoryName, e.OldName);
         }
 
         private sealed class AssemblyCacheEntry

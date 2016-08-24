@@ -42,6 +42,7 @@ namespace CodeContractNullability.Utilities
         [NotNull]
         public TInterface GetCached()
         {
+            // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
             if (activeInstance == null)
             {
                 activeInstance = specificInstance ?? InstantiateNotNull(createDefaultInstanceFactory);
