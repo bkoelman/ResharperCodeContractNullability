@@ -220,6 +220,11 @@ namespace CodeContractNullability.ExternalAnnotations
 
             return new[]
             {
+                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudioV15),
+                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudioV15),
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudioV15),
+                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudioV15),
+
                 Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
                 Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015),
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
@@ -267,6 +272,12 @@ namespace CodeContractNullability.ExternalAnnotations
 
             public const string ResharperExtensionsForVisualStudio2015 =
                 @"JetBrains\Installations\ReSharperPlatformVs14\Extensions";
+
+            public const string ResharperForVisualStudioV15 =
+                @"JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations";
+
+            public const string ResharperExtensionsForVisualStudioV15 =
+                @"JetBrains\Installations\ReSharperPlatformVs15\Extensions";
         }
     }
 }
