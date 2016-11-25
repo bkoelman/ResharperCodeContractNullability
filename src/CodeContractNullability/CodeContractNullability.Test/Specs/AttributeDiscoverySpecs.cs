@@ -1,5 +1,5 @@
 ﻿using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 using JetBrainsNotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace CodeContractNullability.Test.Specs
@@ -7,10 +7,9 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests concerning detection of the nullability attribute definitions at various places.
     /// </summary>
-    [TestFixture]
-    internal class AttributeDiscoverySpecs : NullabilityNUnitRoslynTest
+    public sealed class AttributeDiscoverySpecs : NullabilityNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_attributes_are_not_defined_it_must_not_report_any_diagnostics()
         {
             // Arrange
@@ -28,7 +27,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_in_global_namespace_they_must_be_found()
         {
             // Arrange
@@ -50,7 +49,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_in_different_namespace_it_must_add_namespace_import()
         {
             // Arrange
@@ -70,7 +69,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_some_attributes_are_private_none_must_be_found()
         {
             // Arrange
@@ -96,7 +95,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_public_nested_they_must_be_found()
         {
             // Arrange
@@ -119,7 +118,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_public_nested_in_private_class_they_must_not_be_found()
         {
             // Arrange
@@ -142,7 +141,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_in_JetBrains_assembly_it_must_add_namespace_import()
         {
             // Arrange
@@ -162,7 +161,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_public_in_external_assembly_it_must_add_namespace_import()
         {
             // Arrange
@@ -191,7 +190,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_attributes_are_internal_in_external_assembly_they_must_not_be_found()
         {
             // Arrange

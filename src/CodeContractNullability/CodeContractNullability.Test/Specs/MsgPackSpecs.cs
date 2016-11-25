@@ -2,14 +2,16 @@
 using CodeContractNullability.ExternalAnnotations;
 using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
-    [TestFixture]
-    internal class MsgPackSpecs
+    /// <summary>
+    /// Tests for usage of MsgPack external library.
+    /// </summary>
+    public sealed class MsgPackSpecs
     {
-        [Test]
+        [Fact]
         public void When_using_embedded_serializer_resource_it_must_roundtrip()
         {
             // Arrange

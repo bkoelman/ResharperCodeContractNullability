@@ -1,15 +1,14 @@
 ﻿using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
     /// <summary>
     /// Tests for reporting nullability diagnostics on lambda expressions.
     /// </summary>
-    [TestFixture]
-    internal class LambdaSpecs : NullabilityNUnitRoslynTest
+    public sealed class LambdaSpecs : NullabilityNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_lambda_parameter_is_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -26,7 +25,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_lambda_return_value_is_nullable_it_must_be_skipped()
         {
             // Arrange

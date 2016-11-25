@@ -5,17 +5,16 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
     /// <summary>
     /// Tests for reporting item nullability diagnostics on fields of collection types.
     /// </summary>
-    [TestFixture]
-    internal class FieldCollectionSpecs : ItemNullabilityNUnitRoslynTest
+    public sealed class FieldCollectionSpecs : ItemNullabilityNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_field_is_annotated_with_item_not_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -36,7 +35,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_is_annotated_with_item_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -62,7 +61,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_is_constant_it_must_be_skipped()
         {
             // Arrange
@@ -76,7 +75,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_value_type_it_must_be_skipped()
         {
             // Arrange
@@ -91,7 +90,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_generic_value_type_it_must_be_skipped()
         {
             // Arrange
@@ -109,7 +108,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_enum_it_must_be_skipped()
         {
             // Arrange
@@ -126,7 +125,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_object_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -141,7 +140,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -156,7 +155,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_nullable_but_analysis_is_disabled_it_must_be_skipped()
         {
             // Arrange
@@ -173,7 +172,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -191,7 +190,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_item_type_is_reference_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -206,7 +205,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_is_compiler_generated_it_must_be_skipped()
         {
             // Arrange
@@ -223,7 +222,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_is_in_designer_generated_file_it_must_be_skipped()
         {
             // Arrange
@@ -244,7 +243,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_is_in_file_with_codegen_comment_at_top_it_must_be_skipped()
         {
             // Arrange
@@ -270,7 +269,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_contains_multiple_variables_they_must_be_reported_and_fixed()
         {
             // Arrange
@@ -285,7 +284,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_type_is_lazy_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -299,7 +298,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_type_is_task_it_must_be_skipped()
         {
             // Arrange
@@ -314,7 +313,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_type_is_generic_task_it_must_be_reported_and_fixed()
         {
             // Arrange

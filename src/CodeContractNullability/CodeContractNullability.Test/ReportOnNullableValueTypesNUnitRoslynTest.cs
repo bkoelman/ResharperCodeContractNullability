@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.Test
 {
-    internal abstract class ReportOnNullableValueTypesNUnitRoslynTest : NullabilityNUnitRoslynTest
+    public abstract class ReportOnNullableValueTypesNUnitRoslynTest : NullabilityNUnitRoslynTest
     {
         protected override string DiagnosticId => BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId;
 

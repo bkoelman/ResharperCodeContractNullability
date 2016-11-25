@@ -5,17 +5,16 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
     /// <summary>
     /// Tests for reporting item nullability diagnostics on properties.
     /// </summary>
-    [TestFixture]
-    internal class PropertyCollectionSpecs : ItemNullabilityNUnitRoslynTest
+    public sealed class PropertyCollectionSpecs : ItemNullabilityNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_property_is_annotated_with_item_not_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -34,7 +33,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_is_annotated_with_item_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -53,7 +52,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_value_type_it_must_be_skipped()
         {
             // Arrange
@@ -68,7 +67,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_generic_value_type_it_must_be_skipped()
         {
             // Arrange
@@ -86,7 +85,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_enum_it_must_be_skipped()
         {
             // Arrange
@@ -102,7 +101,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -117,7 +116,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_nullable_but_analysis_is_disabled_it_must_be_skipped()
         {
             // Arrange
@@ -134,7 +133,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -152,7 +151,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_reference_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -167,7 +166,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_item_type_is_object_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -182,7 +181,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_is_compiler_generated_it_must_be_skipped()
         {
             // Arrange
@@ -199,7 +198,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_is_not_debuggable_it_must_be_skipped()
         {
             // Arrange
@@ -216,7 +215,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_indexer_property_type_is_collection_of_reference_type_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -235,7 +234,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_in_base_class_is_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -262,7 +261,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_in_implicit_interface_is_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -287,7 +286,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_in_explicit_interface_is_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -312,7 +311,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void
             When_property_in_implicit_interface_is_not_annotated_with_explicit_interface_it_must_be_reported_and_fixed()
         {
@@ -340,7 +339,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void
             When_indexer_property_type_in_implicit_interface_is_not_annotated_it_must_be_reported_and_fixed()
         {
@@ -379,7 +378,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_is_in_file_with_codegen_comment_at_top_it_must_be_skipped()
         {
             // Arrange
@@ -415,7 +414,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_type_is_lazy_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -429,7 +428,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_type_is_task_it_must_be_skipped()
         {
             // Arrange
@@ -444,7 +443,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_type_is_generic_task_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -459,7 +458,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_base_property_inherits_item_annotation_from_interface_it_must_be_skipped()
         {
             // Arrange
@@ -491,7 +490,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_override_breaks_inheritance_it_must_be_reported()
         {
             // Arrange

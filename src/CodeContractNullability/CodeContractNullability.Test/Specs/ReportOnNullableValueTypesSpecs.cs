@@ -1,12 +1,14 @@
 ﻿using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
-    [TestFixture]
-    internal class ReportOnNullableValueTypesSpecs : ReportOnNullableValueTypesNUnitRoslynTest
+    /// <summary>
+    /// Tests for disabling reporting on nullable types, which is configurable.
+    /// </summary>
+    public sealed class ReportOnNullableValueTypesSpecs : ReportOnNullableValueTypesNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_field_type_is_nullable_it_must_be_reported_and_disabled()
         {
             // Arrange
@@ -20,7 +22,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyDiagnosticWithFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_type_is_nullable_but_analysis_is_disabled_it_must_be_skipped()
         {
             // Arrange

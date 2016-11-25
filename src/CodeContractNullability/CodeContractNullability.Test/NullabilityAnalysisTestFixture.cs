@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.Test
 {
-    internal abstract class NullabilityAnalysisTestFixture : AnalysisTestFixture
+    public abstract class NullabilityAnalysisTestFixture : AnalysisTestFixture
     {
         [NotNull]
         private IExternalAnnotationsResolver externalAnnotationsResolver =
@@ -40,6 +40,8 @@ namespace CodeContractNullability.Test
         protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source)
         {
             Guard.NotNull(source, nameof(source));
+
+            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
 
             string fixNotNull = source.GetExpectedTextForAttribute(NotNullAttributeName);
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);

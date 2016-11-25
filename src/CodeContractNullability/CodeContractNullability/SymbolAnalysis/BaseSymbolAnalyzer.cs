@@ -15,7 +15,7 @@ namespace CodeContractNullability.SymbolAnalysis
     public abstract class BaseSymbolAnalyzer<TSymbol>
         where TSymbol : class, ISymbol
     {
-        private readonly SymbolAnalysisContext context;
+        private SymbolAnalysisContext context;
 
         [NotNull]
         private readonly AnalysisScope scope;

@@ -1,15 +1,14 @@
 ﻿using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
     /// <summary>
     /// Tests concerning whitespace and comment preservation when fixes are applied.
     /// </summary>
-    [TestFixture]
-    internal class TokenTriviaSpecs : NullabilityNUnitRoslynTest
+    public sealed class TokenTriviaSpecs : NullabilityNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_field_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -30,7 +29,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_field_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -51,7 +50,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -72,7 +71,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_property_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -93,7 +92,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_indexer_result_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -118,7 +117,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_indexer_result_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -143,7 +142,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_indexer_parameter_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -167,7 +166,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_indexer_parameter_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -191,7 +190,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -212,7 +211,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -233,7 +232,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_parameter_has_singleline_comments_they_must_be_preserved()
         {
             // Arrange
@@ -253,7 +252,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_parameter_has_multiline_comments_they_must_be_preserved()
         {
             // Arrange

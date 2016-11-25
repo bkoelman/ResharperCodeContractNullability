@@ -3,17 +3,16 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CodeContractNullability.Test.TestDataBuilders;
-using NUnit.Framework;
+using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
     /// <summary>
     /// Tests for reporting nullability diagnostics on methods (meaning: method return values).
     /// </summary>
-    [TestFixture]
-    internal class MethodReturnValueSpecs : NullabilityNUnitRoslynTest
+    public sealed class MethodReturnValueSpecs : NullabilityNUnitRoslynTest
     {
-        [Test]
+        [Fact]
         public void When_method_returns_void_it_must_be_skipped()
         {
             // Arrange
@@ -27,7 +26,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_is_annotated_with_not_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -45,7 +44,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_is_annotated_with_nullable_it_must_be_skipped()
         {
             // Arrange
@@ -63,7 +62,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -87,7 +86,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_value_type_it_must_be_skipped()
         {
             // Arrange
@@ -101,7 +100,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_generic_value_type_it_must_be_skipped()
         {
             // Arrange
@@ -118,7 +117,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_enum_it_must_be_skipped()
         {
             // Arrange
@@ -133,7 +132,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -147,7 +146,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_nullable_but_analysis_is_disabled_it_must_be_skipped()
         {
             // Arrange
@@ -163,7 +162,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -180,7 +179,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_type_is_reference_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -194,7 +193,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_is_compiler_generated_it_must_be_skipped()
         {
             // Arrange
@@ -210,7 +209,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_is_not_debuggable_it_must_be_skipped()
         {
             // Arrange
@@ -226,7 +225,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_async_method_returns_void_it_must_be_skipped()
         {
             // Arrange
@@ -241,7 +240,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_async_method_returns_task_it_must_be_skipped()
         {
             // Arrange
@@ -256,7 +255,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_async_method_returns_generic_task_it_must_be_skipped()
         {
             // Arrange
@@ -271,7 +270,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_return_value_is_task_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -286,7 +285,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_return_value_is_generic_task_it_must_be_reported_and_fixed()
         {
             // Arrange
@@ -301,7 +300,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_is_lambda_named_by_compiler_it_must_be_skipped()
         {
             // Arrange
@@ -330,7 +329,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_method_is_anonymous_named_by_compiler_it_must_be_skipped()
         {
             // Arrange
@@ -359,7 +358,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_base_class_is_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -385,7 +384,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_base_class_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -417,7 +416,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_implicit_interface_is_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -441,7 +440,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_implicit_interface_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -471,7 +470,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_explicit_interface_is_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -495,7 +494,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_explicit_interface_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
@@ -525,7 +524,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void
             When_return_value_in_implicit_interface_is_not_annotated_with_explicit_interface_it_must_be_reported_and_fixed
             ()
@@ -553,7 +552,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_in_implicit_interface_is_annotated_with_explicit_interface_it_must_be_skipped()
         {
             // Arrange
@@ -581,7 +580,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void
             When_return_value_in_implicit_interface_is_annotated_with_externally_annotated_explicit_interface_it_must_be_skipped
             ()
@@ -617,7 +616,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_return_value_is_in_file_with_codegen_comment_at_top_it_must_be_skipped()
         {
             // Arrange
@@ -642,7 +641,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_containing_type_is_decorated_with_conditional_its_members_must_be_skipped()
         {
             // Arrange
@@ -665,7 +664,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_base_method_inherits_annotation_from_interface_it_must_be_skipped()
         {
             // Arrange
@@ -696,7 +695,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-        [Test]
+        [Fact]
         public void When_override_breaks_inheritance_it_must_be_reported()
         {
             // Arrange

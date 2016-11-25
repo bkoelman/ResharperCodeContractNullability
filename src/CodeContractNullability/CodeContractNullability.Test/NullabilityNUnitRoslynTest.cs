@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 
 namespace CodeContractNullability.Test
 {
-    internal abstract class NullabilityNUnitRoslynTest : NullabilityAnalysisTestFixture
+    public abstract class NullabilityNUnitRoslynTest : NullabilityAnalysisTestFixture
     {
         protected override string DiagnosticId => CodeContractNullabilityAnalyzer.DiagnosticId;
 
