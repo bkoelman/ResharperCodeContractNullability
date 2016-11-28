@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability.Test
 {
-    public class ExactSourceCode : ParsedSourceCode
+    public sealed class ExactSourceCode : ParsedSourceCode
     {
         [NotNull]
         private readonly string sourceExpected;

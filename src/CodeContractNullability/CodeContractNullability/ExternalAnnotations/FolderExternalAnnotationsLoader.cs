@@ -224,7 +224,6 @@ namespace CodeContractNullability.ExternalAnnotations
                 Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudioV15),
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudioV15),
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudioV15),
-
                 Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
                 Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015),
                 Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public class RawSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
+    public sealed class RawSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
         private string sourceText = string.Empty;

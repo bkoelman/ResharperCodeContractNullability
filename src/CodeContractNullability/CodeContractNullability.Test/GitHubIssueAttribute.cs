@@ -3,11 +3,13 @@
 namespace CodeContractNullability.Test
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public sealed class GitHubIssueAttribute : Attribute
+    internal sealed class GitHubIssueAttribute : Attribute
     {
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Id { get; private set; }
 
-        public GitHubIssueAttribute(int id)
+        internal GitHubIssueAttribute(int id)
         {
             Id = id;
         }

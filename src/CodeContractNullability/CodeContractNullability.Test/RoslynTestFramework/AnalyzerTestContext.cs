@@ -18,8 +18,8 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private static readonly ImmutableList<MetadataReference> DefaultReferences =
             ImmutableList.Create(new MetadataReference[]
             {
-                MetadataReference.CreateFromFile(typeof (object).GetTypeInfo().Assembly.Location),
-                MetadataReference.CreateFromFile(typeof (Enumerable).GetTypeInfo().Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Enumerable).GetTypeInfo().Assembly.Location)
             });
 
         [NotNull]

@@ -19,12 +19,7 @@ namespace CodeContractNullability
         private static IEnumerable<TNode> GetAncestorsOrThis<TNode>([CanBeNull] this SyntaxNode node)
             where TNode : SyntaxNode
         {
-            if (node == null)
-            {
-                return new TNode[0];
-            }
-
-            return node.AncestorsAndSelf().OfType<TNode>();
+            return node?.AncestorsAndSelf().OfType<TNode>() ?? new TNode[0];
         }
     }
 }

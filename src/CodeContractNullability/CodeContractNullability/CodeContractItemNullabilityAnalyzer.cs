@@ -8,7 +8,7 @@ namespace CodeContractNullability
     /// Entry point for analyzer that creates diagnostics for members that need item nullability annotation.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class CodeContractItemNullabilityAnalyzer : BaseAnalyzer
+    public sealed class CodeContractItemNullabilityAnalyzer : BaseAnalyzer
     {
         public const string DiagnosticId = "RINUL";
 

@@ -14,14 +14,14 @@ namespace CodeContractNullability
     /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(DisableReportOnNullableValueTypesCodeFixProvider))]
     [Shared]
-    public class DisableReportOnNullableValueTypesCodeFixProvider : CodeFixProvider
+    public sealed class DisableReportOnNullableValueTypesCodeFixProvider : CodeFixProvider
     {
         [ItemNotNull]
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
+        public override ImmutableArray<string> FixableDiagnosticIds
             => ImmutableArray.Create(BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId);
 
         [NotNull]
-        public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
+        public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             await Task.Yield();
 

@@ -9,7 +9,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <summary>
     /// Performs analysis of a method parameter.
     /// </summary>
-    public class ParameterAnalyzer : BaseSymbolAnalyzer<IParameterSymbol>
+    public sealed class ParameterAnalyzer : BaseSymbolAnalyzer<IParameterSymbol>
     {
         public ParameterAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
             : base(context, scope)

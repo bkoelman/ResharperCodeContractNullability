@@ -147,7 +147,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             if (HasAnnotationInBaseClass())
             {
-                // Resharper reports nullability attribute as unneeded 
+                // Resharper reports nullability attribute as unneeded
                 // if member on base class contains nullability attribute.
                 return false;
             }

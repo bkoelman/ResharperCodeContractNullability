@@ -122,7 +122,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (BindingFlags).Namespace)
+                .Using(typeof(BindingFlags).Namespace)
                 .InDefaultClass(@"
                     BindingFlags M() { throw new NotImplementedException(); }
                 ")
@@ -198,7 +198,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (CompilerGeneratedAttribute).Namespace)
+                .Using(typeof(CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
                     string M() { throw new NotImplementedException(); }
@@ -214,7 +214,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (DebuggerNonUserCodeAttribute).Namespace)
+                .Using(typeof(DebuggerNonUserCodeAttribute).Namespace)
                 .InDefaultClass(@"
                     [DebuggerNonUserCode]
                     string M() { throw new NotImplementedException(); }
@@ -230,7 +230,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task).Namespace)
+                .Using(typeof(Task).Namespace)
                 .InDefaultClass(@"
                     async void M() { throw new NotImplementedException(); }
                 ")
@@ -245,7 +245,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task).Namespace)
+                .Using(typeof(Task).Namespace)
                 .InDefaultClass(@"
                     async Task M() { throw new NotImplementedException(); }
                 ")
@@ -260,7 +260,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task<>).Namespace)
+                .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
                     async Task<string> M() { throw new NotImplementedException(); }
                 ")
@@ -275,7 +275,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task).Namespace)
+                .Using(typeof(Task).Namespace)
                 .InDefaultClass(@"
                     <annotate/> Task [|M|]() { throw new NotImplementedException(); }
                 ")
@@ -290,7 +290,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task<>).Namespace)
+                .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
                     <annotate/> Task<string> [|M|]() { throw new NotImplementedException(); }
                 ")
@@ -646,8 +646,8 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithReference(typeof (ConditionalAttribute).Assembly)
-                .Using(typeof (ConditionalAttribute).Namespace)
+                .WithReference(typeof(ConditionalAttribute).Assembly)
+                .Using(typeof(ConditionalAttribute).Namespace)
                 .InGlobalScope(@"
                     namespace N
                     {

@@ -51,9 +51,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
             ImmutableHashSet.Create(new MetadataReference[]
             {
                 /* mscorlib.dll */
-                MetadataReference.CreateFromFile(typeof (object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 /* System.dll */
-                MetadataReference.CreateFromFile(typeof (Component).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(Component).Assembly.Location)
             });
 
         public ParsedSourceCode Build()
@@ -234,7 +234,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 CSharpCompilation.Create("TempAssembly", new[] { tree })
                     .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            PortableExecutableReference msCorLib = MetadataReference.CreateFromFile(typeof (object).Assembly.Location);
+            PortableExecutableReference msCorLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
             compilation = compilation.AddReferences(msCorLib);
             compilation = compilation.AddReferences(references);
 

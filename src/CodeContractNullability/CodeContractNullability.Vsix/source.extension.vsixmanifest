@@ -6,10 +6,7 @@
     <Description xml:space="preserve">Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html</Description>
     <MoreInfo>https://github.com/bkoelman/ResharperCodeContractNullability</MoreInfo>
     <License>LICENSE.txt</License>
-    <Tags>
-      resharper, code contracts, annotations, nullability, analyzer, canbenull, notnull, itemcanbenull,
-      itemnotnull, rnul, rinul
-    </Tags>
+    <Tags>resharper, code contracts, annotations, nullability, analyzer, canbenull, notnull, itemcanbenull, itemnotnull, rnul, rinul</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Version="[14.0,]" Id="Microsoft.VisualStudio.Pro" />

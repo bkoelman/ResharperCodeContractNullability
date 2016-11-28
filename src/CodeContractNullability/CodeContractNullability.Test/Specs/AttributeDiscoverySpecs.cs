@@ -147,7 +147,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithoutNullabilityAttributes()
-                .WithReference(typeof (JetBrainsNotNullAttribute).Assembly)
+                .WithReference(typeof(JetBrainsNotNullAttribute).Assembly)
                 .InGlobalScope(@"
                     class C
                     {
