@@ -8,7 +8,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
     /// Data storage for external annotations.
     /// </summary>
     [DataContract(Name = "i", Namespace = ExternalAnnotationsCache.CacheNamespace)]
-    public class MemberNullabilityInfo
+    public sealed class MemberNullabilityInfo
     {
         [DataMember(Name = "t")]
         [NotNull]

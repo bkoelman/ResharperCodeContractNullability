@@ -11,13 +11,13 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
     [CollectionDataContract(Name = "p", ItemName = "e", KeyName = "k", ValueName = "v",
         Namespace = ExternalAnnotationsCache.CacheNamespace)]
     [Serializable]
-    public class ParameterNullabilityMap : Dictionary<string, bool>
+    public sealed class ParameterNullabilityMap : Dictionary<string, bool>
     {
         public ParameterNullabilityMap()
         {
         }
 
-        protected ParameterNullabilityMap([NotNull] SerializationInfo info, StreamingContext context)
+        private ParameterNullabilityMap([NotNull] SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

@@ -10,7 +10,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
     /// </summary>
     [DataContract(Namespace = CacheNamespace)]
     [Serializable]
-    public class ExternalAnnotationsCache
+    public sealed class ExternalAnnotationsCache
     {
         internal const string CacheNamespace = "CodeContractNullability";
 

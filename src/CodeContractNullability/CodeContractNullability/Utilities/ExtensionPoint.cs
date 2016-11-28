@@ -10,7 +10,7 @@ namespace CodeContractNullability.Utilities
     /// <typeparam name="TInterface">
     /// Type of the object that is replaceble.
     /// </typeparam>
-    public class ExtensionPoint<TInterface>
+    public sealed class ExtensionPoint<TInterface>
         where TInterface : class
     {
         [NotNull]

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public class ClassSourceCodeBuilder : SourceCodeBuilder
+    public sealed class ClassSourceCodeBuilder : SourceCodeBuilder
     {
         [NotNull]
         [ItemNotNull]

@@ -9,7 +9,7 @@ namespace CodeContractNullability.ExternalAnnotations
     /// <summary>
     /// Parses the contents of a single external annotations xml file.
     /// </summary>
-    public class ExternalAnnotationDocumentParser
+    public sealed class ExternalAnnotationDocumentParser
     {
         public void ProcessDocument([NotNull] TextReader reader, [NotNull] ExternalAnnotationsMap result)
         {
@@ -33,7 +33,7 @@ namespace CodeContractNullability.ExternalAnnotations
                 //    }
                 //
                 // When you set project properties to target .NET Framework v4.5, Resharper is fine with
-                // the [CanBeNull]. But if you switch to target .NET Framework v2, then Resharper grays 
+                // the [CanBeNull]. But if you switch to target .NET Framework v2, then Resharper grays
                 // out the [CanBeNull], with hover message "Base declaration has the same annotation".
                 // This is because the external annotation file "2.0.0.0.Interfaces.Nullness.Gen.xml"
                 // contains the following snapshot:

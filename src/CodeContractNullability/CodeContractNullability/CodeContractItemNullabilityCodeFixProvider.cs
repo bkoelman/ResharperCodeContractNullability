@@ -11,10 +11,10 @@ namespace CodeContractNullability
     /// </summary>
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(CodeContractItemNullabilityCodeFixProvider))]
     [Shared]
-    public class CodeContractItemNullabilityCodeFixProvider : BaseCodeFixProvider
+    public sealed class CodeContractItemNullabilityCodeFixProvider : BaseCodeFixProvider
     {
         [ItemNotNull]
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
+        public override ImmutableArray<string> FixableDiagnosticIds
             => ImmutableArray.Create(CodeContractItemNullabilityAnalyzer.DiagnosticId);
 
         public CodeContractItemNullabilityCodeFixProvider()

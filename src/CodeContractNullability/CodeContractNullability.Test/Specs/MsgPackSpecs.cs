@@ -34,7 +34,7 @@ namespace CodeContractNullability.Test.Specs
         }
     }
 
-    public class SerializerTestObject
+    public sealed class SerializerTestObject
     {
         [CanBeNull]
         public string Name { get; set; }
