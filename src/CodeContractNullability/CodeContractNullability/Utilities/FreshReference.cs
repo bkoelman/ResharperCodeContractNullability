@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Threading;
+﻿using System.Threading;
 using JetBrains.Annotations;
 
 namespace CodeContractNullability.Utilities
@@ -41,8 +40,6 @@ namespace CodeContractNullability.Utilities
             }
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "This class is not intended to be inherited externally.")]
         public FreshReference([CanBeNull] T value)
         {
             // ReSharper disable once DoNotCallOverridableMethodsInConstructor
