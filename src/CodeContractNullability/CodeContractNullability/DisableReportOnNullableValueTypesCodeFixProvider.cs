@@ -21,16 +21,16 @@ namespace CodeContractNullability
             => ImmutableArray.Create(BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId);
 
         [NotNull]
-        public override async Task RegisterCodeFixesAsync(CodeFixContext context)
+        public override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            await Task.Yield();
-
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
                 CodeAction codeAction = CodeAction.Create("Disable reporting on nullable value types in project",
                     cancellationToken => CreateOrUpdateSolution(context));
                 context.RegisterCodeFix(codeAction, diagnostic);
             }
+
+            return Task.FromResult(0);
         }
 
         [NotNull]

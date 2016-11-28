@@ -43,7 +43,7 @@ namespace CodeContractNullability
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
                 NullabilityAttributeSymbols nullSymbols =
-                    await GetNullabilityAttributesFromDiagnostic(context, diagnostic);
+                    await GetNullabilityAttributesFromDiagnostic(context, diagnostic).ConfigureAwait(false);
 
                 SyntaxNode syntaxRoot =
                     await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
