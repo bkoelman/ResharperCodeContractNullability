@@ -36,7 +36,7 @@ namespace CodeContractNullability
                 {
                     return ReadSourceText(fileText, reader =>
                     {
-                        var serializer = new DataContractSerializer(typeof (AnalyzerSettings));
+                        var serializer = new DataContractSerializer(typeof(AnalyzerSettings));
                         return (AnalyzerSettings) serializer.ReadObject(reader);
                     }, cancellationToken);
                 }
@@ -87,7 +87,7 @@ namespace CodeContractNullability
             Encoding encoding = new UTF8Encoding();
             return GetStringForXml(encoding, writer =>
             {
-                var serializer = new DataContractSerializer(typeof (AnalyzerSettings));
+                var serializer = new DataContractSerializer(typeof(AnalyzerSettings));
                 serializer.WriteObject(writer, settings);
             });
         }

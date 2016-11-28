@@ -21,7 +21,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("N.M"))
-                .Using(typeof (IEnumerable<>).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C
                     {
@@ -42,7 +42,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("N1"))
-                .Using(typeof (IEnumerable<>).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace N2
                     {
@@ -80,7 +80,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (List<>).Namespace)
+                .Using(typeof(List<>).Namespace)
                 .InDefaultClass(@"
                     List<int> f;
                 ")
@@ -95,7 +95,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (IList<>).Namespace)
+                .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
@@ -113,9 +113,9 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .WithReference(typeof (HashSet<>).Assembly)
-                .Using(typeof (HashSet<>).Namespace)
-                .Using(typeof (BindingFlags).Namespace)
+                .WithReference(typeof(HashSet<>).Assembly)
+                .Using(typeof(HashSet<>).Namespace)
+                .Using(typeof(BindingFlags).Namespace)
                 .InDefaultClass(@"
                     HashSet<BindingFlags> f;
                 ")
@@ -130,7 +130,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (IList).Namespace)
+                .Using(typeof(IList).Namespace)
                 .InDefaultClass(@"
                     <annotate/> IList [|f|];
                 ")
@@ -145,7 +145,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (IList<>).Namespace)
+                .Using(typeof(IList<>).Namespace)
                 .InDefaultClass(@"
                     <annotate/> IList<int?> [|f|];
                 ")
@@ -162,7 +162,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithSettings(new AnalyzerSettingsBuilder()
                     .DisableReportOnNullableValueTypes)
-                .Using(typeof (IList<>).Namespace)
+                .Using(typeof(IList<>).Namespace)
                 .InDefaultClass(@"
                     IList<int?> f;
                 ")
@@ -177,7 +177,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (ISet<>).Namespace)
+                .Using(typeof(ISet<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
@@ -195,7 +195,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (IEnumerable<>).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
                     <annotate/> IEnumerable<string> [|f|];
                 ")
@@ -210,8 +210,8 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (IEnumerable<>).Namespace)
-                .Using(typeof (CompilerGeneratedAttribute).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
+                .Using(typeof(CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
                     IEnumerable<string> f;
@@ -228,9 +228,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .Named("MainForm.Designer.cs")
-                .WithReference(typeof (Control).Assembly)
-                .Using(typeof (IList<>).Namespace)
-                .Using(typeof (Control).Namespace)
+                .WithReference(typeof(Control).Assembly)
+                .Using(typeof(IList<>).Namespace)
+                .Using(typeof(Control).Namespace)
                 .InGlobalScope(@"
                     public partial class DerivedControl : Control
                     {
@@ -248,7 +248,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (IList).Namespace)
+                .Using(typeof(IList).Namespace)
                 .WithHeader(@"
         //------------------------------------------------------------------------------
         // <auto-generated>
@@ -274,7 +274,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (List<>).Namespace)
+                .Using(typeof(List<>).Namespace)
                 .InDefaultClass(@"
                     <annotate/> List<int?> [|f|], [|g|];
                 ")
@@ -303,7 +303,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task).Namespace)
+                .Using(typeof(Task).Namespace)
                 .InDefaultClass(@"
                     Task f;
                 ")
@@ -318,7 +318,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (Task<>).Namespace)
+                .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
                     <annotate/> Task<string> [|f|];
                 ")

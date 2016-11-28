@@ -107,7 +107,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (BindingFlags).Namespace)
+                .Using(typeof(BindingFlags).Namespace)
                 .InDefaultClass(@"
                     void M(BindingFlags p) { }
                 ")
@@ -257,7 +257,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (CompilerGeneratedAttribute).Namespace)
+                .Using(typeof(CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     void M([CompilerGenerated] string p) { }
                 ")
@@ -805,8 +805,8 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithReference(typeof (ConditionalAttribute).Assembly)
-                .Using(typeof (ConditionalAttribute).Namespace)
+                .WithReference(typeof(ConditionalAttribute).Assembly)
+                .Using(typeof(ConditionalAttribute).Namespace)
                 .InGlobalScope(@"
                     namespace N
                     {

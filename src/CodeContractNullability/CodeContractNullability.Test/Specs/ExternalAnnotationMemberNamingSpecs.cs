@@ -15,7 +15,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (IEnumerable<>).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace SampleNamespace
                     {
@@ -107,7 +107,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (IEnumerable<>).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace SystemCollections
                     {
@@ -136,7 +136,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (IEnumerable<>).Namespace)
+                .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace SystemCollections
                     {
@@ -200,7 +200,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (KeyValuePair<,>).Namespace)
+                .Using(typeof(KeyValuePair<,>).Namespace)
                 .InGlobalScope(@"
                     namespace TestSystem
                     {

@@ -27,32 +27,32 @@ namespace CodeContractNullability
         }
 
         [CanBeNull]
-        public INamedTypeSymbol EnumerableOfT => GetCached(typeof (IEnumerable<>).FullName);
+        public INamedTypeSymbol EnumerableOfT => GetCached(typeof(IEnumerable<>).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol Enumerable => GetCached(typeof (IEnumerable).FullName);
+        public INamedTypeSymbol Enumerable => GetCached(typeof(IEnumerable).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol String => GetCached(typeof (string).FullName);
+        public INamedTypeSymbol String => GetCached(typeof(string).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol Object => GetCached(typeof (object).FullName);
+        public INamedTypeSymbol Object => GetCached(typeof(object).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol LazyOfT => GetCached(typeof (Lazy<>).FullName);
+        public INamedTypeSymbol LazyOfT => GetCached(typeof(Lazy<>).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol TaskOfT => GetCached(typeof (Task<>).FullName);
+        public INamedTypeSymbol TaskOfT => GetCached(typeof(Task<>).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol CompilerGeneratedAttribute => GetCached(typeof (CompilerGeneratedAttribute).FullName);
+        public INamedTypeSymbol CompilerGeneratedAttribute => GetCached(typeof(CompilerGeneratedAttribute).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol DebuggerNonUserCodeAttribute
-            => GetCached(typeof (DebuggerNonUserCodeAttribute).FullName);
+        public INamedTypeSymbol DebuggerNonUserCodeAttribute => GetCached(typeof(DebuggerNonUserCodeAttribute).FullName)
+            ;
 
         [CanBeNull]
-        public INamedTypeSymbol ConditionalAttribute => GetCached(typeof (ConditionalAttribute).FullName);
+        public INamedTypeSymbol ConditionalAttribute => GetCached(typeof(ConditionalAttribute).FullName);
 
         [CanBeNull]
         private INamedTypeSymbol GetCached([NotNull] string typeName)

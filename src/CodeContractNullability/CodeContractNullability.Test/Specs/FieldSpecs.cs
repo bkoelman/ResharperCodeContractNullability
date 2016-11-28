@@ -132,7 +132,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (BindingFlags).Namespace)
+                .Using(typeof(BindingFlags).Namespace)
                 .InDefaultClass(@"
                     BindingFlags f;
                 ")
@@ -232,7 +232,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (CompilerGeneratedAttribute).Namespace)
+                .Using(typeof(CompilerGeneratedAttribute).Namespace)
                 .InDefaultClass(@"
                     [CompilerGenerated]
                     string f;
@@ -248,7 +248,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (EventHandler).Namespace)
+                .Using(typeof(EventHandler).Namespace)
                 .InDefaultClass(@"
                     public event EventHandler E;
                 ")
@@ -263,7 +263,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof (EventHandler).Namespace)
+                .Using(typeof(EventHandler).Namespace)
                 .InDefaultClass(@"
                     public event EventHandler E
                     {
@@ -282,8 +282,8 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Using(typeof (EventHandler<>).Namespace)
-                .Using(typeof (EventArgs).Namespace)
+                .Using(typeof(EventHandler<>).Namespace)
+                .Using(typeof(EventArgs).Namespace)
                 .InGlobalScope(@"
                     public class DerivedEventArgs : EventArgs { }
 
@@ -304,9 +304,9 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
                 .Named("MainForm.Designer.cs")
-                .WithReference(typeof (Control).Assembly)
-                .Using(typeof (Control).Namespace)
-                .Using(typeof (Button).Namespace)
+                .WithReference(typeof(Control).Assembly)
+                .Using(typeof(Control).Namespace)
+                .Using(typeof(Button).Namespace)
                 .InGlobalScope(@"
                     public partial class DerivedControl : Control
                     {
@@ -349,8 +349,8 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .WithReference(typeof (ConditionalAttribute).Assembly)
-                .Using(typeof (ConditionalAttribute).Namespace)
+                .WithReference(typeof(ConditionalAttribute).Assembly)
+                .Using(typeof(ConditionalAttribute).Namespace)
                 .InGlobalScope(@"
                     namespace N
                     {
