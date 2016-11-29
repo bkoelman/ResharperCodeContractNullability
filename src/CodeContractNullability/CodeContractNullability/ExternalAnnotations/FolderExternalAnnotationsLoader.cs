@@ -19,9 +19,12 @@ namespace CodeContractNullability.ExternalAnnotations
     public static class FolderExternalAnnotationsLoader
     {
         [NotNull]
+        private static readonly FolderOnDiskScanner Scanner = new FolderOnDiskScanner();
+
+        [NotNull]
         private static readonly string CachePath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                @"ResharperCodeContractNullability\external-annotations.cache");
+                "ResharperCodeContractNullability", "external-annotations.cache");
 
         [NotNull]
         private static readonly object LockObject = new object();
@@ -29,24 +32,28 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         public static ExternalAnnotationsMap Create()
         {
-            try
+            // The lock prevents IOException (process cannot access file) when host executes analyzers in parallel.
+            lock (LockObject)
             {
-                return GetCached();
-            }
-            catch (MissingExternalAnnotationsException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw GetErrorForMissingExternalAnnotations(ex);
+                try
+                {
+                    return GetCached();
+                }
+                catch (MissingExternalAnnotationsException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    throw GetErrorForMissingExternalAnnotations(ex);
+                }
             }
         }
 
         [NotNull]
         private static Exception GetErrorForMissingExternalAnnotations([CanBeNull] Exception error = null)
         {
-            IEnumerable<string> folderSet = GetFoldersToScan();
+            IEnumerable<string> folderSet = Scanner.GetFoldersToProbe();
             string folders = string.Join(";", folderSet.Select(SurroundWithDoubleQuotes));
 
             string message = "Failed to load Resharper external annotations. Scanned folders: " + folders;
@@ -62,25 +69,19 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         private static ExternalAnnotationsMap GetCached()
         {
-            // The lock prevents IOException (process cannot access file) when host executes analyzers in parallel.
-            lock (LockObject)
+            ExternalAnnotationsCache cached = TryGetCacheFromDisk();
+            DateTime highestLastWriteTimeUtcOnDisk = cached != null ? GetHighestLastWriteTimeUtc() : DateTime.MinValue;
+
+            if (cached == null || cached.LastWriteTimeUtc != highestLastWriteTimeUtcOnDisk)
             {
-                ExternalAnnotationsCache cached = TryGetCacheFromDisk();
-                DateTime highestLastWriteTimeUtcOnDisk = cached != null
-                    ? GetHighestLastWriteTimeUtc()
-                    : DateTime.MinValue;
-
-                if (cached == null || cached.LastWriteTimeUtc != highestLastWriteTimeUtcOnDisk)
+                using (new CodeTimer("ExternalAnnotationsCache:Create"))
                 {
-                    using (new CodeTimer("ExternalAnnotationsCache:Create"))
-                    {
-                        cached = ScanForMemberExternalAnnotations();
-                        TrySaveToDisk(cached);
-                    }
+                    cached = ScanForMemberExternalAnnotations();
+                    TrySaveToDisk(cached);
                 }
-
-                return cached.ExternalAnnotations;
             }
+
+            return cached.ExternalAnnotations;
         }
 
         [CanBeNull]
@@ -158,10 +159,7 @@ namespace CodeContractNullability.ExternalAnnotations
         private static void EnsureDirectoryExists()
         {
             string folder = Path.GetDirectoryName(CachePath);
-            if (folder != null)
-            {
-                Directory.CreateDirectory(folder);
-            }
+            Directory.CreateDirectory(folder);
         }
 
         [NotNull]
@@ -197,7 +195,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             var fileSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (string folder in GetFoldersToScan())
+            foreach (string folder in Scanner.GetFoldersToScan())
             {
                 if (Directory.Exists(folder))
                 {
@@ -209,26 +207,6 @@ namespace CodeContractNullability.ExternalAnnotations
             }
 
             return fileSet;
-        }
-
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetFoldersToScan()
-        {
-            string programFilesX86Folder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
-            string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            return new[]
-            {
-                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudioV15),
-                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudioV15),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudioV15),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudioV15),
-                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
-                Path.Combine(programFilesX86Folder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperForVisualStudio2015),
-                Path.Combine(localAppDataFolder, ExternalAnnotationFolders.ResharperExtensionsForVisualStudio2015)
-            };
         }
 
         private static void Compact([NotNull] ExternalAnnotationsMap externalAnnotations)
@@ -262,21 +240,6 @@ namespace CodeContractNullability.ExternalAnnotations
                     HighestLastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
                 }
             }
-        }
-
-        private static class ExternalAnnotationFolders
-        {
-            public const string ResharperForVisualStudio2015 =
-                @"JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations";
-
-            public const string ResharperExtensionsForVisualStudio2015 =
-                @"JetBrains\Installations\ReSharperPlatformVs14\Extensions";
-
-            public const string ResharperForVisualStudioV15 =
-                @"JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations";
-
-            public const string ResharperExtensionsForVisualStudioV15 =
-                @"JetBrains\Installations\ReSharperPlatformVs15\Extensions";
         }
     }
 }
