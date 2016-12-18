@@ -153,7 +153,6 @@
     <Compile Include="Specs\LambdaSpecs.cs" />
     <Compile Include="Specs\MethodReturnValueCollectionSpecs.cs" />
     <Compile Include="Specs\MethodReturnValueSpecs.cs" />
-    <Compile Include="Specs\MsgPackSpecs.cs" />
     <Compile Include="Specs\ParameterCollectionSpecs.cs" />
     <Compile Include="Specs\ParameterSpecs.cs" />
     <Compile Include="Specs\PropertyCollectionSpecs.cs" />

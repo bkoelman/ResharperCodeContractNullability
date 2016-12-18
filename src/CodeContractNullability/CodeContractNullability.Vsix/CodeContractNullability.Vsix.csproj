@@ -90,7 +90,6 @@
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\tools\uninstall.ps1" />
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\CodeContractNullability.nuspec" />
       <VsixSourceItem Remove="$(SolutionDir)packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll" />
-      <VsixSourceItem Remove="$(SolutionDir)packages\MsgPack.Cli.0.8.0\lib\net45\MsgPack.dll" />
     </ItemGroup>
     <!--
         <Message Text="VsixSourceItem collection now contains: @(VsixSourceItem)" Importance="High" />
