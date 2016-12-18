@@ -53,8 +53,9 @@ namespace CodeContractNullability.NullabilityAttributes
 
             return notNullSymbol != null && canBeNullSymbol != null && itemNotNullSymbol != null &&
                 itemCanBeNullSymbol != null
-                ? new NullabilityAttributeSymbols(notNullSymbol, canBeNullSymbol, itemNotNullSymbol, itemCanBeNullSymbol)
-                : null;
+                    ? new NullabilityAttributeSymbols(notNullSymbol, canBeNullSymbol, itemNotNullSymbol,
+                        itemCanBeNullSymbol)
+                    : null;
         }
 
         [CanBeNull]

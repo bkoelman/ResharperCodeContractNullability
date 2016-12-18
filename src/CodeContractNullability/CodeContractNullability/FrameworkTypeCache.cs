@@ -49,7 +49,7 @@ namespace CodeContractNullability
 
         [CanBeNull]
         public INamedTypeSymbol DebuggerNonUserCodeAttribute => GetCached(typeof(DebuggerNonUserCodeAttribute).FullName)
-            ;
+        ;
 
         [CanBeNull]
         public INamedTypeSymbol ConditionalAttribute => GetCached(typeof(ConditionalAttribute).FullName);

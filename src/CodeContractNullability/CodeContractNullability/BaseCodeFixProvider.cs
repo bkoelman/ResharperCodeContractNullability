@@ -139,9 +139,8 @@ namespace CodeContractNullability
 
             // Add namespace import.
             Document documentWithImport =
-                await
-                    ImportAdder.AddImportsAsync(documentWithAttribute, NamespaceImportAnnotation, options,
-                        cancellationToken).ConfigureAwait(false);
+                await ImportAdder.AddImportsAsync(documentWithAttribute, NamespaceImportAnnotation, options,
+                    cancellationToken).ConfigureAwait(false);
 
             // Simplify and reformat all annotated nodes.
             Document simplified =

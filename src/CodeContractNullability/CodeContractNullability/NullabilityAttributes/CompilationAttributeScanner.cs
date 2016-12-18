@@ -48,9 +48,9 @@ namespace CodeContractNullability.NullabilityAttributes
 
             return notNullAttributeSymbol != null && canBeNullAttributeSymbol != null &&
                 itemNotNullAttributeSymbol != null && itemCanBeNullAttributeSymbol != null
-                ? new NullabilityAttributeSymbols(notNullAttributeSymbol, canBeNullAttributeSymbol,
-                    itemNotNullAttributeSymbol, itemCanBeNullAttributeSymbol)
-                : null;
+                    ? new NullabilityAttributeSymbols(notNullAttributeSymbol, canBeNullAttributeSymbol,
+                        itemNotNullAttributeSymbol, itemCanBeNullAttributeSymbol)
+                    : null;
         }
 
         private bool IsAttributeName([CanBeNull] string name)
@@ -127,7 +127,7 @@ namespace CodeContractNullability.NullabilityAttributes
             private bool IsComplete
                 =>
                     NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null &&
-                        ItemNotNullAttributeSymbol != null && ItemCanBeNullAttributeSymbol != null;
+                    ItemNotNullAttributeSymbol != null && ItemCanBeNullAttributeSymbol != null;
 
             public override void VisitNamespace([NotNull] INamespaceSymbol symbol)
             {
