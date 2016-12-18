@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="CodeContractNullability.Vsix..600f9d9f-680c-4d95-9a05-1aa033e7dbee" Version="1.0.5" Language="en-US" Publisher="Bart Koelman" />
+    <Identity Id="CodeContractNullability.Vsix..600f9d9f-680c-4d95-9a05-1aa033e7dbee" Version="1.0.6" Language="en-US" Publisher="Bart Koelman" />
     <DisplayName>Resharper Code Contract Nullability</DisplayName>
     <Description xml:space="preserve">Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html</Description>
     <MoreInfo>https://github.com/bkoelman/ResharperCodeContractNullability</MoreInfo>
