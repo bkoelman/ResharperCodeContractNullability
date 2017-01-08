@@ -1,6 +1,9 @@
 # Resharper Code Contract Nullability
 
-[![Build status](https://ci.appveyor.com/api/projects/status/bw9h05bekojslnmr?svg=true)](https://ci.appveyor.com/project/bkoelman/resharpercodecontractnullability) [![resharpercodecontractnullability MyGet Build Status](https://www.myget.org/BuildSource/Badge/resharpercodecontractnullability?identifier=17a3b649-fcf5-4dfb-825b-c89644271895)](https://www.myget.org/)
+[![Build status](https://ci.appveyor.com/api/projects/status/bw9h05bekojslnmr?svg=true)](https://ci.appveyor.com/project/bkoelman/resharpercodecontractnullability)
+[![codecov](https://codecov.io/gh/bkoelman/ResharperCodeContractNullability/branch/master/graph/badge.svg)](https://codecov.io/gh/bkoelman/ResharperCodeContractNullability)
+
+[![resharpercodecontractnullability MyGet Build Status](https://www.myget.org/BuildSource/Badge/resharpercodecontractnullability?identifier=17a3b649-fcf5-4dfb-825b-c89644271895)](https://www.myget.org/)
 
 This Visual Studio analyzer supports you in consequently annotating your codebase with Resharpers nullability attributes. Doing so improves the [nullability analysis engine in Resharper](https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html), so `NullReferenceException`s at runtime will become something from the past.
 
