@@ -8,7 +8,7 @@ namespace CodeContractNullability.Test.Specs
     /// Tests concerning the interpretation of full metadata name notation of members, as they occur in external annotation
     /// files.
     /// </summary>
-    public sealed class ExternalAnnotationMemberNamingSpecs : NullabilityNUnitRoslynTest
+    public sealed class ExternalAnnotationMemberNamingSpecs : NullabilityTest
     {
         [Fact]
         public void When_property_in_generic_class_is_externally_annotated_it_must_be_skipped()

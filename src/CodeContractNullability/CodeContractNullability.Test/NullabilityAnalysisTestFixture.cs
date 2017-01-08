@@ -21,42 +21,42 @@ namespace CodeContractNullability.Test
         [NotNull]
         protected abstract string CanBeNullAttributeName { get; }
 
-        protected void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source)
+        protected void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source,
+            [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 
-            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
+            AnalyzerTestContext analyzerContext = CreateTestContext(source);
 
-            string text = source.GetText();
-            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
-
-            AnalyzerTestContext analyzerContext = new AnalyzerTestContext(text, LanguageNames.CSharp, options)
-                .WithReferences(source.References)
-                .WithFileName(source.Filename);
-
-            AssertDiagnostics(analyzerContext);
+            AssertDiagnostics(analyzerContext, messages);
         }
 
-        protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source)
+        protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source,
+            [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 
-            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
+            AnalyzerTestContext analyzerContext = CreateTestContext(source);
 
             string fixNotNull = source.GetExpectedTextForAttribute(NotNullAttributeName);
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);
 
-            string text = source.GetText();
-            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
-
-            AnalyzerTestContext analyzerContext = new AnalyzerTestContext(text, LanguageNames.CSharp, options)
-                .WithReferences(source.References)
-                .WithFileName(source.Filename);
-
             var fixContext = new FixProviderTestContext(analyzerContext, new[] { fixNotNull, fixCanBeNull },
                 source.ReIndentExpected);
 
-            AssertDiagnosticsWithCodeFixes(fixContext);
+            AssertDiagnosticsWithCodeFixes(fixContext, messages);
+        }
+
+        [NotNull]
+        protected AnalyzerTestContext CreateTestContext([NotNull] ParsedSourceCode source)
+        {
+            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
+
+            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
+
+            return new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp, options)
+                .WithReferences(source.References)
+                .InFileNamed(source.Filename);
         }
 
         protected override DiagnosticAnalyzer CreateAnalyzer()

@@ -6,7 +6,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reporting nullability diagnostics on lambda expressions.
     /// </summary>
-    public sealed class LambdaSpecs : NullabilityNUnitRoslynTest
+    public sealed class LambdaSpecs : NullabilityTest
     {
         [Fact]
         public void When_lambda_parameter_is_nullable_it_must_be_skipped()

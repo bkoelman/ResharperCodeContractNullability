@@ -6,7 +6,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reported bugs.
     /// </summary>
-    public sealed class Bugfixes : NullabilityNUnitRoslynTest
+    public sealed class Bugfixes : NullabilityTest
     {
         [Fact]
         [GitHubIssue(4)]

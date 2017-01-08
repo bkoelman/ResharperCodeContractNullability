@@ -12,7 +12,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reporting item nullability diagnostics on properties.
     /// </summary>
-    public sealed class PropertyCollectionSpecs : ItemNullabilityNUnitRoslynTest
+    public sealed class PropertyCollectionSpecs : ItemNullabilityTest
     {
         [Fact]
         public void When_property_is_annotated_with_item_not_nullable_it_must_be_skipped()
@@ -113,7 +113,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -231,7 +231,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("this[]"));
         }
 
         [Fact]
@@ -336,7 +336,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -375,7 +375,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("this[]"));
         }
 
         [Fact]
@@ -425,7 +425,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -455,7 +455,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -514,7 +514,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
     }
 }

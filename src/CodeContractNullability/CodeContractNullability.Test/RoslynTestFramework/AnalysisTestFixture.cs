@@ -17,6 +17,9 @@ namespace CodeContractNullability.Test.RoslynTestFramework
     public abstract class AnalysisTestFixture
     {
         [NotNull]
+        private static readonly DocumentFactory DocumentFactory = new DocumentFactory();
+
+        [NotNull]
         protected abstract string DiagnosticId { get; }
 
         [NotNull]
@@ -25,86 +28,161 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [NotNull]
         protected abstract CodeFixProvider CreateFixProvider();
 
-        protected void AssertDiagnostics([NotNull] AnalyzerTestContext context)
+        protected void AssertDiagnostics([NotNull] AnalyzerTestContext context,
+            [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(context, nameof(context));
+            Guard.NotNull(messages, nameof(messages));
 
-            RunDiagnostics(context);
+            RunDiagnostics(context, messages);
         }
 
-        [ItemNotNull]
-        private ImmutableArray<Diagnostic> RunDiagnostics([NotNull] AnalyzerTestContext context)
+        [NotNull]
+        private AnalysisResult RunDiagnostics([NotNull] AnalyzerTestContext context,
+            [NotNull] [ItemNotNull] params string[] messages)
         {
-            DocumentWithSpans documentWithSpans = TestHelpers.GetDocumentAndSpansFromMarkup(context.MarkupCode,
-                context.LanguageName, context.References, context.FileName);
+            AnalysisResult result = GetAnalysisResult(context, messages);
 
-            ImmutableArray<Diagnostic> diagnostics =
-                GetDiagnosticsForDocument(documentWithSpans.Document, context.Options)
-                    .OrderBy(d => d.Location.SourceSpan)
-                    .Where(d => d.Id == DiagnosticId)
-                    .ToImmutableArray();
+            VerifyDiagnosticCount(result, context.DiagnosticsCaptureMode);
+            VerifyDiagnostics(result, context);
+
+            return result;
+        }
+
+        [NotNull]
+        private AnalysisResult GetAnalysisResult([NotNull] AnalyzerTestContext context,
+            [NotNull] [ItemNotNull] string[] messages)
+        {
+            DocumentWithSpans documentWithSpans = DocumentFactory.GetDocumentWithSpansFromMarkup(context);
+
+            IList<Diagnostic> diagnostics = GetSortedAnalyzerDiagnostics(context, documentWithSpans);
             ImmutableArray<TextSpan> spans = documentWithSpans.TextSpans.OrderBy(s => s).ToImmutableArray();
 
-            diagnostics.Should().HaveCount(spans.Length);
-
-            for (int index = 0; index < diagnostics.Length; index++)
-            {
-                Diagnostic diagnostic = diagnostics[index];
-                TextSpan span = spans[index];
-
-                diagnostic.Location.IsInSource.Should().BeTrue();
-                diagnostic.Location.SourceSpan.Should().Be(span);
-            }
-
-            return diagnostics;
+            return new AnalysisResult(diagnostics, spans, messages);
         }
 
+        [NotNull]
         [ItemNotNull]
-        private ImmutableArray<Diagnostic> GetDiagnosticsForDocument([NotNull] Document document,
+        private IList<Diagnostic> GetSortedAnalyzerDiagnostics([NotNull] AnalyzerTestContext context,
+            [NotNull] DocumentWithSpans documentWithSpans)
+        {
+            IEnumerable<Diagnostic> diagnostics =
+                EnumerateDiagnosticsForDocument(documentWithSpans.Document, context.ValidationMode,
+                        context.DiagnosticsCaptureMode, context.Options)
+                    .Where(d => d.Id == DiagnosticId);
+
+            if (context.DiagnosticsCaptureMode == DiagnosticsCaptureMode.RequireInSourceTree)
+            {
+                diagnostics = diagnostics.OrderBy(d => d.Location.SourceSpan);
+            }
+
+            return diagnostics.ToImmutableArray();
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        private IEnumerable<Diagnostic> EnumerateDiagnosticsForDocument([NotNull] Document document,
+            TestValidationMode validationMode, DiagnosticsCaptureMode diagnosticsCaptureMode,
             [NotNull] AnalyzerOptions options)
         {
-            ImmutableArray<DiagnosticAnalyzer> analyzers = ImmutableArray.Create(CreateAnalyzer());
-            Compilation compilation = document.Project.GetCompilationAsync().Result;
-            CompilationWithAnalyzers compilationWithAnalyzers = compilation.WithAnalyzers(analyzers, options,
-                CancellationToken.None);
-
-            ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(CancellationToken.None);
-            ValidateCompilerDiagnostics(compilerDiagnostics);
+            CompilationWithAnalyzers compilationWithAnalyzers = GetCompilationWithAnalyzers(document, validationMode,
+                options);
 
             SyntaxTree tree = document.GetSyntaxTreeAsync().Result;
 
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+            return EnumerateAnalyzerDiagnostics(compilationWithAnalyzers, tree, diagnosticsCaptureMode);
+        }
+
+        [NotNull]
+        private CompilationWithAnalyzers GetCompilationWithAnalyzers([NotNull] Document document,
+            TestValidationMode validationMode, [NotNull] AnalyzerOptions options)
+        {
+            ImmutableArray<DiagnosticAnalyzer> analyzers = ImmutableArray.Create(CreateAnalyzer());
+            Compilation compilation = document.Project.GetCompilationAsync().Result;
+
+            ImmutableArray<Diagnostic> compilerDiagnostics = compilation.GetDiagnostics(CancellationToken.None);
+            if (validationMode != TestValidationMode.AllowCompileErrors)
+            {
+                ValidateCompileErrors(compilerDiagnostics);
+            }
+
+            return compilation.WithAnalyzers(analyzers, options);
+        }
+
+        private void ValidateCompileErrors([ItemNotNull] ImmutableArray<Diagnostic> compilerDiagnostics)
+        {
+            bool hasErrors = compilerDiagnostics.Any(d => d.Severity == DiagnosticSeverity.Error);
+            hasErrors.Should().BeFalse("test should have no compile errors");
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        private static IEnumerable<Diagnostic> EnumerateAnalyzerDiagnostics(
+            [NotNull] CompilationWithAnalyzers compilationWithAnalyzers, [NotNull] SyntaxTree tree,
+            DiagnosticsCaptureMode diagnosticsCaptureMode)
+        {
             foreach (Diagnostic analyzerDiagnostic in compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result)
             {
                 Location location = analyzerDiagnostic.Location;
-                if (location.IsInSource && location.SourceTree == tree)
+
+                if (diagnosticsCaptureMode == DiagnosticsCaptureMode.AllowOutsideSourceTree ||
+                    LocationIsInSourceTree(location, tree))
                 {
-                    builder.Add(analyzerDiagnostic);
+                    yield return analyzerDiagnostic;
                 }
             }
-
-            return builder.ToImmutable();
         }
 
-        private void ValidateCompilerDiagnostics([ItemNotNull] ImmutableArray<Diagnostic> compilerDiagnostics)
+        private static bool LocationIsInSourceTree([NotNull] Location location, [CanBeNull] SyntaxTree tree)
         {
-            bool hasErrors = compilerDiagnostics.Any(d => d.Severity == DiagnosticSeverity.Error);
-            hasErrors.Should().BeFalse();
+            return location.IsInSource && location.SourceTree == tree;
         }
 
-        protected void AssertDiagnosticsWithCodeFixes([NotNull] FixProviderTestContext context)
+        private static void VerifyDiagnosticCount([NotNull] AnalysisResult result,
+            DiagnosticsCaptureMode captureMode)
+        {
+            if (captureMode == DiagnosticsCaptureMode.RequireInSourceTree)
+            {
+                result.Diagnostics.Should().HaveSameCount(result.Spans);
+            }
+
+            result.Diagnostics.Should().HaveSameCount(result.Messages);
+        }
+
+        private static void VerifyDiagnostics([NotNull] AnalysisResult result, [NotNull] AnalyzerTestContext context)
+        {
+            for (int index = 0; index < result.Diagnostics.Count; index++)
+            {
+                Diagnostic diagnostic = result.Diagnostics[index];
+
+                if (context.DiagnosticsCaptureMode == DiagnosticsCaptureMode.RequireInSourceTree)
+                {
+                    VerifyDiagnosticLocation(diagnostic, result.Spans[index]);
+                }
+
+                diagnostic.GetMessage().Should().Be(result.Messages[index]);
+            }
+        }
+
+        private static void VerifyDiagnosticLocation([NotNull] Diagnostic diagnostic, TextSpan span)
+        {
+            diagnostic.Location.IsInSource.Should().BeTrue();
+            diagnostic.Location.SourceSpan.Should().Be(span);
+        }
+
+        protected void AssertDiagnosticsWithCodeFixes([NotNull] FixProviderTestContext context,
+            [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(context, nameof(context));
+            Guard.NotNull(messages, nameof(messages));
 
-            ImmutableArray<Diagnostic> diagnostics = RunDiagnostics(context.AnalyzerTestContext);
+            AnalysisResult analysisResult = RunDiagnostics(context.AnalyzerTestContext, messages);
 
-            IList<string> expectedCode = TestHelpers.RemoveMarkupFrom(context.Expected,
-                context.AnalyzerTestContext.LanguageName, context.ReformatExpected,
-                context.AnalyzerTestContext.References, context.AnalyzerTestContext.FileName);
+            ICollection<string> expectedCode = DocumentFactory.RemoveMarkupFrom(context);
             context = context.WithExpected(expectedCode);
 
             CodeFixProvider fixProvider = CreateFixProvider();
-            foreach (Diagnostic diagnostic in diagnostics)
+            foreach (Diagnostic diagnostic in analysisResult.Diagnostics)
             {
                 RunCodeFixes(context, diagnostic, fixProvider);
             }
@@ -116,14 +194,12 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             for (int index = 0; index < context.Expected.Count; index++)
             {
                 Document document =
-                    TestHelpers.GetDocumentAndSpansFromMarkup(context.AnalyzerTestContext.MarkupCode,
-                        context.AnalyzerTestContext.LanguageName, context.AnalyzerTestContext.References,
-                        context.AnalyzerTestContext.FileName).Document;
+                    DocumentFactory.GetDocumentWithSpansFromMarkup(context.AnalyzerTestContext).Document;
 
                 ImmutableArray<CodeAction> codeFixes = GetCodeFixesForDiagnostic(diagnostic, document, fixProvider);
-                codeFixes.Should().HaveCount(context.Expected.Count);
+                codeFixes.Should().HaveSameCount(context.Expected);
 
-                Verify.CodeAction(codeFixes[index], document, context.Expected[index]);
+                VerifyCodeAction(codeFixes[index], document, context.Expected[index]);
             }
         }
 
@@ -132,12 +208,70 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             [NotNull] Document document, [NotNull] CodeFixProvider fixProvider)
         {
             ImmutableArray<CodeAction>.Builder builder = ImmutableArray.CreateBuilder<CodeAction>();
-            Action<CodeAction, ImmutableArray<Diagnostic>> registerCodeFix = (a, _) => builder.Add(a);
+            Action<CodeAction, ImmutableArray<Diagnostic>> registerCodeFix = (codeAction, _) => builder.Add(codeAction);
 
-            var context = new CodeFixContext(document, diagnostic, registerCodeFix, CancellationToken.None);
-            fixProvider.RegisterCodeFixesAsync(context).Wait();
+            var fixContext = new CodeFixContext(document, diagnostic, registerCodeFix, CancellationToken.None);
+            fixProvider.RegisterCodeFixesAsync(fixContext).Wait();
 
             return builder.ToImmutable();
+        }
+
+        private static void VerifyCodeAction([NotNull] CodeAction codeAction, [NotNull] Document document,
+            [NotNull] string expectedCode)
+        {
+            Guard.NotNull(codeAction, nameof(codeAction));
+
+            if (codeAction.GetType().Name != "SolutionChangeAction")
+            {
+                Guard.NotNull(expectedCode, nameof(expectedCode));
+
+                ImmutableArray<CodeActionOperation> operations =
+                    codeAction.GetOperationsAsync(CancellationToken.None).Result;
+
+                operations.Should().HaveCount(1);
+
+                VerifyOperationText(operations.Single(), expectedCode, document);
+            }
+        }
+
+        private static void VerifyOperationText([NotNull] CodeActionOperation operation, [NotNull] string expectedCode,
+            [NotNull] Document document)
+        {
+            Workspace workspace = document.Project.Solution.Workspace;
+            operation.Apply(workspace, CancellationToken.None);
+
+            Document newDocument = workspace.CurrentSolution.GetDocument(document.Id);
+
+            SourceText sourceText = newDocument.GetTextAsync().Result;
+            string text = sourceText.ToString();
+
+            text.Should().Be(expectedCode);
+        }
+
+        private sealed class AnalysisResult
+        {
+            [NotNull]
+            [ItemNotNull]
+            public IList<Diagnostic> Diagnostics { get; }
+
+            [NotNull]
+            public IList<TextSpan> Spans { get; }
+
+            [NotNull]
+            [ItemNotNull]
+            public IList<string> Messages { get; }
+
+            public AnalysisResult([NotNull] [ItemNotNull] IList<Diagnostic> diagnostics, [NotNull] IList<TextSpan> spans,
+                [NotNull] [ItemNotNull] IList<string> messages)
+            {
+                Guard.NotNull(diagnostics, nameof(diagnostics));
+                Guard.NotNull(spans, nameof(spans));
+                Guard.NotNull(messages, nameof(messages));
+
+                Diagnostics = diagnostics;
+                Spans = spans;
+                Messages = messages;
+            }
         }
     }
 }

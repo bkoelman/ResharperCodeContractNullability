@@ -132,19 +132,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReportOnNullableValueTypesNUnitRoslynTest.cs" />
+    <Compile Include="DiagnosticMessageBuilder.cs" />
+    <Compile Include="ReportOnNullableValueTypesTest.cs" />
     <Compile Include="ExactSourceCode.cs" />
     <Compile Include="GitHubIssueAttribute.cs" />
-    <Compile Include="ItemNullabilityNUnitRoslynTest.cs" />
+    <Compile Include="ItemNullabilityTest.cs" />
     <Compile Include="NullabilityAnalysisTestFixture.cs" />
-    <Compile Include="NullabilityNUnitRoslynTest.cs" />
+    <Compile Include="NullabilityTest.cs" />
     <Compile Include="ParsedSourceCode.cs" />
     <Compile Include="RoslynTestFramework\AnalysisTestFixture.cs" />
     <Compile Include="RoslynTestFramework\AnalyzerTestContext.cs" />
+    <Compile Include="RoslynTestFramework\DiagnosticsCaptureMode.cs" />
     <Compile Include="RoslynTestFramework\DocumentWithSpans.cs" />
     <Compile Include="RoslynTestFramework\FixProviderTestContext.cs" />
-    <Compile Include="RoslynTestFramework\TestHelpers.cs" />
-    <Compile Include="RoslynTestFramework\Verify.cs" />
+    <Compile Include="RoslynTestFramework\DocumentFactory.cs" />
+    <Compile Include="RoslynTestFramework\OperationFeature.cs" />
+    <Compile Include="RoslynTestFramework\TestValidationMode.cs" />
     <Compile Include="Specs\AttributeDiscoverySpecs.cs" />
     <Compile Include="Specs\Bugfixes.cs" />
     <Compile Include="Specs\ExternalAnnotationMemberNamingSpecs.cs" />
@@ -159,6 +162,7 @@
     <Compile Include="Specs\PropertySpecs.cs" />
     <Compile Include="Specs\ReportOnNullableValueTypesSpecs.cs" />
     <Compile Include="Specs\TokenTriviaSpecs.cs" />
+    <Compile Include="SymbolType.cs" />
     <Compile Include="TestDataBuilders\AnalyzerSettingsBuilder.cs" />
     <Compile Include="TestDataBuilders\ClassSourceCodeBuilder.cs" />
     <Compile Include="TestDataBuilders\ExternalAnnotationFragmentBuilder.cs" />

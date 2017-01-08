@@ -11,7 +11,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reporting nullability diagnostics on fields.
     /// </summary>
-    public sealed class FieldSpecs : NullabilityNUnitRoslynTest
+    public sealed class FieldSpecs : NullabilityTest
     {
         [Fact]
         public void When_field_is_annotated_with_not_nullable_it_must_be_skipped()
@@ -153,7 +153,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -224,7 +224,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -378,7 +378,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"), CreateMessageForField("g"));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reporting item nullability diagnostics on methods (meaning: method return values).
     /// </summary>
-    public sealed class MethodReturnValueCollectionSpecs : ItemNullabilityNUnitRoslynTest
+    public sealed class MethodReturnValueCollectionSpecs : ItemNullabilityTest
     {
         [Fact]
         public void When_method_returns_void_it_must_be_skipped()
@@ -127,7 +127,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -162,7 +162,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -192,7 +192,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -270,7 +270,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -300,7 +300,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -466,7 +466,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -535,7 +535,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -609,7 +609,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
     }
 }

@@ -7,7 +7,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests concerning detection of the nullability attribute definitions at various places.
     /// </summary>
-    public sealed class AttributeDiscoverySpecs : NullabilityNUnitRoslynTest
+    public sealed class AttributeDiscoverySpecs : NullabilityTest
     {
         [Fact]
         public void When_attributes_are_not_defined_it_must_not_report_any_diagnostics()
@@ -46,7 +46,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]

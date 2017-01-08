@@ -6,7 +6,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests concerning whitespace and comment preservation when fixes are applied.
     /// </summary>
-    public sealed class TokenTriviaSpecs : NullabilityNUnitRoslynTest
+    public sealed class TokenTriviaSpecs : NullabilityTest
     {
         [Fact]
         public void When_field_has_singleline_comments_they_must_be_preserved()
@@ -26,7 +26,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("this[]"));
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForProperty("this[]"));
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("offset"));
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("offset"));
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -229,7 +229,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -269,7 +269,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
     }
 }

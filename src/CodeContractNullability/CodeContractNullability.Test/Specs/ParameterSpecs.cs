@@ -11,7 +11,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reporting nullability diagnostics on method parameters.
     /// </summary>
-    public sealed class ParameterSpecs : NullabilityNUnitRoslynTest
+    public sealed class ParameterSpecs : NullabilityTest
     {
         [Fact]
         public void When_parameter_is_annotated_with_not_nullable_it_must_be_skipped()
@@ -130,7 +130,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -342,7 +342,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -627,7 +627,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -670,7 +670,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -706,7 +706,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
 
         [Fact]
@@ -877,7 +877,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
     }
 }

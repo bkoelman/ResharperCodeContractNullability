@@ -12,7 +12,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reporting item nullability diagnostics on fields of collection types.
     /// </summary>
-    public sealed class FieldCollectionSpecs : ItemNullabilityNUnitRoslynTest
+    public sealed class FieldCollectionSpecs : ItemNullabilityTest
     {
         [Fact]
         public void When_field_is_annotated_with_item_not_nullable_it_must_be_skipped()
@@ -137,7 +137,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -281,7 +281,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"), CreateMessageForField("g"));
         }
 
         [Fact]
@@ -295,7 +295,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
         [Fact]
@@ -325,7 +325,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source);
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
     }
 }

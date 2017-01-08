@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace CodeContractNullability.Test.RoslynTestFramework
 {
+    /// <summary />
     internal sealed class DocumentWithSpans
     {
         [NotNull]

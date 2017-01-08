@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 
 namespace CodeContractNullability.Test
 {
-    public abstract class NullabilityNUnitRoslynTest : NullabilityAnalysisTestFixture
+    public abstract class NullabilityTest : NullabilityAnalysisTestFixture
     {
         protected override string DiagnosticId => CodeContractNullabilityAnalyzer.DiagnosticId;
 
@@ -43,6 +43,42 @@ namespace CodeContractNullability.Test
             }
 
             return textBuilder.ToString();
+        }
+
+        [NotNull]
+        protected static string CreateMessageForField([NotNull] string name)
+        {
+            return new DiagnosticMessageBuilder()
+                .OfType(SymbolType.Field)
+                .Named(name)
+                .Build();
+        }
+
+        [NotNull]
+        protected static string CreateMessageForProperty([NotNull] string name)
+        {
+            return new DiagnosticMessageBuilder()
+                .OfType(SymbolType.Property)
+                .Named(name)
+                .Build();
+        }
+
+        [NotNull]
+        protected static string CreateMessageForMethod([NotNull] string name)
+        {
+            return new DiagnosticMessageBuilder()
+                .OfType(SymbolType.Method)
+                .Named(name)
+                .Build();
+        }
+
+        [NotNull]
+        protected static string CreateMessageForParameter([NotNull] string name)
+        {
+            return new DiagnosticMessageBuilder()
+                .OfType(SymbolType.Parameter)
+                .Named(name)
+                .Build();
         }
     }
 }
