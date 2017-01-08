@@ -257,20 +257,14 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                     }
                 }
 
-                private void LocateNextSpanStart()
+                private void AppendCodeBlockBeforeSpanStart()
                 {
-                    offset = spanEndIndex + SpanTextLength;
-                    spanStartIndex = parser.GetNextSpanStart(offset);
+                    parser.AppendCodeBlock(offset, spanStartIndex - offset);
                 }
 
                 private void LocateNextSpanEnd()
                 {
                     spanEndIndex = parser.GetNextSpanEnd(spanStartIndex);
-                }
-
-                private void AppendCodeBlockBeforeSpanStart()
-                {
-                    parser.AppendCodeBlock(offset, spanStartIndex - offset);
                 }
 
                 private void AppendCodeBlockBetweenSpans()
@@ -279,14 +273,20 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                         spanEndIndex - spanStartIndex - SpanTextLength);
                 }
 
-                private void AppendCodeBlockAfterSpanEnd()
-                {
-                    parser.AppendLastCodeBlock(offset);
-                }
-
                 private void AppendTextSpan()
                 {
                     parser.AppendTextSpan(spanStartIndex, spanEndIndex);
+                }
+
+                private void LocateNextSpanStart()
+                {
+                    offset = spanEndIndex + SpanTextLength;
+                    spanStartIndex = parser.GetNextSpanStart(offset);
+                }
+
+                private void AppendCodeBlockAfterSpanEnd()
+                {
+                    parser.AppendLastCodeBlock(offset);
                 }
             }
         }
