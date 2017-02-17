@@ -7,6 +7,7 @@ using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using MsgPack.Serialization;
+using TestableFileSystem.Interfaces;
 
 namespace CodeContractNullability.ExternalAnnotations
 {
@@ -18,10 +19,13 @@ namespace CodeContractNullability.ExternalAnnotations
     /// from such a built-in type, we need to have those definitions available because Resharper reports nullability annotation as
     /// unneeded when a base type is already decorated.
     /// </remarks>
-    internal static class FolderExternalAnnotationsLoader
+    internal sealed class FolderExternalAnnotationsLoader
     {
         [NotNull]
-        private static readonly FolderOnDiskScanner Scanner = new FolderOnDiskScanner();
+        private readonly IFileSystem fileSystem;
+
+        [NotNull]
+        private readonly FolderOnDiskScanner scanner;
 
         [NotNull]
         private static readonly string CachePath =
@@ -31,8 +35,16 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         private static readonly object LockObject = new object();
 
+        public FolderExternalAnnotationsLoader([NotNull] IFileSystem fileSystem)
+        {
+            Guard.NotNull(fileSystem, nameof(fileSystem));
+
+            this.fileSystem = fileSystem;
+            scanner = new FolderOnDiskScanner(fileSystem);
+        }
+
         [NotNull]
-        public static ExternalAnnotationsMap Create()
+        public ExternalAnnotationsMap Create()
         {
             // The lock prevents IOException (process cannot access file) when host executes analyzers in parallel.
             lock (LockObject)
@@ -53,9 +65,9 @@ namespace CodeContractNullability.ExternalAnnotations
         }
 
         [NotNull]
-        private static Exception GetErrorForMissingExternalAnnotations([CanBeNull] Exception error = null)
+        private Exception GetErrorForMissingExternalAnnotations([CanBeNull] Exception error = null)
         {
-            IEnumerable<string> folderSet = Scanner.GetFoldersToProbe();
+            IEnumerable<string> folderSet = scanner.GetFoldersToProbe();
             string folders = string.Join(";", folderSet.Select(SurroundWithDoubleQuotes));
 
             string message = "Failed to load Resharper external annotations. Scanned folders: " + folders;
@@ -69,7 +81,7 @@ namespace CodeContractNullability.ExternalAnnotations
         }
 
         [NotNull]
-        private static ExternalAnnotationsMap GetCached()
+        private ExternalAnnotationsMap GetCached()
         {
             ExternalAnnotationsCache cached = TryGetCacheFromDisk();
             DateTime highestLastWriteTimeUtcOnDisk = cached != null ? GetHighestLastWriteTimeUtc() : DateTime.MinValue;
@@ -87,19 +99,19 @@ namespace CodeContractNullability.ExternalAnnotations
         }
 
         [CanBeNull]
-        private static ExternalAnnotationsCache TryGetCacheFromDisk()
+        private ExternalAnnotationsCache TryGetCacheFromDisk()
         {
             try
             {
-                if (File.Exists(CachePath))
+                if (fileSystem.File.Exists(CachePath))
                 {
                     MessagePackSerializer<ExternalAnnotationsCache> serializer =
                         SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
-                    using (FileStream stream = File.OpenRead(CachePath))
+                    using (IFileStream stream = fileSystem.File.OpenRead(CachePath))
                     {
                         using (new CodeTimer("ExternalAnnotationsCache:Read"))
                         {
-                            ExternalAnnotationsCache result = serializer.Unpack(stream);
+                            ExternalAnnotationsCache result = serializer.Unpack(stream.AsStream());
 
                             if (result.ExternalAnnotations.Any())
                             {
@@ -122,11 +134,11 @@ namespace CodeContractNullability.ExternalAnnotations
             return null;
         }
 
-        private static DateTime GetHighestLastWriteTimeUtc()
+        private DateTime GetHighestLastWriteTimeUtc()
         {
             using (new CodeTimer("ExternalAnnotationsCache:Scan"))
             {
-                var recorder = new HighestLastWriteTimeUtcRecorder();
+                var recorder = new HighestLastWriteTimeUtcRecorder(fileSystem);
                 foreach (string path in EnumerateAnnotationFiles())
                 {
                     recorder.VisitFile(path);
@@ -141,7 +153,7 @@ namespace CodeContractNullability.ExternalAnnotations
             }
         }
 
-        private static void TrySaveToDisk([NotNull] ExternalAnnotationsCache cache)
+        private void TrySaveToDisk([NotNull] ExternalAnnotationsCache cache)
         {
             try
             {
@@ -149,11 +161,11 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 MessagePackSerializer<ExternalAnnotationsCache> serializer =
                     SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
-                using (FileStream stream = File.Create(CachePath))
+                using (IFileStream stream = fileSystem.File.Create(CachePath))
                 {
                     using (new CodeTimer("ExternalAnnotationsCache:Write"))
                     {
-                        serializer.Pack(stream, cache);
+                        serializer.Pack(stream.AsStream(), cache);
                     }
                 }
             }
@@ -163,27 +175,27 @@ namespace CodeContractNullability.ExternalAnnotations
             }
         }
 
-        private static void EnsureDirectoryExists()
+        private void EnsureDirectoryExists()
         {
             string folder = Path.GetDirectoryName(CachePath);
             if (folder != null)
             {
-                Directory.CreateDirectory(folder);
+                fileSystem.Directory.CreateDirectory(folder);
             }
         }
 
         [NotNull]
-        private static ExternalAnnotationsCache ScanForMemberExternalAnnotations()
+        private ExternalAnnotationsCache ScanForMemberExternalAnnotations()
         {
             var result = new ExternalAnnotationsMap();
             var parser = new ExternalAnnotationDocumentParser();
-            var recorder = new HighestLastWriteTimeUtcRecorder();
+            var recorder = new HighestLastWriteTimeUtcRecorder(fileSystem);
 
             foreach (string path in EnumerateAnnotationFiles())
             {
                 recorder.VisitFile(path);
 
-                using (StreamReader reader = File.OpenText(path))
+                using (StreamReader reader = fileSystem.File.OpenText(path))
                 {
                     parser.ProcessDocument(reader, result);
                 }
@@ -201,15 +213,15 @@ namespace CodeContractNullability.ExternalAnnotations
 
         [NotNull]
         [ItemNotNull]
-        private static IEnumerable<string> EnumerateAnnotationFiles()
+        private IEnumerable<string> EnumerateAnnotationFiles()
         {
             var fileSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (string folder in Scanner.GetFoldersToScan())
+            foreach (string folder in scanner.GetFoldersToScan())
             {
-                if (Directory.Exists(folder))
+                if (fileSystem.Directory.Exists(folder))
                 {
-                    foreach (string path in Directory.EnumerateFiles(folder, "*.xml", SearchOption.AllDirectories))
+                    foreach (string path in fileSystem.Directory.EnumerateFiles(folder, "*.xml", SearchOption.AllDirectories))
                     {
                         fileSet.Add(path);
                     }
@@ -238,13 +250,22 @@ namespace CodeContractNullability.ExternalAnnotations
 
         private sealed class HighestLastWriteTimeUtcRecorder
         {
+            [NotNull]
+            private readonly IFileSystem fileSystem;
+
             public DateTime HighestLastWriteTimeUtc { get; private set; }
 
             public bool HasSeenFiles => HighestLastWriteTimeUtc > DateTime.MinValue;
 
+            public HighestLastWriteTimeUtcRecorder([NotNull] IFileSystem fileSystem)
+            {
+                Guard.NotNull(fileSystem, nameof(fileSystem));
+                this.fileSystem = fileSystem;
+            }
+
             public void VisitFile([NotNull] string path)
             {
-                var fileInfo = new FileInfo(path);
+                IFileInfo fileInfo = fileSystem.ConstructFileInfo(path);
                 if (fileInfo.LastWriteTimeUtc > HighestLastWriteTimeUtc)
                 {
                     HighestLastWriteTimeUtc = fileInfo.LastWriteTimeUtc;

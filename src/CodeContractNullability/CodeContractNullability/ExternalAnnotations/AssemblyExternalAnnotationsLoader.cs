@@ -3,6 +3,7 @@ using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
+using TestableFileSystem.Interfaces;
 
 namespace CodeContractNullability.ExternalAnnotations
 {
@@ -10,10 +11,19 @@ namespace CodeContractNullability.ExternalAnnotations
     /// Attempts to find and parse a side-by-side [AssemblyName].ExternalAnnotations.xml file that resides in the same folder as the
     /// assembly that contains the requested symbol.
     /// </summary>
-    internal static class AssemblyExternalAnnotationsLoader
+    internal sealed class AssemblyExternalAnnotationsLoader
     {
+        [NotNull]
+        private readonly IFileSystem fileSystem;
+
+        public AssemblyExternalAnnotationsLoader([NotNull] IFileSystem fileSystem)
+        {
+            Guard.NotNull(fileSystem, nameof(fileSystem));
+            this.fileSystem = fileSystem;
+        }
+
         [CanBeNull]
-        public static string GetPathForExternalSymbolOrNull([NotNull] ISymbol symbol, [NotNull] Compilation compilation)
+        public string GetPathForExternalSymbolOrNull([NotNull] ISymbol symbol, [NotNull] Compilation compilation)
         {
             Guard.NotNull(symbol, nameof(symbol));
             Guard.NotNull(compilation, nameof(compilation));
@@ -30,7 +40,7 @@ namespace CodeContractNullability.ExternalAnnotations
                     string assemblyFileName = Path.GetFileNameWithoutExtension(assemblyPath);
                     string annotationFilePath = Path.Combine(folder, assemblyFileName + ".ExternalAnnotations.xml");
 
-                    return File.Exists(annotationFilePath) ? annotationFilePath : null;
+                    return fileSystem.File.Exists(annotationFilePath) ? annotationFilePath : null;
                 }
             }
 
@@ -38,11 +48,11 @@ namespace CodeContractNullability.ExternalAnnotations
         }
 
         [NotNull]
-        public static ExternalAnnotationsMap ParseFile([NotNull] string externalAnnotationsPath)
+        public ExternalAnnotationsMap ParseFile([NotNull] string externalAnnotationsPath)
         {
             Guard.NotNull(externalAnnotationsPath, nameof(externalAnnotationsPath));
 
-            using (TextReader reader = File.OpenText(externalAnnotationsPath))
+            using (StreamReader reader = fileSystem.File.OpenText(externalAnnotationsPath))
             {
                 var map = new ExternalAnnotationsMap();
 
