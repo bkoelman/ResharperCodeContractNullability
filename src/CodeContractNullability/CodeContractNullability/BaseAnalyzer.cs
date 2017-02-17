@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.NullabilityAttributes;
@@ -127,23 +126,6 @@ perform the following additional steps after applying this code fix.
             context.RegisterSymbolAction(c => AnalyzeMethod(c, factory, properties), SymbolKind.Method);
             context.RegisterSyntaxNodeAction(c => AnalyzeParameter(SyntaxToSymbolContext(c), factory, properties),
                 SyntaxKind.Parameter);
-
-            // Bug workaround for https://github.com/dotnet/roslyn/issues/16209
-            SyntaxKind? localFunctionStatementSyntaxKind = TryGetLocalFunctionStatementSyntaxKind();
-            if (localFunctionStatementSyntaxKind != null)
-            {
-                context.RegisterSyntaxNodeAction(
-                    c => AnalyzeLocalFunction(SyntaxToSymbolContext(c), factory, properties),
-                    localFunctionStatementSyntaxKind.Value);
-            }
-        }
-
-        [CanBeNull]
-        private static SyntaxKind? TryGetLocalFunctionStatementSyntaxKind()
-        {
-            // Requires VS 2017 or higher.
-            SyntaxKind value;
-            return Enum.TryParse("LocalFunctionStatement", out value) ? value : (SyntaxKind?) null;
         }
 
         private void AnalyzeField(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,
@@ -175,19 +157,6 @@ perform the following additional steps after applying this code fix.
             {
                 ParameterAnalyzer analyzer = factory.GetParameterAnalyzer(context);
                 analyzer.Analyze(ruleForParameter, properties);
-            }
-        }
-
-        private void AnalyzeLocalFunction(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,
-            [NotNull] ImmutableDictionary<string, string> properties)
-        {
-            var localFunction = (IMethodSymbol) context.Symbol;
-
-            foreach (IParameterSymbol parameter in localFunction.Parameters)
-            {
-                var parameterContext = new SymbolAnalysisContext(parameter, context.Compilation, context.Options,
-                    context.ReportDiagnostic, x => true, context.CancellationToken);
-                AnalyzeParameter(parameterContext, factory, properties);
             }
         }
 

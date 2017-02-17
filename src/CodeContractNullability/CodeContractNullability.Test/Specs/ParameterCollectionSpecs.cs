@@ -8,8 +8,6 @@ using Xunit;
 
 namespace CodeContractNullability.Test.Specs
 {
-    // TODO: Add tests for local functions.
-
     /// <summary>
     /// Tests for reporting item nullability diagnostics on method parameters.
     /// </summary>
