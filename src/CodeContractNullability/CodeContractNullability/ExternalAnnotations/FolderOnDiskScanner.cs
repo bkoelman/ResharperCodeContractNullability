@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
+using TestableFileSystem.Interfaces;
 
 namespace CodeContractNullability.ExternalAnnotations
 {
@@ -11,6 +12,9 @@ namespace CodeContractNullability.ExternalAnnotations
     {
         private const string RiderFolderNamePrefix = "JetBrains Rider";
         private const string ResharperFolderNamePrefix = "ReSharperPlatformVs";
+
+        [NotNull]
+        private readonly IFileSystem fileSystem;
 
         [NotNull]
         private readonly string programFilesFolder = Environment.GetEnvironmentVariable("ProgramW6432") ??
@@ -31,6 +35,12 @@ namespace CodeContractNullability.ExternalAnnotations
 
         [NotNull]
         private static readonly Category[] Categories = Enum.GetValues(typeof(Category)).Cast<Category>().ToArray();
+
+        public FolderOnDiskScanner([NotNull] IFileSystem fileSystem)
+        {
+            Guard.NotNull(fileSystem, nameof(fileSystem));
+            this.fileSystem = fileSystem;
+        }
 
         [NotNull]
         [ItemNotNull]
@@ -122,18 +132,18 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         private IEnumerable<ExternalAnnotationsLocation> EnumerateNuGetSubfolders()
         {
-            if (!Directory.Exists(nuGetUserDirectory))
+            if (!fileSystem.Directory.Exists(nuGetUserDirectory))
             {
                 yield break;
             }
 
-            foreach (string versionPath in Directory.GetDirectories(nuGetUserDirectory))
+            foreach (string versionPath in fileSystem.Directory.GetDirectories(nuGetUserDirectory))
             {
                 string versionFolder = Path.GetFileName(versionPath);
                 if (versionFolder != null && Version.TryParse(versionFolder, out Version packageVersion))
                 {
                     string path = Path.Combine(versionPath, "DotFiles", "ExternalAnnotations");
-                    if (Directory.Exists(path))
+                    if (fileSystem.Directory.Exists(path))
                     {
                         yield return new ExternalAnnotationsLocation(Scope.NuGet, Category.ExternalAnnotations, packageVersion,
                             path);
@@ -148,12 +158,12 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             string installationsFolder = Path.Combine(programFilesFolder, "JetBrains");
 
-            if (!Directory.Exists(installationsFolder))
+            if (!fileSystem.Directory.Exists(installationsFolder))
             {
                 yield break;
             }
 
-            foreach (string versionPath in Directory.GetDirectories(installationsFolder, RiderFolderNamePrefix + "*"))
+            foreach (string versionPath in fileSystem.Directory.GetDirectories(installationsFolder, RiderFolderNamePrefix + "*"))
             {
                 string versionFolder = Path.GetFileName(versionPath);
                 if (versionFolder?.Length > RiderFolderNamePrefix.Length)
@@ -162,7 +172,7 @@ namespace CodeContractNullability.ExternalAnnotations
                         out Version riderVersion))
                     {
                         string path = Path.Combine(versionPath, "lib", "ReSharperHost", "ExternalAnnotations");
-                        if (Directory.Exists(path))
+                        if (fileSystem.Directory.Exists(path))
                         {
                             yield return new ExternalAnnotationsLocation(Scope.SystemRider, Category.ExternalAnnotations,
                                 riderVersion, path);
@@ -181,12 +191,13 @@ namespace CodeContractNullability.ExternalAnnotations
 
             string installationsFolder = Path.Combine(startFolder, "JetBrains", "Installations");
 
-            if (!Directory.Exists(installationsFolder))
+            if (!fileSystem.Directory.Exists(installationsFolder))
             {
                 yield break;
             }
 
-            foreach (string platformPath in Directory.GetDirectories(installationsFolder, ResharperFolderNamePrefix + "*"))
+            foreach (string platformPath in fileSystem.Directory.GetDirectories(installationsFolder,
+                ResharperFolderNamePrefix + "*"))
             {
                 string platformFolder = Path.GetFileName(platformPath);
                 if (platformFolder?.Length >= ResharperFolderNamePrefix.Length + 2)
@@ -195,7 +206,7 @@ namespace CodeContractNullability.ExternalAnnotations
                         vsVersion >= 14)
                     {
                         string path = Path.Combine(platformPath, subFolder);
-                        if (Directory.Exists(path))
+                        if (fileSystem.Directory.Exists(path))
                         {
                             yield return new ExternalAnnotationsLocation(scope, category, new Version(vsVersion, 0), path);
                         }

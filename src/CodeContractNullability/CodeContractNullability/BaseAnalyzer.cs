@@ -11,6 +11,8 @@ using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using TestableFileSystem.Interfaces;
+using TestableFileSystem.Wrappers;
 
 namespace CodeContractNullability
 {
@@ -89,13 +91,18 @@ perform the following additional steps after applying this code fix.
             new ExtensionPoint<INullabilityAttributeProvider>(() => new CachingNullabilityAttributeProvider());
 
         [NotNull]
-        public ExtensionPoint<IExternalAnnotationsResolver> ExternalAnnotationsResolver { get; } =
-            new ExtensionPoint<IExternalAnnotationsResolver>(() => new CachingExternalAnnotationsResolver());
+        public ExtensionPoint<IFileSystem> FileSystem { get; } = new ExtensionPoint<IFileSystem>(() => FileSystemWrapper.Default);
+
+        [NotNull]
+        public ExtensionPoint<IExternalAnnotationsResolver> ExternalAnnotationsResolver { get; }
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected BaseAnalyzer(bool appliesToItem)
         {
             this.appliesToItem = appliesToItem;
+
+            ExternalAnnotationsResolver = new ExtensionPoint<IExternalAnnotationsResolver>(() =>
+                new CachingExternalAnnotationsResolver(FileSystem.GetCached(), new GlobalAnnotationCacheProvider()));
 
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
             ruleForField = CreateRuleFor("Field");
