@@ -1,4 +1,5 @@
 ﻿using CodeContractNullability.ExternalAnnotations;
+using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;

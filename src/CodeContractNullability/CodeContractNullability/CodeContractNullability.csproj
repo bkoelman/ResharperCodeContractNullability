@@ -37,7 +37,7 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AnalyzerSettings.cs" />
+    <Compile Include="Settings\AnalyzerSettings.cs" />
     <Compile Include="BaseAnalyzer.cs" />
     <Compile Include="BaseCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityCodeFixProvider.cs" />
@@ -50,7 +50,8 @@
     <Compile Include="ExternalAnnotations\IExternalAnnotationsResolver.cs" />
     <Compile Include="ExternalAnnotations\MissingExternalAnnotationsException.cs" />
     <Compile Include="ExternalAnnotations\SimpleExternalAnnotationsResolver.cs" />
-    <Compile Include="SettingsProvider.cs" />
+    <Compile Include="Settings\SettingsProvider.cs" />
+    <Compile Include="Settings\TypeHierarchyReportMode.cs" />
     <Compile Include="SymbolAnalysis\FieldAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\BaseSymbolAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />

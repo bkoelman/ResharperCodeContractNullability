@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;

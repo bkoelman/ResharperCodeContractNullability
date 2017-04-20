@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
 using System.Threading;
+using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -12,10 +13,11 @@ namespace CodeContractNullability.Test.TestDataBuilders
     public sealed class AnalyzerSettingsBuilder : ITestDataBuilder<AnalyzerSettings>
     {
         private bool disableReportOnNullableValueTypes;
+        private TypeHierarchyReportMode typeHierarchyReportMode;
 
         public AnalyzerSettings Build()
         {
-            return new AnalyzerSettings(disableReportOnNullableValueTypes);
+            return new AnalyzerSettings(disableReportOnNullableValueTypes, typeHierarchyReportMode);
         }
 
         [NotNull]
@@ -26,6 +28,13 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 disableReportOnNullableValueTypes = true;
                 return this;
             }
+        }
+
+        [NotNull]
+        public AnalyzerSettingsBuilder InTypeHierarchyReportMode(TypeHierarchyReportMode mode)
+        {
+            typeHierarchyReportMode = mode;
+            return this;
         }
 
         [NotNull]

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -12,7 +13,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 
-namespace CodeContractNullability
+namespace CodeContractNullability.Settings
 {
     public static class SettingsProvider
     {
@@ -26,12 +27,34 @@ namespace CodeContractNullability
         {
             Guard.NotNull(options, nameof(options));
 
-            AdditionalText settingsFileOrNull = options.AdditionalFiles.FirstOrDefault(file => IsSettingsFile(file.Path));
+            AdditionalText settingsFileOrNull =
+                options.AdditionalFiles.FirstOrDefault(file => IsSettingsFile(file.Path));
+
             if (settingsFileOrNull != null)
             {
                 SourceText fileText = settingsFileOrNull.GetText(cancellationToken);
+                return SafeReadSourceText(cancellationToken, fileText);
+            }
 
-                try
+            return AnalyzerSettings.Default;
+        }
+
+        [ItemNotNull]
+        public static async Task<AnalyzerSettings> LoadSettings([NotNull] TextDocument settingsDocument,
+            CancellationToken cancellationToken)
+        {
+            Guard.NotNull(settingsDocument, nameof(settingsDocument));
+
+            SourceText fileText = await settingsDocument.GetTextAsync(cancellationToken).ConfigureAwait(false);
+            return SafeReadSourceText(cancellationToken, fileText);
+        }
+
+        [NotNull]
+        private static AnalyzerSettings SafeReadSourceText(CancellationToken cancellationToken,
+            [NotNull] SourceText fileText)
+        {
+            try
+            {
                 {
                     return ReadSourceText(fileText, reader =>
                     {
@@ -39,10 +62,10 @@ namespace CodeContractNullability
                         return (AnalyzerSettings)serializer.ReadObject(reader);
                     }, cancellationToken);
                 }
-                catch (Exception ex)
-                {
-                    Debug.Write("Failed to parse analyser settings file. Using default settings. Exception: " + ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Write("Failed to parse analyser settings file. Using default settings. Exception: " + ex);
             }
 
             return AnalyzerSettings.Default;

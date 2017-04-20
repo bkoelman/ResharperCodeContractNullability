@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.NullabilityAttributes;
+using CodeContractNullability.Settings;
 using CodeContractNullability.SymbolAnalysis;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using FluentAssertions;
 using JetBrains.Annotations;

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;

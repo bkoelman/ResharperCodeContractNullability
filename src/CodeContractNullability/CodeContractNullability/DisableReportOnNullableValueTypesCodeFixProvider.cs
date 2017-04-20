@@ -2,6 +2,7 @@
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using CodeContractNullability.Settings;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -35,22 +36,24 @@ namespace CodeContractNullability
 
         [NotNull]
         [ItemNotNull]
-        private Task<Solution> CreateOrUpdateSolution(CodeFixContext context)
+        private async Task<Solution> CreateOrUpdateSolution(CodeFixContext context)
         {
-            string content = SettingsProvider.ToFileContent(new AnalyzerSettings(true));
-
             TextDocument existingDocument =
                 context.Document.Project.AdditionalDocuments.FirstOrDefault(
                     document => SettingsProvider.IsSettingsFile(document.FilePath));
 
+            AnalyzerSettings settings = AnalyzerSettings.Default;
+
             Project project = context.Document.Project;
             if (existingDocument != null)
             {
+                settings = await SettingsProvider.LoadSettings(existingDocument, context.CancellationToken);
                 project = project.RemoveAdditionalDocument(existingDocument.Id);
             }
 
-            TextDocument newDocument = project.AddAdditionalDocument(SettingsProvider.SettingsFileName, content);
-            return Task.FromResult(newDocument.Project.Solution);
+            string newContent = SettingsProvider.ToFileContent(settings.WithDisableReportOnNullableValueTypes(true));
+            TextDocument newDocument = project.AddAdditionalDocument(SettingsProvider.SettingsFileName, newContent);
+            return newDocument.Project.Solution;
         }
     }
 }
