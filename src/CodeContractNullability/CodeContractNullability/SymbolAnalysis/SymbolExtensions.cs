@@ -79,9 +79,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
             if (typeCache.Enumerable != null)
             {
-                if (
-                    typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol)
-                        .Any(type => typeCache.Enumerable.Equals(type)))
+                if (typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol)
+                    .Any(type => typeCache.Enumerable.Equals(type)))
                 {
                     if (!typeSymbol.Equals(typeCache.String))
                     {
@@ -104,7 +103,8 @@ namespace CodeContractNullability.SymbolAnalysis
             if (namedTypeSymbol?.ConstructedFrom != null)
             {
                 bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(typeCache.LazyOfT) ||
-                    namedTypeSymbol.ConstructedFrom.Equals(typeCache.TaskOfT);
+                    namedTypeSymbol.ConstructedFrom.Equals(typeCache.TaskOfT) ||
+                    namedTypeSymbol.ConstructedFrom.Equals(typeCache.ValueTaskOfT);
 
                 if (isMatch)
                 {

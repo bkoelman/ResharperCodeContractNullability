@@ -45,6 +45,9 @@ namespace CodeContractNullability
         public INamedTypeSymbol TaskOfT => GetCached(typeof(Task<>).FullName);
 
         [CanBeNull]
+        public INamedTypeSymbol ValueTaskOfT => GetCached("System.Threading.Tasks.ValueTask`1");
+
+        [CanBeNull]
         public INamedTypeSymbol CompilerGeneratedAttribute => GetCached(typeof(CompilerGeneratedAttribute).FullName);
 
         [CanBeNull]

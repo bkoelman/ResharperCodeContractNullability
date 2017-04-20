@@ -304,6 +304,22 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_method_return_value_is_generic_value_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithReference(typeof(ValueTask<>).Assembly)
+                .Using(typeof(ValueTask<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> ValueTask<string> [|M|]() { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
+        }
+
+        [Fact]
         public void When_method_is_lambda_named_by_compiler_it_must_be_skipped()
         {
             // Arrange

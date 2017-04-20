@@ -327,5 +327,21 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
+
+        [Fact]
+        public void When_field_type_is_generic_value_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithReference(typeof(ValueTask<>).Assembly)
+                .Using(typeof(ValueTask<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> ValueTask<string> [|f|];
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
+        }
     }
 }

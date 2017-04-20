@@ -459,6 +459,22 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_property_type_is_generic_value_task_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithReference(typeof(ValueTask<>).Assembly)
+                .Using(typeof(ValueTask<>).Namespace)
+                .InDefaultClass(@"
+                    <annotate/> ValueTask<string> [|P|] { get; set; }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForProperty("P"));
+        }
+
+        [Fact]
         public void When_base_property_inherits_item_annotation_from_interface_it_must_be_skipped()
         {
             // Arrange
