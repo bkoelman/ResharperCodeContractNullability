@@ -145,6 +145,10 @@
     <Compile Include="RoslynTestFramework\DocumentFactory.cs" />
     <Compile Include="RoslynTestFramework\OperationFeature.cs" />
     <Compile Include="RoslynTestFramework\TestValidationMode.cs" />
+    <Compile Include="Specs\AlternateTypeHierarchyModes\FieldSpecs.cs" />
+    <Compile Include="Specs\AlternateTypeHierarchyModes\MethodReturnValueSpecs.cs" />
+    <Compile Include="Specs\AlternateTypeHierarchyModes\ParameterSpecs.cs" />
+    <Compile Include="Specs\AlternateTypeHierarchyModes\PropertySpecs.cs" />
     <Compile Include="Specs\AttributeDiscoverySpecs.cs" />
     <Compile Include="Specs\Bugfixes.cs" />
     <Compile Include="Specs\ExternalAnnotationMemberNamingSpecs.cs" />

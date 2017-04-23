@@ -59,6 +59,7 @@
     <Compile Include="SymbolAnalysis\ParameterAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\PropertyAnalyzer.cs" />
     <Compile Include="SymbolAnalysis\SymbolAnalyzerFactory.cs" />
+    <Compile Include="SymbolAnalysis\TypeHierarchyLookupResult.cs" />
     <Compile Include="SyntaxNodeExtensions.cs" />
     <Compile Include="NullabilityAttributes\CompilationAttributeScanner.cs" />
     <Compile Include="CodeContractNullabilityAnalyzer.cs" />

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Immutable;
+using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
@@ -137,21 +139,49 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected virtual bool RequiresAnnotation()
         {
-            if (HasAnnotationInInterface(Symbol))
-            {
-                // Resharper reports nullability attribute as unneeded on interface implementation
-                // if member on interface contains nullability attribute.
-                return false;
-            }
+            TypeHierarchyLookupResult lookupResult = GetAnnotationInTypeHierarchy();
 
-            if (HasAnnotationInBaseClass())
-            {
-                // Resharper reports nullability attribute as unneeded
-                // if member on base class contains nullability attribute.
-                return false;
-            }
+            // Truth table which determines per report mode if annotation is required.
+            // For example, "YX" means: lookupResult = { Source = true, Assembly = null }
+            //
+            //  mode:       Always  Highest Top
+            //  XX          Y       Y       Y
+            //  XN          Y       Y       N
+            //  XY          N       N       N
+            //  NX          Y       N       N
+            //  NN          Y       N       N
+            //  NY          N       N       N
+            //  YX          N       N       N
+            //  YN          N       N       N
+            //  YY          N       N       N
 
-            return true;
+            switch (scope.Settings.TypeHierarchyReportMode)
+            {
+                case TypeHierarchyReportMode.Always:
+                    return !(lookupResult.IsAnnotatedAtHigherLevelInSource == true ||
+                        lookupResult.IsAnnotatedAtHigherLevelInAssembly == true);
+                case TypeHierarchyReportMode.AtHighestSourceInTypeHierarchy:
+                    return lookupResult.IsAnnotatedAtHigherLevelInSource == null &&
+                        lookupResult.IsAnnotatedAtHigherLevelInAssembly != true;
+                case TypeHierarchyReportMode.AtTopInTypeHierarchy:
+                    return lookupResult.IsAnnotatedAtHigherLevelInSource == null &&
+                        lookupResult.IsAnnotatedAtHigherLevelInAssembly == null;
+                default:
+                    throw new NotSupportedException($"Unsupported mode '{scope.Settings.TypeHierarchyReportMode}'.");
+            }
+        }
+
+        private TypeHierarchyLookupResult GetAnnotationInTypeHierarchy()
+        {
+            // Resharper reports nullability attribute as unneeded on implemented interface member
+            // if member on interface contains nullability attribute.
+            TypeHierarchyLookupResult interfaceLookupResult = GetAnnotationInInterface(Symbol);
+
+            // Resharper reports nullability attribute as unneeded on derived member
+            // if member on base class contains nullability attribute.
+            TypeHierarchyLookupResult baseClassLookupResult = GetAnnotationInBaseClass();
+
+            return TypeHierarchyLookupResult.Merge(interfaceLookupResult, baseClassLookupResult);
         }
 
         [NotNull]
@@ -161,8 +191,11 @@ namespace CodeContractNullability.SymbolAnalysis
             return Diagnostic.Create(descriptor, Symbol.Locations[0], properties, Symbol.Name);
         }
 
-        protected virtual bool HasAnnotationInInterface([NotNull] TSymbol symbol)
+        protected virtual TypeHierarchyLookupResult GetAnnotationInInterface([NotNull] TSymbol symbol)
         {
+            bool higherLevelSeenInSource = false;
+            bool higherLevelSeenInAssembly = false;
+
             foreach (INamedTypeSymbol iface in symbol.ContainingType.AllInterfaces)
             {
                 foreach (TSymbol ifaceMember in iface.GetMembers().OfType<TSymbol>())
@@ -171,19 +204,30 @@ namespace CodeContractNullability.SymbolAnalysis
 
                     if (symbol.Equals(implementer))
                     {
+                        bool isInExternalAssembly = ifaceMember.IsInExternalAssembly();
+                        if (isInExternalAssembly)
+                        {
+                            higherLevelSeenInAssembly = true;
+                        }
+                        else
+                        {
+                            higherLevelSeenInSource = true;
+                        }
+
                         if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceMember))
                         {
-                            return true;
+                            return TypeHierarchyLookupResult.ForAnnotated(isInExternalAssembly);
                         }
                     }
                 }
             }
-            return false;
+
+            return TypeHierarchyLookupResult.ForNonAnnotated(higherLevelSeenInSource, higherLevelSeenInAssembly);
         }
 
-        protected virtual bool HasAnnotationInBaseClass()
+        protected virtual TypeHierarchyLookupResult GetAnnotationInBaseClass()
         {
-            return false;
+            return TypeHierarchyLookupResult.ForNonAnnotated(false, false);
         }
 
         [NotNull]

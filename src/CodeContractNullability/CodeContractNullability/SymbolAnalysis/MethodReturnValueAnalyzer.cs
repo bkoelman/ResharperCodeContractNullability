@@ -34,20 +34,39 @@ namespace CodeContractNullability.SymbolAnalysis
             return base.RequiresAnnotation();
         }
 
-        protected override bool HasAnnotationInBaseClass()
+        protected override TypeHierarchyLookupResult GetAnnotationInBaseClass()
         {
+            bool higherLevelSeenInSource = false;
+            bool higherLevelSeenInAssembly = false;
+
             IMethodSymbol baseMember = Symbol.OverriddenMethod;
             while (baseMember != null)
             {
-                if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember) ||
-                    HasAnnotationInInterface(baseMember))
+                bool isInExternalAssembly = baseMember.IsInExternalAssembly();
+                if (isInExternalAssembly)
                 {
-                    return true;
+                    higherLevelSeenInAssembly = true;
+                }
+                else
+                {
+                    higherLevelSeenInSource = true;
+                }
+
+                if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember))
+                {
+                    return TypeHierarchyLookupResult.ForAnnotated(isInExternalAssembly);
+                }
+
+                var interfaceLookupResult = GetAnnotationInInterface(baseMember);
+                if (interfaceLookupResult.HasAnnotation)
+                {
+                    return interfaceLookupResult;
                 }
 
                 baseMember = baseMember.OverriddenMethod;
             }
-            return false;
+
+            return TypeHierarchyLookupResult.ForNonAnnotated(higherLevelSeenInSource, higherLevelSeenInAssembly);
         }
     }
 }

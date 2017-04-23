@@ -203,5 +203,12 @@ namespace CodeContractNullability.SymbolAnalysis
             var namespaceSymbol = symbol as INamespaceSymbol;
             return namespaceSymbol != null && namespaceSymbol.IsGlobalNamespace;
         }
+
+        public static bool IsInExternalAssembly([NotNull] this ISymbol symbol)
+        {
+            Guard.NotNull(symbol, nameof(symbol));
+
+            return !symbol.DeclaringSyntaxReferences.Any();
+        }
     }
 }

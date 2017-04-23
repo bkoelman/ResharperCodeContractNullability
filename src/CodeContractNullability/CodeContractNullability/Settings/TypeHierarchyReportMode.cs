@@ -11,13 +11,15 @@ namespace CodeContractNullability.Settings
         Always,
 
         /// <summary>
-        /// Only report on highest-level members in the type hierarchy that are defined in source.
+        /// Only report at the highest-level member in the type hierarchy that is defined in source. If the toplevel member is
+        /// defined in an external assembly, this reports the highest-level member that is defined in source.
         /// </summary>
-        HighestInSource,
+        AtHighestSourceInTypeHierarchy,
 
         /// <summary>
-        /// Never report if the root of the type hierarchy is defined in an external assembly.
+        /// Only report at the toplevel member in the type hierarchy. If the toplevel member is defined in an external assembly,
+        /// this reports nothing.
         /// </summary>
-        NeverIfTopLevelInAssembly
+        AtTopInTypeHierarchy
     }
 }

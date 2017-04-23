@@ -37,20 +37,39 @@ namespace CodeContractNullability.SymbolAnalysis
             return method != null && FunctionAnalysis.KindsToSkip.Contains(method.MethodKind);
         }
 
-        protected override bool HasAnnotationInBaseClass()
+        protected override TypeHierarchyLookupResult GetAnnotationInBaseClass()
         {
+            bool higherLevelSeenInSource = false;
+            bool higherLevelSeenInAssembly = false;
+
             IParameterSymbol baseParameter = TryGetBaseParameterFor(Symbol);
             while (baseParameter != null)
             {
-                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseParameter) ||
-                    HasAnnotationInInterface(baseParameter))
+                bool isInExternalAssembly = baseParameter.IsInExternalAssembly();
+                if (isInExternalAssembly)
                 {
-                    return true;
+                    higherLevelSeenInAssembly = true;
+                }
+                else
+                {
+                    higherLevelSeenInSource = true;
+                }
+
+                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseParameter))
+                {
+                    return TypeHierarchyLookupResult.ForAnnotated(isInExternalAssembly);
+                }
+
+                var interfaceLookupResult = GetAnnotationInInterface(baseParameter);
+                if (interfaceLookupResult.HasAnnotation)
+                {
+                    return interfaceLookupResult;
                 }
 
                 baseParameter = TryGetBaseParameterFor(baseParameter);
             }
-            return false;
+
+            return TypeHierarchyLookupResult.ForNonAnnotated(higherLevelSeenInSource, higherLevelSeenInAssembly);
         }
 
         [CanBeNull]
@@ -75,8 +94,11 @@ namespace CodeContractNullability.SymbolAnalysis
             return null;
         }
 
-        protected override bool HasAnnotationInInterface(IParameterSymbol parameter)
+        protected override TypeHierarchyLookupResult GetAnnotationInInterface(IParameterSymbol parameter)
         {
+            bool higherLevelSeenInSource = false;
+            bool higherLevelSeenInAssembly = false;
+
             ISymbol containingMember = parameter.ContainingSymbol;
 
             foreach (INamedTypeSymbol iface in parameter.ContainingType.AllInterfaces)
@@ -87,6 +109,16 @@ namespace CodeContractNullability.SymbolAnalysis
 
                     if (containingMember.Equals(implementer))
                     {
+                        bool isInExternalAssembly = ifaceMember.IsInExternalAssembly();
+                        if (isInExternalAssembly)
+                        {
+                            higherLevelSeenInAssembly = true;
+                        }
+                        else
+                        {
+                            higherLevelSeenInSource = true;
+                        }
+
                         ImmutableArray<IParameterSymbol> parameters = GetParametersFor(containingMember);
                         int parameterIndex = parameters.IndexOf(parameter);
 
@@ -95,12 +127,13 @@ namespace CodeContractNullability.SymbolAnalysis
 
                         if (ifaceParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceParameter))
                         {
-                            return true;
+                            return TypeHierarchyLookupResult.ForAnnotated(isInExternalAssembly);
                         }
                     }
                 }
             }
-            return false;
+
+            return TypeHierarchyLookupResult.ForNonAnnotated(higherLevelSeenInSource, higherLevelSeenInAssembly);
         }
 
         [ItemNotNull]
