@@ -712,7 +712,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_override_breaks_inheritance_it_must_be_reported()
+        public void When_override_breaks_inheritance_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
