@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using CodeContractNullability.Utilities;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
@@ -129,9 +132,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
             references.Add(MetadataReference.CreateFromFile(assembly.Location));
         }
 
-        internal void _WithReference([NotNull] MetadataReference reference)
+        internal void _WithReference([NotNull] Stream assemblyStream)
         {
-            references.Add(reference);
+            references.Add(MetadataReference.CreateFromStream(assemblyStream));
         }
 
         internal void _Named([NotNull] string filename)
@@ -220,13 +223,13 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(code, nameof(code));
 
-            MetadataReference reference = GetInMemoryAssemblyReferenceForCode(code);
-            source._WithReference(reference);
+            Stream assemblyStream = GetInMemoryAssemblyStreamForCode(code);
+            source._WithReference(assemblyStream);
             return source;
         }
 
         [NotNull]
-        private static MetadataReference GetInMemoryAssemblyReferenceForCode([NotNull] string code,
+        private static Stream GetInMemoryAssemblyStreamForCode([NotNull] string code,
             [NotNull] [ItemNotNull] params MetadataReference[] references)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
@@ -238,7 +241,20 @@ namespace CodeContractNullability.Test.TestDataBuilders
             compilation = compilation.AddReferences(msCorLib);
             compilation = compilation.AddReferences(references);
 
-            return compilation.ToMetadataReference();
+            var stream = new MemoryStream();
+
+            EmitResult emitResult = compilation.Emit(stream);
+            ValidateCompileErrors(emitResult);
+
+            return stream;
+        }
+
+        private static void ValidateCompileErrors([NotNull] EmitResult emitResult)
+        {
+            Diagnostic[] compilerErrors = emitResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error)
+                .ToArray();
+            compilerErrors.Should().BeEmpty("external assembly should not have compile errors");
+            emitResult.Success.Should().BeTrue();
         }
 
         [NotNull]
