@@ -32,11 +32,10 @@ namespace CodeContractNullability.SymbolAnalysis
             this.context = context;
             this.scope = scope;
 
-            Symbol = (TSymbol) this.context.Symbol;
+            Symbol = (TSymbol)this.context.Symbol;
         }
 
-        public void Analyze([NotNull] DiagnosticDescriptor descriptor,
-            [NotNull] ImmutableDictionary<string, string> properties)
+        public void Analyze([NotNull] DiagnosticDescriptor descriptor, [NotNull] ImmutableDictionary<string, string> properties)
         {
             Guard.NotNull(descriptor, nameof(descriptor));
             Guard.NotNull(properties, nameof(properties));

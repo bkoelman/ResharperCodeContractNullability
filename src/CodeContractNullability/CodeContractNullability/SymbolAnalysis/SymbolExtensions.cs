@@ -29,8 +29,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return typeName == "ItemCanBeNullAttribute" || typeName == "ItemNotNullAttribute";
         }
 
-        public static bool TypeCanContainNull([NotNull] this ITypeSymbol typeSymbol,
-            bool disableReportOnNullableValueTypes)
+        public static bool TypeCanContainNull([NotNull] this ITypeSymbol typeSymbol, bool disableReportOnNullableValueTypes)
         {
             Guard.NotNull(typeSymbol, nameof(typeSymbol));
 
@@ -79,8 +78,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             if (typeCache.Enumerable != null)
             {
-                if (typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol)
-                    .Any(type => typeCache.Enumerable.Equals(type)))
+                if (typeSymbol.AllInterfaces.PrependIfNotNull(namedTypeSymbol).Any(type => typeCache.Enumerable.Equals(type)))
                 {
                     if (!typeSymbol.Equals(typeCache.String))
                     {
@@ -163,7 +161,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 if (typeCache.ConditionalAttribute.Equals(attribute.AttributeClass))
                 {
                     object ctorValue = attribute.ConstructorArguments.First().Value;
-                    return (string) ctorValue == "JETBRAINS_ANNOTATIONS";
+                    return (string)ctorValue == "JETBRAINS_ANNOTATIONS";
                 }
             }
 

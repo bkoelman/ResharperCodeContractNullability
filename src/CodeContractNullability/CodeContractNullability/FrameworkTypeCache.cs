@@ -51,8 +51,7 @@ namespace CodeContractNullability
         public INamedTypeSymbol CompilerGeneratedAttribute => GetCached(typeof(CompilerGeneratedAttribute).FullName);
 
         [CanBeNull]
-        public INamedTypeSymbol DebuggerNonUserCodeAttribute => GetCached(typeof(DebuggerNonUserCodeAttribute).FullName)
-        ;
+        public INamedTypeSymbol DebuggerNonUserCodeAttribute => GetCached(typeof(DebuggerNonUserCodeAttribute).FullName);
 
         [CanBeNull]
         public INamedTypeSymbol ConditionalAttribute => GetCached(typeof(ConditionalAttribute).FullName);

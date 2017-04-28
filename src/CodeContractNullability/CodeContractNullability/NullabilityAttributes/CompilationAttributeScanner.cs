@@ -9,8 +9,8 @@ using Microsoft.CodeAnalysis;
 namespace CodeContractNullability.NullabilityAttributes
 {
     /// <summary>
-    /// Scans through the source code and assembly references of a <see cref="Compilation" /> to locate the
-    /// (Item)NotNullAttribute and (Item)CanBeNullAttribute types.
+    /// Scans through the source code and assembly references of a <see cref="Compilation" /> to locate the (Item)NotNullAttribute and
+    /// (Item)CanBeNullAttribute types.
     /// </summary>
     public sealed class CompilationAttributeScanner
     {
@@ -30,24 +30,18 @@ namespace CodeContractNullability.NullabilityAttributes
         }
 
         [CanBeNull]
-        private NullabilityAttributeSymbols ScanInSources([NotNull] Compilation compilation,
-            CancellationToken cancellationToken)
+        private NullabilityAttributeSymbols ScanInSources([NotNull] Compilation compilation, CancellationToken cancellationToken)
         {
-            List<INamedTypeSymbol> matches =
-                compilation.GetSymbolsWithName(IsAttributeName, SymbolFilter.Type, cancellationToken)
-                    .OfType<INamedTypeSymbol>()
-                    .Where(x => IsUsableAttribute(x, true))
-                    .ToList();
+            List<INamedTypeSymbol> matches = compilation.GetSymbolsWithName(IsAttributeName, SymbolFilter.Type, cancellationToken)
+                .OfType<INamedTypeSymbol>().Where(x => IsUsableAttribute(x, true)).ToList();
 
             INamedTypeSymbol notNullAttributeSymbol = matches.FirstOrDefault(x => x.Name == AttributeNameForNotNull);
             INamedTypeSymbol canBeNullAttributeSymbol = matches.FirstOrDefault(x => x.Name == AttributeNameForCanBeNull);
-            INamedTypeSymbol itemNotNullAttributeSymbol =
-                matches.FirstOrDefault(x => x.Name == AttributeNameForItemNotNull);
-            INamedTypeSymbol itemCanBeNullAttributeSymbol =
-                matches.FirstOrDefault(x => x.Name == AttributeNameForItemCanBeNull);
+            INamedTypeSymbol itemNotNullAttributeSymbol = matches.FirstOrDefault(x => x.Name == AttributeNameForItemNotNull);
+            INamedTypeSymbol itemCanBeNullAttributeSymbol = matches.FirstOrDefault(x => x.Name == AttributeNameForItemCanBeNull);
 
-            return notNullAttributeSymbol != null && canBeNullAttributeSymbol != null &&
-                itemNotNullAttributeSymbol != null && itemCanBeNullAttributeSymbol != null
+            return notNullAttributeSymbol != null && canBeNullAttributeSymbol != null && itemNotNullAttributeSymbol != null &&
+                itemCanBeNullAttributeSymbol != null
                     ? new NullabilityAttributeSymbols(notNullAttributeSymbol, canBeNullAttributeSymbol,
                         itemNotNullAttributeSymbol, itemCanBeNullAttributeSymbol)
                     : null;
@@ -55,8 +49,8 @@ namespace CodeContractNullability.NullabilityAttributes
 
         private bool IsAttributeName([CanBeNull] string name)
         {
-            return name == AttributeNameForNotNull || name == AttributeNameForCanBeNull ||
-                name == AttributeNameForItemNotNull || name == AttributeNameForItemCanBeNull;
+            return name == AttributeNameForNotNull || name == AttributeNameForCanBeNull || name == AttributeNameForItemNotNull ||
+                name == AttributeNameForItemCanBeNull;
         }
 
         private static bool IsUsableAttribute([CanBeNull] INamedTypeSymbol symbol, bool allowInternal)
@@ -100,9 +94,8 @@ namespace CodeContractNullability.NullabilityAttributes
                     if (visitor.NotNullAttributeSymbol != null && visitor.CanBeNullAttributeSymbol != null &&
                         visitor.ItemNotNullAttributeSymbol != null && visitor.ItemCanBeNullAttributeSymbol != null)
                     {
-                        return new NullabilityAttributeSymbols(visitor.NotNullAttributeSymbol,
-                            visitor.CanBeNullAttributeSymbol, visitor.ItemNotNullAttributeSymbol,
-                            visitor.ItemCanBeNullAttributeSymbol);
+                        return new NullabilityAttributeSymbols(visitor.NotNullAttributeSymbol, visitor.CanBeNullAttributeSymbol,
+                            visitor.ItemNotNullAttributeSymbol, visitor.ItemCanBeNullAttributeSymbol);
                     }
                 }
             }
@@ -124,10 +117,8 @@ namespace CodeContractNullability.NullabilityAttributes
             [CanBeNull]
             public INamedTypeSymbol ItemCanBeNullAttributeSymbol { get; private set; }
 
-            private bool IsComplete
-                =>
-                    NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null &&
-                    ItemNotNullAttributeSymbol != null && ItemCanBeNullAttributeSymbol != null;
+            private bool IsComplete => NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null &&
+                ItemNotNullAttributeSymbol != null && ItemCanBeNullAttributeSymbol != null;
 
             public override void VisitNamespace([NotNull] INamespaceSymbol symbol)
             {

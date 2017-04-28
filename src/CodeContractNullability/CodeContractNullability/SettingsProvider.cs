@@ -22,8 +22,7 @@ namespace CodeContractNullability
         public static Encoding CreateEncoding() => new UTF8Encoding();
 
         [NotNull]
-        public static AnalyzerSettings LoadSettings([NotNull] AnalyzerOptions options,
-            CancellationToken cancellationToken)
+        public static AnalyzerSettings LoadSettings([NotNull] AnalyzerOptions options, CancellationToken cancellationToken)
         {
             Guard.NotNull(options, nameof(options));
 
@@ -37,7 +36,7 @@ namespace CodeContractNullability
                     return ReadSourceText(fileText, reader =>
                     {
                         var serializer = new DataContractSerializer(typeof(AnalyzerSettings));
-                        return (AnalyzerSettings) serializer.ReadObject(reader);
+                        return (AnalyzerSettings)serializer.ReadObject(reader);
                     }, cancellationToken);
                 }
                 catch (Exception ex)
@@ -99,11 +98,7 @@ namespace CodeContractNullability
             {
                 using (var textWriter = new StreamWriter(stream))
                 {
-                    var xmlSettings = new XmlWriterSettings
-                    {
-                        Encoding = encoding,
-                        Indent = true
-                    };
+                    var xmlSettings = new XmlWriterSettings { Encoding = encoding, Indent = true };
                     using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, xmlSettings))
                     {
                         writeAction(xmlWriter);

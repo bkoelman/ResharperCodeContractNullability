@@ -129,7 +129,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiagnosticMessageBuilder.cs" />
+    <Compile Include="TestDataBuilders\DiagnosticMessageBuilder.cs" />
     <Compile Include="ReportOnNullableValueTypesTest.cs" />
     <Compile Include="ExactSourceCode.cs" />
     <Compile Include="GitHubIssueAttribute.cs" />

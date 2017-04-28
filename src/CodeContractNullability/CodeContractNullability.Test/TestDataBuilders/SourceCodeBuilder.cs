@@ -217,8 +217,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder WithReferenceToExternalAssemblyFor<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string code) where TBuilder : SourceCodeBuilder
+        public static TBuilder WithReferenceToExternalAssemblyFor<TBuilder>([NotNull] this TBuilder source, [NotNull] string code)
+            where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(code, nameof(code));
@@ -233,9 +233,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
             [NotNull] [ItemNotNull] params MetadataReference[] references)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
-            CSharpCompilation compilation =
-                CSharpCompilation.Create("TempAssembly", new[] { tree })
-                    .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            CSharpCompilation compilation = CSharpCompilation
+                .Create("TempAssembly", new[] { tree })
+                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             PortableExecutableReference msCorLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
             compilation = compilation.AddReferences(msCorLib);
@@ -251,8 +251,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         private static void ValidateCompileErrors([NotNull] EmitResult emitResult)
         {
-            Diagnostic[] compilerErrors = emitResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error)
-                .ToArray();
+            Diagnostic[] compilerErrors = emitResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToArray();
             compilerErrors.Should().BeEmpty("external assembly should not have compile errors");
             emitResult.Success.Should().BeTrue();
         }
@@ -270,7 +269,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder ExternallyAnnotated<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] ExternalAnnotationsBuilder builder) where TBuilder : SourceCodeBuilder
+            [NotNull] ExternalAnnotationsBuilder builder)
+            where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(builder, nameof(builder));
@@ -281,7 +281,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder WithNullabilityAttributes<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] NullabilityAttributesBuilder builder) where TBuilder : SourceCodeBuilder
+            [NotNull] NullabilityAttributesBuilder builder)
+            where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(builder, nameof(builder));
@@ -302,7 +303,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         public static TBuilder ExpectingImportForNamespace<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string expectedImportText) where TBuilder : SourceCodeBuilder
+            [NotNull] string expectedImportText)
+            where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(expectedImportText, nameof(expectedImportText));

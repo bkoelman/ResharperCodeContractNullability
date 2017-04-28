@@ -45,8 +45,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
             ParseOptions parseOptions = GetParseOptions(context.DocumentationMode, context.LanguageName,
                 context.OperationFeature);
-            CompilationOptions compilationOptions = GetCompilationOptions(context.CompilerWarningLevel,
-                context.LanguageName);
+            CompilationOptions compilationOptions = GetCompilationOptions(context.CompilerWarningLevel, context.LanguageName);
 
             Document document = new AdhocWorkspace()
                 .AddProject(context.AssemblyName, context.LanguageName)
@@ -64,7 +63,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         {
             // Bug workaround: Setting DocumentationMode to a non-default value resets Features.
             ParseOptions optionsWithLostFeatures = languageName == LanguageNames.VisualBasic
-                ? (ParseOptions) DefaultBasicParseOptions.WithDocumentationMode(documentationMode)
+                ? (ParseOptions)DefaultBasicParseOptions.WithDocumentationMode(documentationMode)
                 : DefaultCSharpParseOptions.WithDocumentationMode(documentationMode);
 
             return operationFeature == OperationFeature.Enabled
@@ -92,8 +91,8 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         {
             Guard.NotNull(context, nameof(context));
 
-            return context.Expected.Select(text =>
-                    RemoveMarkupFrom(context.AnalyzerTestContext.WithMarkupCode(text), context.ReformatExpected))
+            return context.Expected
+                .Select(text => RemoveMarkupFrom(context.AnalyzerTestContext.WithMarkupCode(text), context.ReformatExpected))
                 .ToList();
         }
 

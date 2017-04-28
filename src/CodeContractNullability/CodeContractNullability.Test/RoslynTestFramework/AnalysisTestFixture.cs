@@ -28,8 +28,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [NotNull]
         protected abstract CodeFixProvider CreateFixProvider();
 
-        protected void AssertDiagnostics([NotNull] AnalyzerTestContext context,
-            [NotNull] [ItemNotNull] params string[] messages)
+        protected void AssertDiagnostics([NotNull] AnalyzerTestContext context, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(context, nameof(context));
             Guard.NotNull(messages, nameof(messages));
@@ -50,8 +49,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         [NotNull]
-        private AnalysisResult GetAnalysisResult([NotNull] AnalyzerTestContext context,
-            [NotNull] [ItemNotNull] string[] messages)
+        private AnalysisResult GetAnalysisResult([NotNull] AnalyzerTestContext context, [NotNull] [ItemNotNull] string[] messages)
         {
             DocumentWithSpans documentWithSpans = DocumentFactory.GetDocumentWithSpansFromMarkup(context);
 
@@ -66,10 +64,8 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private IList<Diagnostic> GetSortedAnalyzerDiagnostics([NotNull] AnalyzerTestContext context,
             [NotNull] DocumentWithSpans documentWithSpans)
         {
-            IEnumerable<Diagnostic> diagnostics =
-                EnumerateDiagnosticsForDocument(documentWithSpans.Document, context.ValidationMode,
-                        context.DiagnosticsCaptureMode, context.Options)
-                    .Where(d => d.Id == DiagnosticId);
+            IEnumerable<Diagnostic> diagnostics = EnumerateDiagnosticsForDocument(documentWithSpans.Document,
+                context.ValidationMode, context.DiagnosticsCaptureMode, context.Options).Where(d => d.Id == DiagnosticId);
 
             if (context.DiagnosticsCaptureMode == DiagnosticsCaptureMode.RequireInSourceTree)
             {
@@ -82,11 +78,9 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [NotNull]
         [ItemNotNull]
         private IEnumerable<Diagnostic> EnumerateDiagnosticsForDocument([NotNull] Document document,
-            TestValidationMode validationMode, DiagnosticsCaptureMode diagnosticsCaptureMode,
-            [NotNull] AnalyzerOptions options)
+            TestValidationMode validationMode, DiagnosticsCaptureMode diagnosticsCaptureMode, [NotNull] AnalyzerOptions options)
         {
-            CompilationWithAnalyzers compilationWithAnalyzers = GetCompilationWithAnalyzers(document, validationMode,
-                options);
+            CompilationWithAnalyzers compilationWithAnalyzers = GetCompilationWithAnalyzers(document, validationMode, options);
 
             SyntaxTree tree = document.GetSyntaxTreeAsync().Result;
 
@@ -138,8 +132,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             return location.IsInSource && location.SourceTree == tree;
         }
 
-        private static void VerifyDiagnosticCount([NotNull] AnalysisResult result,
-            DiagnosticsCaptureMode captureMode)
+        private static void VerifyDiagnosticCount([NotNull] AnalysisResult result, DiagnosticsCaptureMode captureMode)
         {
             if (captureMode == DiagnosticsCaptureMode.RequireInSourceTree)
             {
@@ -193,8 +186,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         {
             for (int index = 0; index < context.Expected.Count; index++)
             {
-                Document document =
-                    DocumentFactory.GetDocumentWithSpansFromMarkup(context.AnalyzerTestContext).Document;
+                Document document = DocumentFactory.GetDocumentWithSpansFromMarkup(context.AnalyzerTestContext).Document;
 
                 ImmutableArray<CodeAction> codeFixes = GetCodeFixesForDiagnostic(diagnostic, document, fixProvider);
                 codeFixes.Should().HaveSameCount(context.Expected);
@@ -204,8 +196,8 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         [ItemNotNull]
-        private ImmutableArray<CodeAction> GetCodeFixesForDiagnostic([NotNull] Diagnostic diagnostic,
-            [NotNull] Document document, [NotNull] CodeFixProvider fixProvider)
+        private ImmutableArray<CodeAction> GetCodeFixesForDiagnostic([NotNull] Diagnostic diagnostic, [NotNull] Document document,
+            [NotNull] CodeFixProvider fixProvider)
         {
             ImmutableArray<CodeAction>.Builder builder = ImmutableArray.CreateBuilder<CodeAction>();
             Action<CodeAction, ImmutableArray<Diagnostic>> registerCodeFix = (codeAction, _) => builder.Add(codeAction);
@@ -225,8 +217,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             {
                 Guard.NotNull(expectedCode, nameof(expectedCode));
 
-                ImmutableArray<CodeActionOperation> operations =
-                    codeAction.GetOperationsAsync(CancellationToken.None).Result;
+                ImmutableArray<CodeActionOperation> operations = codeAction.GetOperationsAsync(CancellationToken.None).Result;
 
                 operations.Should().HaveCount(1);
 

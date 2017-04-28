@@ -13,9 +13,9 @@ namespace CodeContractNullability.ExternalAnnotations
     /// Scans the filesystem for Resharper external annotations in xml files.
     /// </summary>
     /// <remarks>
-    /// Resharper provides downloadable xml definitions that contain decoration of built-in .NET Framework types. When a class
-    /// derives from such a built-in type, we need to have those definitions available because Resharper reports nullability
-    /// annotation as unneeded when a base type is already decorated.
+    /// Resharper provides downloadable xml definitions that contain decoration of built-in .NET Framework types. When a class derives
+    /// from such a built-in type, we need to have those definitions available because Resharper reports nullability annotation as
+    /// unneeded when a base type is already decorated.
     /// </remarks>
     public static class FolderExternalAnnotationsLoader
     {
@@ -23,9 +23,9 @@ namespace CodeContractNullability.ExternalAnnotations
         private static readonly FolderOnDiskScanner Scanner = new FolderOnDiskScanner();
 
         [NotNull]
-        private static readonly string CachePath =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "ResharperCodeContractNullability", "external-annotations.cache");
+        private static readonly string CachePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ResharperCodeContractNullability",
+            "external-annotations.cache");
 
         [NotNull]
         private static readonly object LockObject = new object();

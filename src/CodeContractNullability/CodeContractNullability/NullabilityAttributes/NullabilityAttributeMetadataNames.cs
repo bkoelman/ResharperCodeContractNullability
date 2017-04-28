@@ -51,11 +51,9 @@ namespace CodeContractNullability.NullabilityAttributes
             INamedTypeSymbol itemNotNullSymbol = GetVisibleAttribute(ItemNotNull, compilation);
             INamedTypeSymbol itemCanBeNullSymbol = GetVisibleAttribute(ItemCanBeNull, compilation);
 
-            return notNullSymbol != null && canBeNullSymbol != null && itemNotNullSymbol != null &&
-                itemCanBeNullSymbol != null
-                    ? new NullabilityAttributeSymbols(notNullSymbol, canBeNullSymbol, itemNotNullSymbol,
-                        itemCanBeNullSymbol)
-                    : null;
+            return notNullSymbol != null && canBeNullSymbol != null && itemNotNullSymbol != null && itemCanBeNullSymbol != null
+                ? new NullabilityAttributeSymbols(notNullSymbol, canBeNullSymbol, itemNotNullSymbol, itemCanBeNullSymbol)
+                : null;
         }
 
         [CanBeNull]
@@ -75,12 +73,8 @@ namespace CodeContractNullability.NullabilityAttributes
         [NotNull]
         public ImmutableDictionary<string, string> ToImmutableDictionary()
         {
-            return
-                ImmutableDictionary.Create<string, string>()
-                    .Add(KeyNotNull, NotNull)
-                    .Add(KeyCanBeNull, CanBeNull)
-                    .Add(KeyItemNotNull, ItemNotNull)
-                    .Add(KeyItemCanBeNull, ItemCanBeNull);
+            return ImmutableDictionary.Create<string, string>().Add(KeyNotNull, NotNull).Add(KeyCanBeNull, CanBeNull)
+                .Add(KeyItemNotNull, ItemNotNull).Add(KeyItemCanBeNull, ItemCanBeNull);
         }
 
         [NotNull]

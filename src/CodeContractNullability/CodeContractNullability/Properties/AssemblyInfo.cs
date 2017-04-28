@@ -8,8 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CodeContractNullability")]
 [assembly:
     AssemblyDescription(
-        "Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html"
-    )]
+        "Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CodeContractNullability")]

@@ -93,8 +93,7 @@ namespace CodeContractNullability.SymbolAnalysis
                         ImmutableArray<IParameterSymbol> ifaceParameters = GetParametersFor(ifaceMember);
                         IParameterSymbol ifaceParameter = ifaceParameters[parameterIndex];
 
-                        if (ifaceParameter.HasNullabilityAnnotation(AppliesToItem) ||
-                            HasExternalAnnotationFor(ifaceParameter))
+                        if (ifaceParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceParameter))
                         {
                             return true;
                         }

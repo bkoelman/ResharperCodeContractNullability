@@ -8,16 +8,9 @@ namespace CodeContractNullability.SymbolAnalysis
     /// </summary>
     internal static class FunctionAnalysis
     {
-        private const MethodKind MethodKindLocalFunction = (MethodKind) 17;
+        private const MethodKind MethodKindLocalFunction = (MethodKind)17;
 
-        public static readonly ImmutableArray<MethodKind> KindsToSkip =
-            ImmutableArray.Create(new[]
-            {
-                MethodKind.AnonymousFunction,
-                MethodKind.LambdaMethod,
-                MethodKind.PropertyGet,
-                MethodKind.PropertySet,
-                MethodKindLocalFunction
-            });
+        public static readonly ImmutableArray<MethodKind> KindsToSkip = ImmutableArray.Create(MethodKind.AnonymousFunction,
+            MethodKind.LambdaMethod, MethodKind.PropertyGet, MethodKind.PropertySet, MethodKindLocalFunction);
     }
 }

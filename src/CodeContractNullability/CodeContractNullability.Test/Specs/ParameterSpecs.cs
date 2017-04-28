@@ -497,8 +497,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void
-            When_indexer_parameter_in_implicit_interface_implementation_is_externally_annotated_it_must_be_skipped()
+        public void When_indexer_parameter_in_implicit_interface_implementation_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -535,8 +534,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_parameter_in_explicit_interface_implementation_is_effectively_annotated_through_annotation_on_interface_it_must_be_skipped
-            ()
+            When_parameter_in_explicit_interface_implementation_is_effectively_annotated_through_annotation_on_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -560,8 +558,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_parameter_in_explicit_interface_implementation_is_effectively_annotated_through_external_annotation_on_interface_it_must_be_skipped
-            ()
+            When_parameter_in_explicit_interface_implementation_is_effectively_annotated_through_external_annotation_on_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -629,8 +626,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void
-            When_indexer_parameter_in_implicit_interface_implementation_is_not_annotated_it_must_be_reported_and_fixed()
+        public void When_indexer_parameter_in_implicit_interface_implementation_is_not_annotated_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -673,8 +669,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_parameter_in_implicit_interface_implementation_is_not_externally_annotated_it_must_be_reported_and_fixed
-            ()
+            When_parameter_in_implicit_interface_implementation_is_not_externally_annotated_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -709,8 +704,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_parameter_in_implicit_interface_implementation_is_effectively_annotated_through_annotation_on_interface_it_must_be_skipped
-            ()
+            When_parameter_in_implicit_interface_implementation_is_effectively_annotated_through_annotation_on_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -740,8 +734,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_parameter_in_implicit_interface_implementation_is_effectively_annotated_through_external_annotation_on_interface_it_must_be_skipped
-            ()
+            When_parameter_in_implicit_interface_implementation_is_effectively_annotated_through_external_annotation_on_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()

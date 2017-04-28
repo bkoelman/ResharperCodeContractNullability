@@ -12,12 +12,10 @@ namespace CodeContractNullability.ExternalAnnotations
         private const string ResharperFolderNamePrefix = "ReSharperPlatformVs";
 
         [NotNull]
-        private readonly string programFilesX86Folder =
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+        private readonly string programFilesX86Folder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
 
         [NotNull]
-        private readonly string localAppDataFolder =
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        private readonly string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         [NotNull]
         private static readonly Scope[] Scopes = { Scope.System, Scope.User };
@@ -29,8 +27,7 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         public IEnumerable<string> GetFoldersToScan()
         {
-            foreach (ExternalAnnotationsLocation location in
-                from folder in EnumerateExternalAnnotationLocations()
+            foreach (ExternalAnnotationsLocation location in from folder in EnumerateExternalAnnotationLocations()
                 orderby folder.Category, folder.Scope, folder.VsVersion
                 select folder)
             {
@@ -84,8 +81,7 @@ namespace CodeContractNullability.ExternalAnnotations
                 yield break;
             }
 
-            foreach (
-                string platformPath in Directory.GetDirectories(installationsFolder, ResharperFolderNamePrefix + "*"))
+            foreach (string platformPath in Directory.GetDirectories(installationsFolder, ResharperFolderNamePrefix + "*"))
             {
                 string platformFolder = Path.GetFileName(platformPath);
                 if (platformFolder?.Length >= ResharperFolderNamePrefix.Length + 2)

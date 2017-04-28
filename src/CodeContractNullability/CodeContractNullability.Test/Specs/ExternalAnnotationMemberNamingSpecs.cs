@@ -5,8 +5,7 @@ using Xunit;
 namespace CodeContractNullability.Test.Specs
 {
     /// <summary>
-    /// Tests concerning the interpretation of full metadata name notation of members, as they occur in external annotation
-    /// files.
+    /// Tests concerning the interpretation of full metadata name notation of members, as they occur in external annotation files.
     /// </summary>
     public sealed class ExternalAnnotationMemberNamingSpecs : NullabilityTest
     {
@@ -102,8 +101,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void
-            When_nested_generic_parameters_in_method_of_generic_interface_is_externally_annotated_it_must_be_skipped()
+        public void When_nested_generic_parameters_in_method_of_generic_interface_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -131,8 +129,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void
-            When_generic_parameters_in_generic_method_of_nongeneric_class_are_externally_annotated_it_must_be_skipped()
+        public void When_generic_parameters_in_generic_method_of_nongeneric_class_are_externally_annotated_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -195,8 +192,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_generic_parameters_in_generic_method_in_generic_nested_classes_are_externally_annotated_it_must_be_skipped
-            ()
+            When_generic_parameters_in_generic_method_in_generic_nested_classes_are_externally_annotated_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()

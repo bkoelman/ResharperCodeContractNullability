@@ -77,8 +77,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
                     Encoding = encoding;
                 }
 
-                public override void CopyTo(int sourceIndex, [NotNull] char[] destination, int destinationIndex,
-                    int count)
+                public override void CopyTo(int sourceIndex, [NotNull] char[] destination, int destinationIndex, int count)
                 {
                     content.CopyTo(sourceIndex, destination, destinationIndex, count);
                 }

@@ -542,8 +542,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_return_value_in_implicit_interface_is_not_annotated_with_explicit_interface_it_must_be_reported_and_fixed
-            ()
+            When_return_value_in_implicit_interface_is_not_annotated_with_explicit_interface_it_must_be_reported_and_fixed()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -598,8 +597,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         public void
-            When_return_value_in_implicit_interface_is_annotated_with_externally_annotated_explicit_interface_it_must_be_skipped
-            ()
+            When_return_value_in_implicit_interface_is_annotated_with_externally_annotated_explicit_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()

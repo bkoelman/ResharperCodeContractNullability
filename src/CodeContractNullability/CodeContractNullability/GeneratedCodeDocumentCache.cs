@@ -106,17 +106,16 @@ namespace CodeContractNullability
 
                 if (firstToken == default(SyntaxToken))
                 {
-                    SyntaxToken lastToken = ((CompilationUnitSyntax) root).EndOfFileToken;
-                    return !lastToken.HasLeadingTrivia ? (SyntaxTriviaList?) null : lastToken.LeadingTrivia;
+                    SyntaxToken lastToken = ((CompilationUnitSyntax)root).EndOfFileToken;
+                    return !lastToken.HasLeadingTrivia ? (SyntaxTriviaList?)null : lastToken.LeadingTrivia;
                 }
 
-                return !firstToken.HasLeadingTrivia ? (SyntaxTriviaList?) null : firstToken.LeadingTrivia;
+                return !firstToken.HasLeadingTrivia ? (SyntaxTriviaList?)null : firstToken.LeadingTrivia;
             }
 
             private bool IsCodeComment(SyntaxTrivia trivia)
             {
-                return trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) ||
-                    trivia.IsKind(SyntaxKind.MultiLineCommentTrivia);
+                return trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) || trivia.IsKind(SyntaxKind.MultiLineCommentTrivia);
             }
         }
     }

@@ -1,8 +1,7 @@
 using System;
-using CodeContractNullability.Test.TestDataBuilders;
 using JetBrains.Annotations;
 
-namespace CodeContractNullability.Test
+namespace CodeContractNullability.Test.TestDataBuilders
 {
     internal sealed class DiagnosticMessageBuilder : ITestDataBuilder<string>
     {

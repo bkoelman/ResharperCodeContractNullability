@@ -10,10 +10,10 @@ using Microsoft.CodeAnalysis;
 namespace CodeContractNullability.ExternalAnnotations
 {
     /// <summary>
-    /// Performs one-time load of files from built-in Resharper External Annotation folders, along with a cached set of
-    /// per-assembly External Annotations (loaded from [AssemblyName].ExternalAnnotations.xml in assembly folder). The
-    /// annotation files from this last set typically come from NuGet packages or assembly references. From that set, each
-    /// per-assembly file is monitored for filesystem changes and flushed accordingly.
+    /// Performs one-time load of files from built-in Resharper External Annotation folders, along with a cached set of per-assembly
+    /// External Annotations (loaded from [AssemblyName].ExternalAnnotations.xml in assembly folder). The annotation files from this last
+    /// set typically come from NuGet packages or assembly references. From that set, each per-assembly file is monitored for filesystem
+    /// changes and flushed accordingly.
     /// </summary>
     public sealed class CachingExternalAnnotationsResolver : IExternalAnnotationsResolver
     {
@@ -106,8 +106,7 @@ namespace CodeContractNullability.ExternalAnnotations
             string directoryName = Path.GetDirectoryName(e.OldFullPath);
             if (directoryName == null)
             {
-                throw new InvalidOperationException(
-                    $"Internal error: failed to extract directory from path '{e.OldFullPath}'.");
+                throw new InvalidOperationException($"Internal error: failed to extract directory from path '{e.OldFullPath}'.");
             }
 
             return new FileSystemEventArgs(e.ChangeType, directoryName, e.OldName);

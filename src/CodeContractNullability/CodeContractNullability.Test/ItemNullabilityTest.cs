@@ -1,3 +1,4 @@
+using CodeContractNullability.Test.TestDataBuilders;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis.CodeFixes;
 

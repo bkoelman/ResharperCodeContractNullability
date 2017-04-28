@@ -6,8 +6,8 @@ using Microsoft.CodeAnalysis;
 namespace CodeContractNullability.NullabilityAttributes
 {
     /// <summary>
-    /// Provides cached access to the (Item)NotNullAttribute and (Item)CanBeNullAttribute symbols in a compilation. The cache
-    /// is used for hinting, resulting in potential faster lookups over (similar) compilations and solutions.
+    /// Provides cached access to the (Item)NotNullAttribute and (Item)CanBeNullAttribute symbols in a compilation. The cache is used for
+    /// hinting, resulting in potential faster lookups over (similar) compilations and solutions.
     /// </summary>
     public sealed class CachingNullabilityAttributeProvider : INullabilityAttributeProvider
     {

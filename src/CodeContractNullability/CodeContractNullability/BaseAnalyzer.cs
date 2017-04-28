@@ -37,9 +37,8 @@ namespace CodeContractNullability
         protected abstract DiagnosticDescriptor CreateRuleFor([NotNull] string memberTypePascalCase);
 
         [NotNull]
-        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule =
-            new DiagnosticDescriptor(DisableReportOnNullableValueTypesDiagnosticId,
-                "Suggest to disable reporting on nullable value types.",
+        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new DiagnosticDescriptor(
+                DisableReportOnNullableValueTypesDiagnosticId, "Suggest to disable reporting on nullable value types.",
                 "IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.",
                 "Configuration", DiagnosticSeverity.Hidden, true, @"
 At this time, the code fix is not able to fully configure the newly-created ResharperCodeContractNullability.config file 
@@ -58,13 +57,12 @@ perform the following additional steps after applying this code fix.
 
 5. Save and close the project file.
 6. Right click the unloaded project in [Solution Explorer] and select [Reload Project].",
-                "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/XNUL_SuggestToDisableReportingOnNullableValueTypes.md");
+                "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/XNUL_SuggestToDisableReportingOnNullableValueTypes.md")
+            ;
 
         [ItemNotNull]
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
-            =>
-                ImmutableArray.Create(ruleForField, ruleForProperty, ruleForMethodReturnValue, ruleForParameter,
-                    disableReportOnNullableValueTypesRule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ruleForField,
+            ruleForProperty, ruleForMethodReturnValue, ruleForParameter, disableReportOnNullableValueTypesRule);
 
         [NotNull]
         public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
@@ -100,8 +98,8 @@ perform the following additional steps after applying this code fix.
 
             AnalyzerSettings settings = SettingsProvider.LoadSettings(context.Options, context.CancellationToken);
 
-            NullabilityAttributeSymbols nullSymbols =
-                NullabilityAttributeProvider.GetCached().GetSymbols(context.Compilation, context.CancellationToken);
+            NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached()
+                .GetSymbols(context.Compilation, context.CancellationToken);
             if (nullSymbols == null)
             {
                 // Nullability attributes not found; keep silent.
@@ -166,11 +164,10 @@ perform the following additional steps after applying this code fix.
             return SyntaxToSymbolContext(syntaxContext, symbol);
         }
 
-        private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext context,
-            [CanBeNull] ISymbol symbol)
+        private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext context, [CanBeNull] ISymbol symbol)
         {
-            return new SymbolAnalysisContext(symbol, context.SemanticModel.Compilation, context.Options,
-                context.ReportDiagnostic, x => true, context.CancellationToken);
+            return new SymbolAnalysisContext(symbol, context.SemanticModel.Compilation, context.Options, context.ReportDiagnostic,
+                x => true, context.CancellationToken);
         }
     }
 }

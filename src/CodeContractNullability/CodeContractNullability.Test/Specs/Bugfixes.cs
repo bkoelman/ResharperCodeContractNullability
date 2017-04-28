@@ -11,8 +11,7 @@ namespace CodeContractNullability.Test.Specs
         [Fact]
         [GitHubIssue(4)]
         public void
-            When_deriving_constructed_arrays_from_externally_annotated_interface_with_open_array_types_it_must_be_skipped
-            ()
+            When_deriving_constructed_arrays_from_externally_annotated_interface_with_open_array_types_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -46,8 +45,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Fact]
         [GitHubIssue(4)]
-        public void
-            When_deriving_constructed_arrays_from_externally_annotated_class_with_open_array_types_it_must_be_skipped()
+        public void When_deriving_constructed_arrays_from_externally_annotated_class_with_open_array_types_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
@@ -82,8 +80,7 @@ namespace CodeContractNullability.Test.Specs
         [Fact]
         [GitHubIssue(13)]
         public void
-            When_parameter_in_nongeneric_class_that_derives_from_generic_base_class_that_implements_annotated_generic_interface_it_must_be_skipped
-            ()
+            When_parameter_in_nongeneric_class_that_derives_from_generic_base_class_that_implements_annotated_generic_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()

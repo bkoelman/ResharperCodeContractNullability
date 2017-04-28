@@ -111,8 +111,7 @@ namespace CodeContractNullability.Test
                         {
                             int importMarkerIndex = startMarker.Item2;
 
-                            line = line.Substring(0, importMarkerIndex) +
-                                line.Substring(importMarkerIndex + ImportMarker.Length);
+                            line = line.Substring(0, importMarkerIndex) + line.Substring(importMarkerIndex + ImportMarker.Length);
 
                             var marker = new SourceLocation(lineNumber, importMarkerIndex + 1);
                             importPoints.Add(marker);

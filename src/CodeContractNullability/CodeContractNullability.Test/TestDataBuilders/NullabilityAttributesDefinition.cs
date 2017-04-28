@@ -75,8 +75,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
         }
 
-        public NullabilityAttributesDefinition([NotNull] string codeNamespace,
-            [NotNull] [ItemNotNull] IList<string> nestedTypes)
+        public NullabilityAttributesDefinition([NotNull] string codeNamespace, [NotNull] [ItemNotNull] IList<string> nestedTypes)
         {
             Guard.NotNull(codeNamespace, nameof(codeNamespace));
             Guard.NotNull(nestedTypes, nameof(nestedTypes));
