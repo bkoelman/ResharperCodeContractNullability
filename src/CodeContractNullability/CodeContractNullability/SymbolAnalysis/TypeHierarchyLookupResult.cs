@@ -3,8 +3,8 @@
 namespace CodeContractNullability.SymbolAnalysis
 {
     /// <summary>
-    /// Indicates whether an annotation has been found up the type hierarchy. The value <c>null</c> means that no higher type
-    /// (base class or interface) was found.
+    /// Indicates whether an annotation has been found up the type hierarchy. The value <c>null</c> means that no higher type (base class
+    /// or interface) was found.
     /// </summary>
     public struct TypeHierarchyLookupResult
     {
@@ -23,8 +23,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
         public static TypeHierarchyLookupResult ForNonAnnotated(bool higherLevelExistsInSource, bool higherLevelExistsInAssembly)
         {
-            return new TypeHierarchyLookupResult(higherLevelExistsInSource ? (bool?) false : null,
-                higherLevelExistsInAssembly ? (bool?) false : null);
+            return new TypeHierarchyLookupResult(higherLevelExistsInSource ? (bool?)false : null,
+                higherLevelExistsInAssembly ? (bool?)false : null);
         }
 
         private TypeHierarchyLookupResult([CanBeNull] bool? isAnnotatedAtHigherLevelInSource,

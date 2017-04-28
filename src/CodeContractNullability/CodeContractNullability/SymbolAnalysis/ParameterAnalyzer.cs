@@ -60,7 +60,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     return TypeHierarchyLookupResult.ForAnnotated(isInExternalAssembly);
                 }
 
-                var interfaceLookupResult = GetAnnotationInInterface(baseParameter);
+                TypeHierarchyLookupResult interfaceLookupResult = GetAnnotationInInterface(baseParameter);
                 if (interfaceLookupResult.HasAnnotation)
                 {
                     return interfaceLookupResult;

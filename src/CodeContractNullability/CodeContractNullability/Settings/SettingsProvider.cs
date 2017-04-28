@@ -27,8 +27,7 @@ namespace CodeContractNullability.Settings
         {
             Guard.NotNull(options, nameof(options));
 
-            AdditionalText settingsFileOrNull =
-                options.AdditionalFiles.FirstOrDefault(file => IsSettingsFile(file.Path));
+            AdditionalText settingsFileOrNull = options.AdditionalFiles.FirstOrDefault(file => IsSettingsFile(file.Path));
 
             if (settingsFileOrNull != null)
             {
@@ -50,8 +49,7 @@ namespace CodeContractNullability.Settings
         }
 
         [NotNull]
-        private static AnalyzerSettings SafeReadSourceText(CancellationToken cancellationToken,
-            [NotNull] SourceText fileText)
+        private static AnalyzerSettings SafeReadSourceText(CancellationToken cancellationToken, [NotNull] SourceText fileText)
         {
             try
             {
