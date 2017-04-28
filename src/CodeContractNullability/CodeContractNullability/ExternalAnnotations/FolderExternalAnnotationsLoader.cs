@@ -162,7 +162,10 @@ namespace CodeContractNullability.ExternalAnnotations
         private static void EnsureDirectoryExists()
         {
             string folder = Path.GetDirectoryName(CachePath);
-            Directory.CreateDirectory(folder);
+            if (folder != null)
+            {
+                Directory.CreateDirectory(folder);
+            }
         }
 
         [NotNull]

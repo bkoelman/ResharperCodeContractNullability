@@ -7,7 +7,7 @@ namespace CodeContractNullability.Test
     {
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public int Id { get; private set; }
+        public int Id { get; }
 
         internal GitHubIssueAttribute(int id)
         {

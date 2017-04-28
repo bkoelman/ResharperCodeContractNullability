@@ -36,7 +36,7 @@ namespace CodeContractNullability.Test
 
         [NotNull]
         [ItemNotNull]
-        public ImmutableHashSet<MetadataReference> References { get; private set; }
+        public ImmutableHashSet<MetadataReference> References { get; }
 
         [NotNull]
         private string CodeNamespaceImport { get; }
