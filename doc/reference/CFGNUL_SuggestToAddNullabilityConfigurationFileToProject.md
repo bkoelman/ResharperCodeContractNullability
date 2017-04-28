@@ -1,4 +1,4 @@
-# ResharperCodeContractNullability configuration
+# Nullability configuration
 
 ## Activate configuration (VS Extension only)
 If you are using the Visual Studio Extension edition (not the NuGet package), you need to manually perform the following additional steps after creating the **ResharperCodeContractNullability.config** file.
@@ -12,13 +12,13 @@ In older versions of Visual Studio 2015:
 
 1. Right click the project in **Solution Explorer** and select **Unload Project**. If you are asked to save changes, click **Yes**.
 2. Right click the unloaded project in **Solution Explorer** and select **Edit *ProjectName*.csproj**.
-3. Locate the following item in the project file.
+3. Locate the following item in the project file:
 
     ```csharp
     <None Include="ResharperCodeContractNullability.config" />
     ```
 
-4. Change the definition to the following.
+4. Change the definition to the following:
 
     ```csharp
     <AdditionalFiles Include="ResharperCodeContractNullability.config" />
