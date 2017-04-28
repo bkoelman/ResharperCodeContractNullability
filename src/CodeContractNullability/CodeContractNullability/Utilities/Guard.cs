@@ -11,6 +11,7 @@ namespace CodeContractNullability.Utilities
         [AssertionMethod]
         [ContractAnnotation("value: null => halt")]
         public static void NotNull<T>([CanBeNull] [NoEnumeration] T value, [NotNull] [InvokerParameterName] string name)
+            where T : class
         {
             if (ReferenceEquals(value, null))
             {
