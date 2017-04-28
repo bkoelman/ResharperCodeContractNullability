@@ -13,17 +13,14 @@ namespace CodeContractNullability.Settings
         [DataMember(Name = "disableReportOnNullableValueTypes")]
         public bool DisableReportOnNullableValueTypes { get; private set; }
 
-        [DataMember(Name = "typeHierarchyReportMode", IsRequired = false)]
+        [DataMember(Name = "typeHierarchyReportMode", IsRequired = false, EmitDefaultValue = true)]
         public TypeHierarchyReportMode TypeHierarchyReportMode { get; private set; }
 
         [NotNull]
-        public static readonly AnalyzerSettings Default = new AnalyzerSettings();
+        public static readonly AnalyzerSettings Default =
+            new AnalyzerSettings(false, TypeHierarchyReportMode.AtHighestSourceInTypeHierarchy);
 
-        public AnalyzerSettings()
-        {
-        }
-
-        public AnalyzerSettings(bool disableReportOnNullableValueTypes, TypeHierarchyReportMode typeHierarchyReportMode)
+        private AnalyzerSettings(bool disableReportOnNullableValueTypes, TypeHierarchyReportMode typeHierarchyReportMode)
         {
             DisableReportOnNullableValueTypes = disableReportOnNullableValueTypes;
             TypeHierarchyReportMode = typeHierarchyReportMode;

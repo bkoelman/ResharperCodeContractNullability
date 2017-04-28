@@ -13,7 +13,7 @@ namespace CodeContractNullability.Test
         private readonly string sourceExpected;
 
         public ExactSourceCode([NotNull] string text, [NotNull] string sourceExpected, [NotNull] string filename,
-            [NotNull] AnalyzerSettings settings, [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
+            [CanBeNull] AnalyzerSettings settings, [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references, [NotNull] string codeNamespaceImport)
             : base(text, filename, settings, externalAnnotationsMap, references, new string[0], codeNamespaceImport, false)
         {

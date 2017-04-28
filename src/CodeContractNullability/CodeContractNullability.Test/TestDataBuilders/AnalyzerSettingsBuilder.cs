@@ -12,12 +12,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
 {
     public sealed class AnalyzerSettingsBuilder : ITestDataBuilder<AnalyzerSettings>
     {
-        private bool disableReportOnNullableValueTypes;
-        private TypeHierarchyReportMode typeHierarchyReportMode;
+        [NotNull]
+        private AnalyzerSettings settings = AnalyzerSettings.Default;
 
         public AnalyzerSettings Build()
         {
-            return new AnalyzerSettings(disableReportOnNullableValueTypes, typeHierarchyReportMode);
+            return settings;
         }
 
         [NotNull]
@@ -25,7 +25,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             get
             {
-                disableReportOnNullableValueTypes = true;
+                settings = settings.WithDisableReportOnNullableValueTypes(true);
                 return this;
             }
         }
@@ -33,14 +33,17 @@ namespace CodeContractNullability.Test.TestDataBuilders
         [NotNull]
         public AnalyzerSettingsBuilder InTypeHierarchyReportMode(TypeHierarchyReportMode mode)
         {
-            typeHierarchyReportMode = mode;
+            settings = settings.InTypeHierarchyReportMode(mode);
             return this;
         }
 
         [NotNull]
-        public static AnalyzerOptions ToOptions([NotNull] AnalyzerSettings settings)
+        public static AnalyzerOptions ToOptions([CanBeNull] AnalyzerSettings settings)
         {
-            Guard.NotNull(settings, nameof(settings));
+            if (settings == null)
+            {
+                return new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty);
+            }
 
             string content = SettingsProvider.ToFileContent(settings);
             return new AnalyzerOptions(ImmutableArray.Create<AdditionalText>(new FakeAdditionalText(content)));

@@ -10,6 +10,22 @@ namespace CodeContractNullability.Test.Specs.AlternateTypeHierarchyModes
     public sealed class FieldSpecs : NullabilityTest
     {
         [Fact]
+        public void When_field_in_mode_EverywhereInTypeHierarchy_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .InTypeHierarchyReportMode(TypeHierarchyReportMode.EverywhereInTypeHierarchy))
+                .InDefaultClass(@"
+                    <annotate/> string [|f|];
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
+        }
+
+        [Fact]
         public void When_field_in_mode_AtHighestSourceInTypeHierarchy_it_must_be_reported_and_fixed()
         {
             // Arrange

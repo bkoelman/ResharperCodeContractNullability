@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using CodeContractNullability.Settings;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -115,26 +116,18 @@ namespace CodeContractNullability.SymbolAnalysis
                 Diagnostic nullabilityDiagnostic = CreateDiagnosticFor(descriptor, properties);
                 context.ReportDiagnostic(nullabilityDiagnostic);
 
-                if (ShouldSuggestDisableReportOnNullableValueTypes())
+                if (CanCreateConfiguration())
                 {
-                    Diagnostic disableDiagnostic = CreateDiagnosticFor(scope.DisableReportOnNullableValueTypesRule,
+                    Diagnostic configureDiagnostic = CreateDiagnosticFor(scope.CreateConfigurationRule,
                         ImmutableDictionary<string, string>.Empty);
-                    context.ReportDiagnostic(disableDiagnostic);
+                    context.ReportDiagnostic(configureDiagnostic);
                 }
             }
         }
 
-        private bool ShouldSuggestDisableReportOnNullableValueTypes()
+        private bool CanCreateConfiguration()
         {
-            if (!scope.Settings.DisableReportOnNullableValueTypes)
-            {
-                ITypeSymbol symbolType = GetEffectiveSymbolType();
-                if (symbolType != null && symbolType.IsSystemNullableType())
-                {
-                    return true;
-                }
-            }
-            return false;
+            return !context.Options.AdditionalFiles.Any(document => SettingsProvider.IsSettingsFile(document.Path));
         }
 
         protected virtual bool RequiresAnnotation()
@@ -144,20 +137,20 @@ namespace CodeContractNullability.SymbolAnalysis
             // Truth table which determines per report mode if annotation is required.
             // For example, "YX" means: lookupResult = { Source = true, Assembly = null }
             //
-            //  mode:       Always  Highest Top
-            //  XX          Y       Y       Y
-            //  XN          Y       Y       N
-            //  XY          N       N       N
-            //  NX          Y       N       N
-            //  NN          Y       N       N
-            //  NY          N       N       N
-            //  YX          N       N       N
-            //  YN          N       N       N
-            //  YY          N       N       N
+            //  mode:       Everywhere  Highest  Top
+            //  XX          Y           Y        Y
+            //  XN          Y           Y        N
+            //  XY          N           N        N
+            //  NX          Y           N        N
+            //  NN          Y           N        N
+            //  NY          N           N        N
+            //  YX          N           N        N
+            //  YN          N           N        N
+            //  YY          N           N        N
 
             switch (scope.Settings.TypeHierarchyReportMode)
             {
-                case TypeHierarchyReportMode.Always:
+                case TypeHierarchyReportMode.EverywhereInTypeHierarchy:
                     return !(lookupResult.IsAnnotatedAtHigherLevelInSource == true ||
                         lookupResult.IsAnnotatedAtHigherLevelInAssembly == true);
                 case TypeHierarchyReportMode.AtHighestSourceInTypeHierarchy:

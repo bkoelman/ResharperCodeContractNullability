@@ -43,7 +43,7 @@
     <Compile Include="CodeContractItemNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
     <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
-    <Compile Include="DisableReportOnNullableValueTypesCodeFixProvider.cs" />
+    <Compile Include="CreateConfigurationCodeFixProvider.cs" />
     <Compile Include="ExternalAnnotations\AssemblyExternalAnnotationsLoader.cs" />
     <Compile Include="ExternalAnnotations\CachingExternalAnnotationsResolver.cs" />
     <Compile Include="ExternalAnnotations\FolderOnDiskScanner.cs" />
@@ -89,6 +89,9 @@
   <ItemGroup>
     <None Include="..\..\..\LICENSE.txt">
       <Link>LICENSE.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="build\ResharperCodeContractNullability.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="CodeContractNullability.nuspec">

@@ -28,14 +28,8 @@ namespace CodeContractNullability.Utilities
         [CanBeNull]
         public T Value
         {
-            get
-            {
-                return Interlocked.CompareExchange(ref innerValue, null, null);
-            }
-            set
-            {
-                Interlocked.Exchange(ref innerValue, value);
-            }
+            get => Interlocked.CompareExchange(ref innerValue, null, null);
+            set => Interlocked.Exchange(ref innerValue, value);
         }
 
         public FreshReference([CanBeNull] T value)

@@ -19,8 +19,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source,
-                "IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.");
+            VerifyNullabilityFix(source, "Add nullability configuration file to the project.");
         }
 
         [Fact]

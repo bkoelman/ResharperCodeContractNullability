@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="InjectResharperCodeContractNullabilitySettings" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <ResharperCodeContractNullabilitySettings Include="@(None)"
+        Condition="'%(Filename)%(Extension)' == 'ResharperCodeContractNullability.config'"/>
+      <AdditionalFiles Include="%(ResharperCodeContractNullabilitySettings.Identity)" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -11,6 +11,149 @@ namespace CodeContractNullability.Test.Specs.AlternateTypeHierarchyModes
     {
         [Fact]
         public void
+            When_parameter_in_mode_EverywhereInTypeHierarchy_with_interface_hierarchy_in_source_it_must_report_everywhere()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .InTypeHierarchyReportMode(TypeHierarchyReportMode.EverywhereInTypeHierarchy))
+                .InGlobalScope(@"
+                    public interface I
+                    {
+                        void M(string [|p|]);
+                    }
+
+                    public abstract class B : I
+                    {
+                        public abstract void M(string [|p|]);
+                    }
+
+                    public class D : B
+                    {
+                        public override void M(string [|p|]) { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source, CreateMessageForParameter("p"), CreateMessageForParameter("p"),
+                CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_parameter_in_mode_EverywhereInTypeHierarchy_with_external_interface_at_top_it_must_report_everywhere()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .InTypeHierarchyReportMode(TypeHierarchyReportMode.EverywhereInTypeHierarchy))
+                .WithReferenceToExternalAssemblyFor(@"
+                    public interface I
+                    {
+                        void M(string p);
+                    }")
+                .InGlobalScope(@"
+                    public abstract class B : I
+                    {
+                        public abstract void M(string [|p|]);
+                    }
+
+                    public class D : B
+                    {
+                        public override void M(string [|p|]) { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source, CreateMessageForParameter("p"), CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_parameter_in_mode_EverywhereInTypeHierarchy_with_annotated_external_interface_at_top_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .InTypeHierarchyReportMode(TypeHierarchyReportMode.EverywhereInTypeHierarchy))
+                .WithReferenceToExternalAssemblyFor(@"
+                    public interface I
+                    {
+                        void M(string p);
+                    }")
+                .ExternallyAnnotated(new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:I.M(System.String)")
+                        .WithParameter(new ExternalAnnotationParameterBuilder()
+                            .Named("p")
+                            .NotNull())))
+                .InGlobalScope(@"
+                    public abstract class B : I
+                    {
+                        public abstract void M(string p);
+                    }
+
+                    public class D : B
+                    {
+                        public override void M(string p) { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Fact]
+        public void When_parameter_in_mode_EverywhereInTypeHierarchy_with_base_hierarchy_in_source_it_must_report_everywhere()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .InTypeHierarchyReportMode(TypeHierarchyReportMode.EverywhereInTypeHierarchy))
+                .InGlobalScope(@"
+                    public abstract class B
+                    {
+                        public abstract void M(string [|p|]);
+                    }
+
+                    public class D : B
+                    {
+                        public override void M(string [|p|]) { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source, CreateMessageForParameter("p"), CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_parameter_in_mode_EverywhereInTypeHierarchy_with_external_base_at_top_it_must_report_everywhere()
+        {
+            // Arrange
+            ParsedSourceCode source = new ClassSourceCodeBuilder()
+                .WithSettings(new AnalyzerSettingsBuilder()
+                    .InTypeHierarchyReportMode(TypeHierarchyReportMode.EverywhereInTypeHierarchy))
+                .WithReferenceToExternalAssemblyFor(@"
+                    public abstract class B
+                    {
+                        public abstract void M(string p);
+                    }")
+                .InGlobalScope(@"
+                    public class D : B
+                    {
+                        public override void M(string [|p|]) { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source, CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void
             When_parameter_in_mode_AtHighestSourceInTypeHierarchy_with_interface_hierarchy_in_source_it_must_report_at_top()
         {
             // Arrange

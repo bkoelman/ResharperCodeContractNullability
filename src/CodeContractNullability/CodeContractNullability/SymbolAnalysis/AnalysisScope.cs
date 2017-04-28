@@ -21,26 +21,25 @@ namespace CodeContractNullability.SymbolAnalysis
         public AnalyzerSettings Settings { get; }
 
         [NotNull]
-        public DiagnosticDescriptor DisableReportOnNullableValueTypesRule { get; }
+        public DiagnosticDescriptor CreateConfigurationRule { get; }
 
         public bool AppliesToItem { get; }
 
         public AnalysisScope([NotNull] IExternalAnnotationsResolver externalAnnotations,
             [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
-            [NotNull] AnalyzerSettings settings, [NotNull] DiagnosticDescriptor disableReportOnNullableValueTypesRule,
-            bool appliesToItem)
+            [NotNull] AnalyzerSettings settings, [NotNull] DiagnosticDescriptor createConfigurationRule, bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));
             Guard.NotNull(generatedCodeCache, nameof(generatedCodeCache));
             Guard.NotNull(typeCache, nameof(typeCache));
             Guard.NotNull(settings, nameof(settings));
-            Guard.NotNull(disableReportOnNullableValueTypesRule, nameof(disableReportOnNullableValueTypesRule));
+            Guard.NotNull(createConfigurationRule, nameof(createConfigurationRule));
 
             ExternalAnnotations = externalAnnotations;
             GeneratedCodeCache = generatedCodeCache;
             TypeCache = typeCache;
             Settings = settings;
-            DisableReportOnNullableValueTypesRule = disableReportOnNullableValueTypesRule;
+            CreateConfigurationRule = createConfigurationRule;
             AppliesToItem = appliesToItem;
         }
     }

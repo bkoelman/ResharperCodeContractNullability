@@ -51,7 +51,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return typeSymbol.SpecialType == SpecialType.System_Void;
         }
 
-        public static bool IsSystemNullableType([NotNull] this ITypeSymbol typeSymbol)
+        private static bool IsSystemNullableType([NotNull] this ITypeSymbol typeSymbol)
         {
             return typeSymbol.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
         }

@@ -13,7 +13,7 @@
     <releaseNotes>Added support for ValueTask&lt;T&gt;.</releaseNotes>
     <copyright>Apache License, Version 2.0</copyright>
     <language>en-us</language>
-    <tags>resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul rinul</tags>
+    <tags>resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul rinul cfgnul</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System" targetFramework="" />
     </frameworkAssemblies>
@@ -23,5 +23,6 @@
   <files>
     <file src="*.dll" target="analyzers\dotnet\cs" exclude="**\JetBrains.Annotations.dll;**\Microsoft.CodeAnalysis.*;**\System.Collections.Immutable.*;**\System.Reflection.Metadata.*;**\System.Composition.*" />
     <file src="tools\*.ps1" target="tools\" />
+    <file src="build\**" target="build" />
   </files>
 </package>

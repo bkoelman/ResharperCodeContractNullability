@@ -17,8 +17,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
 {
     public abstract class SourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
-        [NotNull]
-        private AnalyzerSettings settings = new AnalyzerSettingsBuilder().Build();
+        [CanBeNull]
+        private AnalyzerSettings settings;
 
         [NotNull]
         [ItemNotNull]

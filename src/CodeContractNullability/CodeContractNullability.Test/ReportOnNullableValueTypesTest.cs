@@ -6,13 +6,13 @@ namespace CodeContractNullability.Test
 {
     public abstract class ReportOnNullableValueTypesTest : NullabilityTest
     {
-        protected override string DiagnosticId => BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId;
+        protected override string DiagnosticId => BaseAnalyzer.CreateConfigurationDiagnosticId;
 
         protected override string NotNullAttributeName => "ignored";
 
         protected override CodeFixProvider CreateFixProvider()
         {
-            return new DisableReportOnNullableValueTypesCodeFixProvider();
+            return new CreateConfigurationCodeFixProvider();
         }
 
         protected override void VerifyNullabilityFix(ParsedSourceCode source, params string[] messages)

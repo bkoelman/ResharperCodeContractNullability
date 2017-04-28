@@ -1,5 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Reflection;
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.NullabilityAttributes;
 using CodeContractNullability.Settings;
@@ -17,9 +19,16 @@ namespace CodeContractNullability
     /// </summary>
     public abstract class BaseAnalyzer : DiagnosticAnalyzer
     {
-        public const string DisableReportOnNullableValueTypesDiagnosticId = "XNUL";
+        public const string CreateConfigurationDiagnosticId = "CFGNUL";
 
         protected const string Category = "Nullability";
+
+        private const string ConfigurationRuleTitle = "Suggest to add nullability configuration file to the project.";
+
+        private const string ConfigurationRuleHelpUrl =
+                "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/CFGNUL_SuggestToAddNullabilityConfigurationFileToProject.md"
+            ;
+
         private readonly bool appliesToItem;
 
         [NotNull]
@@ -38,32 +47,11 @@ namespace CodeContractNullability
         protected abstract DiagnosticDescriptor CreateRuleFor([NotNull] string memberTypePascalCase);
 
         [NotNull]
-        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new DiagnosticDescriptor(
-                DisableReportOnNullableValueTypesDiagnosticId, "Suggest to disable reporting on nullable value types.",
-                "IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.",
-                "Configuration", DiagnosticSeverity.Hidden, true, @"
-At this time, the code fix is not able to fully configure the newly-created ResharperCodeContractNullability.config file 
-for use. This is tracked in bug report https://github.com/dotnet/roslyn/issues/4655. In the mean time, users must manually 
-perform the following additional steps after applying this code fix.
-
-1. Right click the project in [Solution Explorer] and select [Unload Project]. If you are asked to save changes, click [Yes].
-2. Right click the unloaded project in [Solution Explorer] and select [Edit ProjectName.csproj].
-3. Locate the following item in the project file:
-
-    <None Include=""ResharperCodeContractNullability.config"" />
-
-4. Change the definition to the following:
-
-    <AdditionalFiles Include=""ResharperCodeContractNullability.config"" />
-
-5. Save and close the project file.
-6. Right click the unloaded project in [Solution Explorer] and select [Reload Project].",
-                "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/XNUL_SuggestToDisableReportingOnNullableValueTypes.md")
-            ;
+        private readonly DiagnosticDescriptor createConfigurationRule;
 
         [ItemNotNull]
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ruleForField,
-            ruleForProperty, ruleForMethodReturnValue, ruleForParameter, disableReportOnNullableValueTypesRule);
+            ruleForProperty, ruleForMethodReturnValue, ruleForParameter, createConfigurationRule);
 
         [NotNull]
         public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
@@ -76,6 +64,8 @@ perform the following additional steps after applying this code fix.
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected BaseAnalyzer(bool appliesToItem)
         {
+            createConfigurationRule = ConstructCreateConfigurationRule();
+
             this.appliesToItem = appliesToItem;
 
             // ReSharper disable DoNotCallOverridableMethodsInConstructor
@@ -84,6 +74,44 @@ perform the following additional steps after applying this code fix.
             ruleForMethodReturnValue = CreateRuleFor("Method");
             ruleForParameter = CreateRuleFor("Parameter");
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
+        }
+
+        [NotNull]
+        private DiagnosticDescriptor ConstructCreateConfigurationRule()
+        {
+            string messageFormat;
+            string description = null;
+
+            if (IsRunningAsExtension())
+            {
+                messageFormat = "IMPORTANT: Additional steps are needed. Expand the arrow on the left for details.";
+                description =
+                    "Click 'More about CFGNUL' to the right for instructions on how to activate this configuration file.";
+            }
+            else
+            {
+                messageFormat = "Add nullability configuration file to the project.";
+            }
+
+            return new DiagnosticDescriptor(CreateConfigurationDiagnosticId, ConfigurationRuleTitle, messageFormat,
+                "Configuration", DiagnosticSeverity.Hidden, true, description, ConfigurationRuleHelpUrl);
+        }
+
+        private bool IsRunningAsExtension()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string assemblyPath = assembly.Location;
+
+            if (!string.IsNullOrEmpty(assemblyPath))
+            {
+                string assemblyFolder = Path.GetDirectoryName(assemblyPath);
+                if (!string.IsNullOrEmpty(assemblyFolder))
+                {
+                    return File.Exists(Path.Combine(assemblyFolder, "extension.vsixmanifest"));
+                }
+            }
+
+            return false;
         }
 
         public override void Initialize([NotNull] AnalysisContext context)
@@ -113,8 +141,8 @@ perform the following additional steps after applying this code fix.
             var generatedCodeCache = new GeneratedCodeDocumentCache();
             var typeCache = new FrameworkTypeCache(context.Compilation);
 
-            var nullabilityContext = new AnalysisScope(resolver, generatedCodeCache, typeCache, settings,
-                disableReportOnNullableValueTypesRule, appliesToItem);
+            var nullabilityContext = new AnalysisScope(resolver, generatedCodeCache, typeCache, settings, createConfigurationRule,
+                appliesToItem);
 
             var factory = new SymbolAnalyzerFactory(nullabilityContext);
 
