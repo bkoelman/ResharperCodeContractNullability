@@ -132,6 +132,10 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected virtual bool RequiresAnnotation()
         {
+            // TODO: In mode Highest, we should report even if base type is unannotated in some cases, for
+            // example because base type is declared in generated code file or nullability attributes are not installed.
+            // We'll need to introduce the concept "can be reported for annotation" on symbols.
+
             TypeHierarchyLookupResult lookupResult = GetAnnotationInTypeHierarchy();
 
             // Truth table which determines per report mode if annotation is required.
@@ -186,6 +190,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected virtual TypeHierarchyLookupResult GetAnnotationInInterface([NotNull] TSymbol symbol)
         {
+            // TODO: Refactor into context object.
             bool higherLevelSeenInSource = false;
             bool higherLevelSeenInAssembly = false;
 

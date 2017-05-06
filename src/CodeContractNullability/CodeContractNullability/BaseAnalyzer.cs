@@ -79,18 +79,14 @@ namespace CodeContractNullability
         [NotNull]
         private DiagnosticDescriptor ConstructCreateConfigurationRule()
         {
-            string messageFormat;
             string description = null;
+            string messageFormat = "Add nullability configuration file to the project.";
 
             if (IsRunningAsExtension())
             {
-                messageFormat = "IMPORTANT: Additional steps are needed. Expand the arrow on the left for details.";
+                messageFormat += "\n\nIMPORTANT: Additional steps are needed. Expand the arrow on the left for details.";
                 description =
                     "Click 'More about CFGNUL' to the right for instructions on how to activate this configuration file.";
-            }
-            else
-            {
-                messageFormat = "Add nullability configuration file to the project.";
             }
 
             return new DiagnosticDescriptor(CreateConfigurationDiagnosticId, ConfigurationRuleTitle, messageFormat,

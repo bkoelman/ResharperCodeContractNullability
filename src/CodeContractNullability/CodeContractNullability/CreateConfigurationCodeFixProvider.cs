@@ -26,7 +26,7 @@ namespace CodeContractNullability
         {
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
-                CodeAction codeAction = CodeAction.Create("Add nullability configuration file in project",
+                CodeAction codeAction = CodeAction.Create("Add nullability configuration file to project",
                     cancellationToken => AddConfigurationFileToProject(context));
                 context.RegisterCodeFix(codeAction, diagnostic);
             }
