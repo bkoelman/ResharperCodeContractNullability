@@ -23,9 +23,9 @@ namespace CodeContractNullability.ExternalAnnotations
         private static readonly FolderOnDiskScanner Scanner = new FolderOnDiskScanner();
 
         [NotNull]
-        private static readonly string CachePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ResharperCodeContractNullability",
-            "external-annotations.cache");
+        private static readonly string CachePath =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "ResharperCodeContractNullability", "external-annotations.cache");
 
         [NotNull]
         private static readonly object LockObject = new object();

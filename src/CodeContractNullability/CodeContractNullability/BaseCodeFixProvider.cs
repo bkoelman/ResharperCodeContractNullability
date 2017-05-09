@@ -105,8 +105,8 @@ namespace CodeContractNullability
         {
             INamedTypeSymbol canBeNullAttribute = appliesToItem ? nullSymbols.ItemCanBeNull : nullSymbols.CanBeNull;
 
-            Func<CancellationToken, Task<Document>> fixForCanBeNull = cancellationToken => WithAttributeAsync(canBeNullAttribute,
-                context.Document, syntaxNode, cancellationToken);
+            Func<CancellationToken, Task<Document>> fixForCanBeNull =
+                cancellationToken => WithAttributeAsync(canBeNullAttribute, context.Document, syntaxNode, cancellationToken);
 
             string canBeNullText = "Decorate with " + GetDisplayNameFor(canBeNullAttribute);
             RegisterCodeFixFor(fixForCanBeNull, canBeNullText, context, diagnostic);

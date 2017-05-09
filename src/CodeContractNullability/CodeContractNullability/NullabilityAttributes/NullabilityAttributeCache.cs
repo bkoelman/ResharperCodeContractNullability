@@ -35,8 +35,8 @@ namespace CodeContractNullability.NullabilityAttributes
 
             NullabilityAttributeSymbols symbolsSnapshot = symbols.Value;
 
-            NullabilityAttributeMetadataNames previousNames = symbolsSnapshot?.GetMetadataNames() ??
-                names.Value ?? LastSeenNames.Value;
+            NullabilityAttributeMetadataNames previousNames =
+                symbolsSnapshot?.GetMetadataNames() ?? names.Value ?? LastSeenNames.Value;
             symbolsSnapshot = previousNames?.GetSymbolsOrNull(compilation);
 
             if (symbolsSnapshot == null)
