@@ -33,7 +33,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -54,6 +54,7 @@
     <StartArguments>/rootsuffix Roslyn</StartArguments>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -63,6 +64,17 @@
       <Project>{1881B7FC-7A28-42ED-94B4-3F2B03FEA0BA}</Project>
       <Name>CodeContractNullability</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MsgPack, Version=0.8.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MsgPack.Cli.0.8.1\lib\net46\MsgPack.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\LICENSE.txt">
+      <Link>LICENSE.txt</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -85,8 +97,6 @@
     <ItemGroup>
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\tools\install.ps1" />
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\tools\uninstall.ps1" />
-      <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\CodeContractNullability.nuspec" />
-      <VsixSourceItem Remove="$(SolutionDir)packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll" />
     </ItemGroup>
     <!--
         <Message Text="VsixSourceItem collection now contains: @(VsixSourceItem)" Importance="High" />

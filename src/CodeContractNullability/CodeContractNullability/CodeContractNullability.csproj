@@ -1,195 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ProjectGuid>{1881B7FC-7A28-42ED-94B4-3F2B03FEA0BA}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeContractNullability</RootNamespace>
-    <AssemblyName>CodeContractNullability</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
+    <TargetFramework>net45</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>..\..\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+  <PropertyGroup>
+    <PackageId>ResharperCodeContractNullability</PackageId>
+    <Title>Resharper Code Contract Nullability</Title>
+    <Version>1.0.9-pre</Version>
+    <Authors>Bart Koelman</Authors>
+    <Company />
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/bkoelman/ResharperCodeContractNullability</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html
+
+You need Visual Studio 2015/2017 and Resharper v9 or higher to use this analyzer. See package "ResharperCodeContractNullabilityFxCop" if you use Visual Studio 2013 or lower.</Description>
+    <PackageReleaseNotes>Added support for ValueTask&lt;T&gt;.</PackageReleaseNotes>
+    <Copyright>Apache License, Version 2.0</Copyright>
+    <PackageTags>resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul rinul</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\..\bin\Debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\..\bin\Release</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AnalyzerSettings.cs" />
-    <Compile Include="BaseAnalyzer.cs" />
-    <Compile Include="BaseCodeFixProvider.cs" />
-    <Compile Include="CodeContractItemNullabilityCodeFixProvider.cs" />
-    <Compile Include="CodeContractNullabilityCodeFixProvider.cs" />
-    <Compile Include="CodeContractItemNullabilityAnalyzer.cs" />
-    <Compile Include="DisableReportOnNullableValueTypesCodeFixProvider.cs" />
-    <Compile Include="ExternalAnnotations\AssemblyExternalAnnotationsLoader.cs" />
-    <Compile Include="ExternalAnnotations\CachingExternalAnnotationsResolver.cs" />
-    <Compile Include="ExternalAnnotations\FolderOnDiskScanner.cs" />
-    <Compile Include="ExternalAnnotations\IExternalAnnotationsResolver.cs" />
-    <Compile Include="ExternalAnnotations\MissingExternalAnnotationsException.cs" />
-    <Compile Include="ExternalAnnotations\SimpleExternalAnnotationsResolver.cs" />
-    <Compile Include="SettingsProvider.cs" />
-    <Compile Include="SymbolAnalysis\FieldAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\BaseSymbolAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\MethodReturnValueAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\AnalysisScope.cs" />
-    <Compile Include="SymbolAnalysis\ParameterAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\PropertyAnalyzer.cs" />
-    <Compile Include="SymbolAnalysis\SymbolAnalyzerFactory.cs" />
-    <Compile Include="SyntaxNodeExtensions.cs" />
-    <Compile Include="NullabilityAttributes\CompilationAttributeScanner.cs" />
-    <Compile Include="CodeContractNullabilityAnalyzer.cs" />
-    <Compile Include="FrameworkTypeCache.cs" />
-    <Compile Include="Utilities\CodeTimer.cs" />
-    <Compile Include="Utilities\EnumerableExtensions.cs" />
-    <Compile Include="Utilities\ExtensionPoint.cs" />
-    <Compile Include="ExternalAnnotations\Storage\ExternalAnnotationsMap.cs" />
-    <Compile Include="ExternalAnnotations\ExternalAnnotationDocumentParser.cs" />
-    <Compile Include="ExternalAnnotations\Storage\ExternalAnnotationsCache.cs" />
-    <Compile Include="Utilities\FreshReference.cs" />
-    <Compile Include="GeneratedCodeDocumentCache.cs" />
-    <Compile Include="Utilities\Guard.cs" />
-    <Compile Include="NullabilityAttributes\INullabilityAttributeProvider.cs" />
-    <Compile Include="SymbolAnalysis\FunctionAnalysis.cs" />
-    <Compile Include="ExternalAnnotations\Storage\MemberNullabilityInfo.cs" />
-    <Compile Include="NullabilityAttributes\NullabilityAttributeCache.cs" />
-    <Compile Include="NullabilityAttributes\NullabilityAttributeMetadataNames.cs" />
-    <Compile Include="NullabilityAttributes\NullabilityAttributeSymbols.cs" />
-    <Compile Include="ExternalAnnotations\Storage\ParameterNullabilityMap.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NullabilityAttributes\SimpleNullabilityAttributeProvider.cs" />
-    <Compile Include="SymbolAnalysis\SymbolExtensions.cs" />
-    <Compile Include="ExternalAnnotations\FolderExternalAnnotationsLoader.cs" />
-    <Compile Include="Utilities\StringExtensions.cs" />
+    <None Include="..\..\..\LICENSE.txt" Link="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\LICENSE.txt">
-      <Link>LICENSE.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CodeContractNullability.nuspec">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-    <None Include="tools\install.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="tools\uninstall.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ReadMe.txt" />
+    <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
+    <None Update="build\*.props" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\MsgPack.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\..\packages\ResharperCodeContractNullability.1.0.8\analyzers\dotnet\cs\CodeContractNullability.dll" />
-    <Analyzer Include="..\..\packages\ResharperCodeContractNullability.1.0.8\analyzers\dotnet\cs\MsgPack.dll" />
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.29" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="MsgPack.Cli" Version="0.8.1" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CodeAnalysis.Common.1.0.1\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CodeAnalysis.CSharp.1.0.1\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.0.1\lib\net45\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.0.1\lib\net452\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.0.1\lib\net452\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MsgPack, Version=0.8.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MsgPack.Cli.0.8.1\lib\net46\MsgPack.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Composition.AttributedModel, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Composition.Convention, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Composition.Hosting, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Composition.Runtime, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Composition.TypedParts, Version=1.0.27.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Reflection.Metadata, Version=1.0.21.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Reflection.Metadata.1.0.21\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="GetSemanticVersionFromOutputAssembly">
-    <PropertyGroup>
-      <In>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs'))</In>
-      <Pattern>\[assembly:\s*AssemblyInformationalVersion\(@?"(?&lt;SemanticVersionString&gt;[0-9A-Za-z-.]+)"\)\]</Pattern>
-      <SemanticVersion>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern), System.Text.RegularExpressions.RegexOptions.Multiline).Groups["SemanticVersionString"].Value)</SemanticVersion>
-    </PropertyGroup>
-  </Target>
-  <Target Name="GetSemanticVersionFromCurrentTime">
-    <PropertyGroup>
-      <SemanticVersion>$([System.DateTime]::Now.ToString(`yyMM`)).$([System.DateTime]::Now.ToString(`ddHH`)).$([System.DateTime]::Now.ToString(`mmss`))</SemanticVersion>
-    </PropertyGroup>
-  </Target>
   <!--
-    For easier debugging of NuGet install/uninstall scripts, change DependsOnTargets below to "GetSemanticVersionFromCurrentTime".
-  -->
-  <Target Name="AfterBuild" DependsOnTargets="GetSemanticVersionFromOutputAssembly">
-    <Exec Command="&quot;$(USERPROFILE)\.nuget\packages\NuGet.CommandLine\4.1.0\tools\NuGet.exe&quot; pack CodeContractNullability.nuspec -NoPackageAnalysis -OutputDirectory . -version $(SemanticVersion)" WorkingDirectory="$(OutDir)" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
-    </Exec>
+    To bypass the NuGet cache during install/uninstall debugging, uncomment the target below.
+
+  <Target Name="SetPackageVersionFromCurrentTime" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <PackageVersion>$([System.DateTime]::Now.ToString(`yyMM`)).$([System.DateTime]::Now.ToString(`ddHH`)).$([System.DateTime]::Now.ToString(`mmss`))-pre</PackageVersion>
+    </PropertyGroup>
+    <Message Importance="High" Text="Setting PackageVersion to $(PackageVersion)" />
   </Target>
+  -->
   <Target Name="CopyExternalAnnotations" BeforeTargets="BeforeBuild" Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <PropertyGroup>
       <ExternalAnnotationsVersion>10.2.29</ExternalAnnotationsVersion>
@@ -201,7 +68,5 @@
     <Exec Command="xcopy $(ExternalAnnotationsSourceDir) $(ExternalAnnotationsTargetDir) /s /i /r /y /q /d" LogStandardErrorAsError="true" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
-  </Target>
-  <Target Name="BeforeBuild" DependsOnTargets="CopyExternalAnnotations">
   </Target>
 </Project>
