@@ -42,11 +42,11 @@ namespace CodeContractNullability
         {
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
-                NullabilityAttributeSymbols nullSymbols = await GetNullabilityAttributesFromDiagnostic(context, diagnostic)
-                    .ConfigureAwait(false);
+                NullabilityAttributeSymbols nullSymbols =
+                    await GetNullabilityAttributesFromDiagnostic(context, diagnostic).ConfigureAwait(false);
 
-                SyntaxNode syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken)
-                    .ConfigureAwait(false);
+                SyntaxNode syntaxRoot =
+                    await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
 
                 FieldDeclarationSyntax fieldSyntax = targetSyntax is VariableDeclaratorSyntax
@@ -69,14 +69,14 @@ namespace CodeContractNullability
             NullabilityAttributeMetadataNames names =
                 NullabilityAttributeMetadataNames.FromImmutableDictionary(diagnostic.Properties);
 
-            Compilation compilation = await context.Document.Project.GetCompilationAsync(context.CancellationToken)
-                .ConfigureAwait(false);
+            Compilation compilation =
+                await context.Document.Project.GetCompilationAsync(context.CancellationToken).ConfigureAwait(false);
 
             var attributeProvider = new CachingNullabilityAttributeProvider(names);
             NullabilityAttributeSymbols nullSymbols = attributeProvider.GetSymbols(compilation, context.CancellationToken);
             if (nullSymbols == null)
             {
-                throw new InvalidOperationException("Internal error - failed to resolve attributes.");
+                throw new InvalidOperationException("Internal error: failed to resolve attributes.");
             }
             return nullSymbols;
         }
@@ -93,8 +93,8 @@ namespace CodeContractNullability
         {
             INamedTypeSymbol notNullAttribute = appliesToItem ? nullSymbols.ItemNotNull : nullSymbols.NotNull;
 
-            Func<CancellationToken, Task<Document>> fixForNotNull =
-                cancellationToken => WithAttributeAsync(notNullAttribute, context.Document, syntaxNode, cancellationToken);
+            Func<CancellationToken, Task<Document>> fixForNotNull = cancellationToken =>
+                WithAttributeAsync(notNullAttribute, context.Document, syntaxNode, cancellationToken);
 
             string notNullText = "Decorate with " + GetDisplayNameFor(notNullAttribute);
             RegisterCodeFixFor(fixForNotNull, notNullText, context, diagnostic);
@@ -105,8 +105,8 @@ namespace CodeContractNullability
         {
             INamedTypeSymbol canBeNullAttribute = appliesToItem ? nullSymbols.ItemCanBeNull : nullSymbols.CanBeNull;
 
-            Func<CancellationToken, Task<Document>> fixForCanBeNull =
-                cancellationToken => WithAttributeAsync(canBeNullAttribute, context.Document, syntaxNode, cancellationToken);
+            Func<CancellationToken, Task<Document>> fixForCanBeNull = cancellationToken =>
+                WithAttributeAsync(canBeNullAttribute, context.Document, syntaxNode, cancellationToken);
 
             string canBeNullText = "Decorate with " + GetDisplayNameFor(canBeNullAttribute);
             RegisterCodeFixFor(fixForCanBeNull, canBeNullText, context, diagnostic);
@@ -139,8 +139,8 @@ namespace CodeContractNullability
                 .ConfigureAwait(false);
 
             // Simplify and reformat all annotated nodes.
-            Document simplified = await Simplifier.ReduceAsync(documentWithImport, options, cancellationToken)
-                .ConfigureAwait(false);
+            Document simplified =
+                await Simplifier.ReduceAsync(documentWithImport, options, cancellationToken).ConfigureAwait(false);
             Document formatted = await Formatter.FormatAsync(simplified, options, cancellationToken).ConfigureAwait(false);
             return formatted;
         }

@@ -132,8 +132,7 @@ namespace CodeContractNullability.Test
         private static Tuple<MarkerType, int> GetNextMarkerStart([NotNull] string line)
         {
             IOrderedEnumerable<Tuple<MarkerType, int>> query =
-                from value in
-                new[]
+                from value in new[]
                 {
                     Tuple.Create(MarkerType.FixPlaceholder, line.IndexOf(FixMarker, StringComparison.Ordinal)),
                     Tuple.Create(MarkerType.ImportPlaceholder, line.IndexOf(ImportMarker, StringComparison.Ordinal))

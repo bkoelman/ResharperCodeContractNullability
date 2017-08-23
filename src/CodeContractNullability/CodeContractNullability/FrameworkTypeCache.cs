@@ -27,34 +27,47 @@ namespace CodeContractNullability
         }
 
         [CanBeNull]
-        public INamedTypeSymbol EnumerableOfT => GetCached(typeof(IEnumerable<>).FullName);
+        public INamedTypeSymbol EnumerableOfT => GetCached(typeof(IEnumerable<>));
 
         [CanBeNull]
-        public INamedTypeSymbol Enumerable => GetCached(typeof(IEnumerable).FullName);
+        public INamedTypeSymbol Enumerable => GetCached(typeof(IEnumerable));
 
         [CanBeNull]
-        public INamedTypeSymbol String => GetCached(typeof(string).FullName);
+        public INamedTypeSymbol String => GetCached(typeof(string));
 
         [CanBeNull]
-        public INamedTypeSymbol Object => GetCached(typeof(object).FullName);
+        public INamedTypeSymbol Object => GetCached(typeof(object));
 
         [CanBeNull]
-        public INamedTypeSymbol LazyOfT => GetCached(typeof(Lazy<>).FullName);
+        public INamedTypeSymbol LazyOfT => GetCached(typeof(Lazy<>));
 
         [CanBeNull]
-        public INamedTypeSymbol TaskOfT => GetCached(typeof(Task<>).FullName);
+        public INamedTypeSymbol TaskOfT => GetCached(typeof(Task<>));
 
         [CanBeNull]
         public INamedTypeSymbol ValueTaskOfT => GetCached("System.Threading.Tasks.ValueTask`1");
 
         [CanBeNull]
-        public INamedTypeSymbol CompilerGeneratedAttribute => GetCached(typeof(CompilerGeneratedAttribute).FullName);
+        public INamedTypeSymbol CompilerGeneratedAttribute => GetCached(typeof(CompilerGeneratedAttribute));
 
         [CanBeNull]
-        public INamedTypeSymbol DebuggerNonUserCodeAttribute => GetCached(typeof(DebuggerNonUserCodeAttribute).FullName);
+        public INamedTypeSymbol DebuggerNonUserCodeAttribute => GetCached(typeof(DebuggerNonUserCodeAttribute));
 
         [CanBeNull]
-        public INamedTypeSymbol ConditionalAttribute => GetCached(typeof(ConditionalAttribute).FullName);
+        public INamedTypeSymbol ConditionalAttribute => GetCached(typeof(ConditionalAttribute));
+
+        [CanBeNull]
+        private INamedTypeSymbol GetCached([NotNull] Type type)
+        {
+            string typeName = type.FullName;
+
+            if (typeName == null)
+            {
+                throw new InvalidOperationException($"Internal error: failed to resolve full name of type '{type}'.");
+            }
+
+            return GetCached(typeName);
+        }
 
         [CanBeNull]
         private INamedTypeSymbol GetCached([NotNull] string typeName)
