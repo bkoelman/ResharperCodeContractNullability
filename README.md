@@ -25,20 +25,21 @@ To make analysis work over multiple projects in your solution, define the `JETBR
 
 ![Analyzer in action](https://github.com/bkoelman/ResharperCodeContractNullability/blob/gh-pages/images/analyzer-in-action.png)
 
+## Trying out the latest build
+
 After each commit, a new prerelease NuGet package is automatically published to AppVeyor at https://ci.appveyor.com/project/bkoelman/resharpercodecontractnullability/branch/master/artifacts. To try it out, follow the next steps:
 
 * In Visual Studio: **Tools**, **NuGet Package Manager**, **Package Manager Settings**, **Package Sources**
     * Click **+**
     * Name: **AppVeyor ResharperCodeContractNullability**, Source: **https://ci.appveyor.com/nuget/resharpercodecontractnullability**
     * Click **Update**, **Ok**
-* Open the NuGet package manager console  (**Tools**, **NuGet Package Manager**, **Package Manager Console**)
+* Open the NuGet package manager console (**Tools**, **NuGet Package Manager**, **Package Manager Console**)
     * Select **AppVeyor ResharperCodeContractNullability** as package source
     * Run command: `Install-Package ResharperCodeContractNullability -pre`
 
 ## Running on your build server
 
 This assumes your project uses ResharperCodeContractNullability (via NuGet), but Resharper is not installed on your build server. To make the analyzer run there, make sure to install External Annotations on the server as a pre-build step:
-
 
 * ```nuget install JetBrains.ExternalAnnotations -Version 10.2.29```
 * ```xcopy JetBrains.ExternalAnnotations.10.2.29\*.xml "%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations" /s /i /r /y /q```
