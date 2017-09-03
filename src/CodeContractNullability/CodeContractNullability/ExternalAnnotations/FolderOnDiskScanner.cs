@@ -86,8 +86,7 @@ namespace CodeContractNullability.ExternalAnnotations
                 string platformFolder = Path.GetFileName(platformPath);
                 if (platformFolder?.Length >= ResharperFolderNamePrefix.Length + 2)
                 {
-                    int vsVersion;
-                    if (int.TryParse(platformFolder?.Substring(ResharperFolderNamePrefix.Length, 2), out vsVersion) &&
+                    if (int.TryParse(platformFolder?.Substring(ResharperFolderNamePrefix.Length, 2), out int vsVersion) &&
                         vsVersion >= 14)
                     {
                         string path = Path.Combine(platformPath, subFolder);

@@ -92,8 +92,7 @@ namespace CodeContractNullability.ExternalAnnotations
 
         private void WatcherOnChanged([NotNull] object sender, [NotNull] FileSystemEventArgs e)
         {
-            AssemblyCacheEntry existing;
-            if (assemblyCache.TryRemove(e.FullPath, out existing))
+            if (assemblyCache.TryRemove(e.FullPath, out AssemblyCacheEntry existing))
             {
                 existing.Watcher.EnableRaisingEvents = false;
                 existing.Watcher.Dispose();

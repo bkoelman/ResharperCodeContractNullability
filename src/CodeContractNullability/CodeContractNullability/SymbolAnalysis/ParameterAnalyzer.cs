@@ -33,8 +33,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
         private bool ContainerIsLambda()
         {
-            var method = Symbol.ContainingSymbol as IMethodSymbol;
-            return method != null && FunctionAnalysis.KindsToSkip.Contains(method.MethodKind);
+            return Symbol.ContainingSymbol is IMethodSymbol method && FunctionAnalysis.KindsToSkip.Contains(method.MethodKind);
         }
 
         protected override bool HasAnnotationInBaseClass()
@@ -106,14 +105,12 @@ namespace CodeContractNullability.SymbolAnalysis
         [ItemNotNull]
         private ImmutableArray<IParameterSymbol> GetParametersFor([NotNull] ISymbol symbol)
         {
-            var method = symbol as IMethodSymbol;
-            if (method != null)
+            if (symbol is IMethodSymbol method)
             {
                 return method.Parameters;
             }
 
-            var property = symbol as IPropertySymbol;
-            if (property != null)
+            if (symbol is IPropertySymbol property)
             {
                 return property.Parameters;
             }

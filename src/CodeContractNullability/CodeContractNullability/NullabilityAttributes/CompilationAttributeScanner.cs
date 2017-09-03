@@ -85,8 +85,7 @@ namespace CodeContractNullability.NullabilityAttributes
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var externalAssemblySymbol = compilation.GetAssemblyOrModuleSymbol(reference) as IAssemblySymbol;
-                if (externalAssemblySymbol != null)
+                if (compilation.GetAssemblyOrModuleSymbol(reference) is IAssemblySymbol externalAssemblySymbol)
                 {
                     var visitor = new NullabilityAttributesVisitor();
                     visitor.Visit(externalAssemblySymbol.GlobalNamespace);

@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability.Vsix", "CodeContractNullability\CodeContractNullability.Vsix\CodeContractNullability.Vsix.csproj", "{3B498FFB-024D-4BB1-8D55-165FF10FCEA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability", "CodeContractNullability\CodeContractNullability\CodeContractNullability.csproj", "{1881B7FC-7A28-42ED-94B4-3F2B03FEA0BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeContractNullability", "CodeContractNullability\CodeContractNullability\CodeContractNullability.csproj", "{1881B7FC-7A28-42ED-94B4-3F2B03FEA0BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeContractNullability.Test", "CodeContractNullability\CodeContractNullability.Test\CodeContractNullability.Test.csproj", "{7337149E-293E-4775-8844-771D6B1D2A91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeContractNullability.Test", "CodeContractNullability\CodeContractNullability.Test\CodeContractNullability.Test.csproj", "{7337149E-293E-4775-8844-771D6B1D2A91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0E7BC359-7536-4E55-8B4F-E36600AA29E0}
 	EndGlobalSection
 EndGlobal

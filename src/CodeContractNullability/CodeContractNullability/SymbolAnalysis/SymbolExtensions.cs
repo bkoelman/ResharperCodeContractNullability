@@ -200,8 +200,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
         private static bool IsRootNamespace([CanBeNull] ISymbol symbol)
         {
-            var namespaceSymbol = symbol as INamespaceSymbol;
-            return namespaceSymbol != null && namespaceSymbol.IsGlobalNamespace;
+            return symbol is INamespaceSymbol namespaceSymbol && namespaceSymbol.IsGlobalNamespace;
         }
     }
 }
