@@ -14,13 +14,13 @@
     <None Remove="CodeContractNullability.Test.csproj.DotSettings" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="4.19.3" />
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="OpenCover" Version="4.6.519" />
-    <PackageReference Include="ReportGenerator" Version="2.5.10" />
+    <PackageReference Include="ReportGenerator" Version="3.0.0" />
     <PackageReference Include="ResharperCodeContractNullability" Version="1.0.8" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
     <PackageReference Include="xunit" Version="2.2.0" />

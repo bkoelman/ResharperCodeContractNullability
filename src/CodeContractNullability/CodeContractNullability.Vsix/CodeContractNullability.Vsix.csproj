@@ -66,15 +66,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MsgPack, Version=0.8.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MsgPack.Cli.0.8.1\lib\net46\MsgPack.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\..\..\LICENSE.txt">
       <Link>LICENSE.txt</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MsgPack, Version=0.9.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MsgPack.Cli.0.9.2\lib\net46\MsgPack.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
