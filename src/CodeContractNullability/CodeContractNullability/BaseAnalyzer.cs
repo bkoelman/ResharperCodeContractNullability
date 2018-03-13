@@ -24,6 +24,10 @@ namespace CodeContractNullability
         protected const string Category = "Nullability";
 
         [NotNull]
+        [ItemNotNull]
+        private static readonly object[] EmptyObjectArray = new object[0];
+
+        [NotNull]
         [ItemCanBeNull]
         private static readonly Lazy<MethodInfo> LazyEnableConcurrentExecutionMethod =
             new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("EnableConcurrentExecution"),
@@ -116,7 +120,7 @@ perform the following additional steps after applying this code fix.
             MethodInfo method = LazyEnableConcurrentExecutionMethod.Value;
             if (method != null)
             {
-                method.Invoke(context, new object[0]);
+                method.Invoke(context, EmptyObjectArray);
             }
         }
 
@@ -135,6 +139,11 @@ perform the following additional steps after applying this code fix.
         private void StartAnalyzeCompilation([NotNull] CompilationStartAnalysisContext context)
         {
             Guard.NotNull(context, nameof(context));
+
+            if (NullableReferenceTypeSupport.IsActive(context.Compilation))
+            {
+                return;
+            }
 
             AnalyzerSettings settings = SettingsProvider.LoadSettings(context.Options, context.CancellationToken);
 
@@ -162,7 +171,7 @@ perform the following additional steps after applying this code fix.
             context.RegisterSymbolAction(c => AnalyzeField(c, factory, properties), SymbolKind.Field);
             context.RegisterSymbolAction(c => AnalyzeProperty(c, factory, properties), SymbolKind.Property);
             context.RegisterSymbolAction(c => AnalyzeMethod(c, factory, properties), SymbolKind.Method);
-            context.RegisterSyntaxNodeAction(c => AnalyzeParameter(SyntaxToSymbolContext(c), factory, properties),
+            context.RegisterSyntaxNodeAction(c => AnalyzeParameter(c.ToSymbolContext(), factory, properties),
                 SyntaxKind.Parameter);
         }
 
@@ -196,18 +205,6 @@ perform the following additional steps after applying this code fix.
                 ParameterAnalyzer analyzer = factory.GetParameterAnalyzer(context);
                 analyzer.Analyze(ruleForParameter, properties);
             }
-        }
-
-        private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext syntaxContext)
-        {
-            ISymbol symbol = syntaxContext.SemanticModel.GetDeclaredSymbol(syntaxContext.Node);
-            return SyntaxToSymbolContext(syntaxContext, symbol);
-        }
-
-        private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext context, [CanBeNull] ISymbol symbol)
-        {
-            return new SymbolAnalysisContext(symbol, context.SemanticModel.Compilation, context.Options, context.ReportDiagnostic,
-                x => true, context.CancellationToken);
         }
     }
 }

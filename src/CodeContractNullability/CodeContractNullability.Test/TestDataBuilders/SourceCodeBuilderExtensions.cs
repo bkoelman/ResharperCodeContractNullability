@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Emit;
+using RoslynTestFramework;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
@@ -173,6 +174,18 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(expectedImportText, nameof(expectedImportText));
 
             source.Editor.ExpectingImportForNamespace(expectedImportText);
+
+            return source;
+        }
+
+        [NotNull]
+        public static TBuilder WithNullableReferenceTypesEnabled<TBuilder>([NotNull] this TBuilder source)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(source, nameof(source));
+
+            source.Editor.UpdateTestContext(context =>
+                context.WithNullableReferenceTypesSupport(NullableReferenceTypesSupport.Enabled));
 
             return source;
         }

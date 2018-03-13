@@ -1,9 +1,12 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
@@ -202,6 +205,23 @@ namespace CodeContractNullability.SymbolAnalysis
         private static bool IsRootNamespace([CanBeNull] ISymbol symbol)
         {
             return symbol is INamespaceSymbol namespaceSymbol && namespaceSymbol.IsGlobalNamespace;
+        }
+
+        public static bool IsParameterInPartialMethod([NotNull] this IParameterSymbol parameterSymbol,
+            CancellationToken cancellationToken)
+        {
+            Guard.NotNull(parameterSymbol, nameof(parameterSymbol));
+
+            if (parameterSymbol.ContainingSymbol is IMethodSymbol methodSymbol)
+            {
+                foreach (MethodDeclarationSyntax methodSyntax in methodSymbol.DeclaringSyntaxReferences
+                    .Select(x => x.GetSyntax(cancellationToken)).OfType<MethodDeclarationSyntax>())
+                {
+                    return methodSyntax.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+                }
+            }
+
+            return false;
         }
     }
 }
