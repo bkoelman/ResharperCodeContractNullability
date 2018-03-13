@@ -5,6 +5,8 @@
 
 This Visual Studio analyzer supports you in consequently annotating your codebase with Resharpers nullability attributes. Doing so improves the [nullability analysis engine in Resharper](https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html), so `NullReferenceException`s at runtime will become something from the past.
 
+**Update:** When used on a project that has C# nullable reference types enabled, this analyzer suppresses its original behavior and turns into a utility to convert existing Resharper nullability attributes to C# 8 syntax. See [documentation](doc/reference/CNUL_ResharperNullabilityAnnotationsCanBeConvertedToCSharpSyntax.md) for details.
+
 ## Get started
 
 * You need [Visual Studio](https://www.visualstudio.com/) 2015/2017/2019 and [Resharper](https://www.jetbrains.com/resharper/) v9 (or higher) to use this analyzer. See [here](https://github.com/bkoelman/ResharperCodeContractNullabilityFxCop/) if you use Visual Studio 2013 or lower.

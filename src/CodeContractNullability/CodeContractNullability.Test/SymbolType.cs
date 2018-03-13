@@ -5,6 +5,7 @@
         Field,
         Property,
         Method,
+        Delegate,
         Parameter
     }
 }
