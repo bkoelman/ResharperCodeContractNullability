@@ -30,7 +30,7 @@ namespace CodeContractNullability.Test
         {
             Guard.NotNull(sourceText, nameof(sourceText));
 
-            var textBuilder = new StringBuilder();
+            var textBuilder = new StringBuilder(sourceText.Length);
             using (var reader = new StringReader(sourceText))
             {
                 string line;

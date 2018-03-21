@@ -136,7 +136,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             private readonly string markupCode;
 
             [NotNull]
-            private readonly StringBuilder codeBuilder = new StringBuilder();
+            private readonly StringBuilder codeBuilder;
 
             [NotNull]
             private readonly IList<TextSpan> textSpans = new List<TextSpan>();
@@ -144,7 +144,9 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             public MarkupParser([NotNull] string markupCode)
             {
                 Guard.NotNull(markupCode, nameof(markupCode));
+
                 this.markupCode = markupCode;
+                codeBuilder = new StringBuilder(markupCode.Length);
             }
 
             public CodeWithSpans Parse()
