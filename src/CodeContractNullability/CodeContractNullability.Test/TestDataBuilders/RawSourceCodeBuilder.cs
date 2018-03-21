@@ -39,12 +39,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static string PublicGlobalNullabilityAttributes => @"
-
-public class CanBeNullAttribute : System.Attribute { }
-public class NotNullAttribute : System.Attribute { }
-public class ItemCanBeNullAttribute : System.Attribute { }
-public class ItemNotNullAttribute : System.Attribute { }
-";
+        public static string PublicGlobalNullabilityAttributes =>
+            new NullabilityAttributesBuilder().InGlobalNamespace().Build().SourceText;
     }
 }
