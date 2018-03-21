@@ -26,27 +26,6 @@ namespace CodeContractNullability.Test
         }
 
         [NotNull]
-        protected static string RemoveLinesWithAnnotation([NotNull] string sourceText)
-        {
-            Guard.NotNull(sourceText, nameof(sourceText));
-
-            var textBuilder = new StringBuilder(sourceText.Length);
-            using (var reader = new StringReader(sourceText))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line.IndexOf(ParsedSourceCode.FixMarker, StringComparison.Ordinal) == -1)
-                    {
-                        textBuilder.AppendLine(line);
-                    }
-                }
-            }
-
-            return textBuilder.ToString();
-        }
-
-        [NotNull]
         protected static string CreateMessageForField([NotNull] string name)
         {
             return new DiagnosticMessageBuilder()

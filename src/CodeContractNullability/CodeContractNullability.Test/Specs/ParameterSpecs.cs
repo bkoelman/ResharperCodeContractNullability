@@ -123,7 +123,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M(<annotate/> int? [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] int? [|p|]) { }
                 ")
                 .Build();
 
@@ -155,7 +155,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        void M(<annotate/> T? [|p|]) { }
+                        void M([+NullabilityAttributePlaceholder+] T? [|p|]) { }
                     }
                 ")
                 .Build();
@@ -170,7 +170,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M(<annotate/> string [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] string [|p|]) { }
                 ")
                 .Build();
 
@@ -184,7 +184,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    int this[<annotate/> string [|p|]]
+                    int this[[+NullabilityAttributePlaceholder+] string [|p|]]
                     {
                         get { throw new NotImplementedException(); }
                         set { throw new NotImplementedException(); }
@@ -202,7 +202,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M(<annotate/> ref int? [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] ref int? [|p|]) { }
                 ")
                 .Build();
 
@@ -230,7 +230,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M(<annotate/> out int? [|p|]) { throw new NotImplementedException(); }
+                    void M([+NullabilityAttributePlaceholder+] out int? [|p|]) { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -334,7 +334,7 @@ namespace CodeContractNullability.Test.Specs
 
                     class D : B
                     {
-                        public D(<annotate/> string [|p|]) : base(p) { }
+                        public D([+NullabilityAttributePlaceholder+] string [|p|]) : base(p) { }
                     }
                 ")
                 .Build();
@@ -613,7 +613,7 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         void I.M(string p) { }
 
-                        public void M(<annotate/> string [|p|]) { }
+                        public void M([+NullabilityAttributePlaceholder+] string [|p|]) { }
 
                         // unrelated overload
                         public void M([NotNull] object p) { }
@@ -647,7 +647,7 @@ namespace CodeContractNullability.Test.Specs
                                 set { throw new NotImplementedException(); }
                             }
 
-                            public int this[<annotate/> string [|p|]]
+                            public int this[[+NullabilityAttributePlaceholder+] string [|p|]]
                             {
                                 get { throw new NotImplementedException(); }
                                 set { throw new NotImplementedException(); }
@@ -686,7 +686,7 @@ namespace CodeContractNullability.Test.Specs
                             // implicitly inherits decoration from interface
                             void I.M(string p) { }
 
-                            public void M(<annotate/> string [|p|]) { }
+                            public void M([+NullabilityAttributePlaceholder+] string [|p|]) { }
                         }
                     }
                 ")
@@ -861,7 +861,7 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            public new void M(<annotate/> string [|p|]) { }
+                            public new void M([+NullabilityAttributePlaceholder+] string [|p|]) { }
                         }
                     }
                 ")

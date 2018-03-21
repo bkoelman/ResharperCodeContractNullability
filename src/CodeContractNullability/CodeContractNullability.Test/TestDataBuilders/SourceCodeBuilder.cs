@@ -68,7 +68,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             IList<string> nestedTypes = nullabilityAttributes?.NestedTypes ?? new string[0];
 
             return new ParsedSourceCode(sourceText, sourceFilename, settings, externalAnnotationsBuilder.Build(),
-                ImmutableHashSet.Create(references.ToArray()), nestedTypes, codeNamespaceImportExpected, true);
+                ImmutableHashSet.Create(references.ToArray()), nestedTypes, true);
         }
 
         private void ApplyNullability()
@@ -98,7 +98,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
             if (!string.IsNullOrEmpty(codeNamespaceImportExpected))
             {
-                sourceBuilder.AppendLine("<import/>");
+                sourceBuilder.AppendLine("[+using " + codeNamespaceImportExpected + ";+]");
                 hasNamespaceImportsAtTop = true;
             }
 

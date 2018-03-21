@@ -105,7 +105,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> IEnumerable<int?> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] IEnumerable<int?> [|p|]) { }
                 ")
                 .Build();
 
@@ -139,7 +139,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        void M(<annotate/> IEnumerable<T?> [|p|]) { }
+                        void M([+NullabilityAttributePlaceholder+] IEnumerable<T?> [|p|]) { }
                     }
                 ")
                 .Build();
@@ -155,7 +155,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> IEnumerable<string> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) { }
                 ")
                 .Build();
 
@@ -170,7 +170,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> IEnumerable [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] IEnumerable [|p|]) { }
                 ")
                 .Build();
 
@@ -185,7 +185,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    int this[<annotate/> IEnumerable<string> [|p|]]
+                    int this[[+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]]
                     {
                         get { throw new NotImplementedException(); }
                         set { throw new NotImplementedException(); }
@@ -204,7 +204,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> ref IEnumerable<int?> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] ref IEnumerable<int?> [|p|]) { }
                 ")
                 .Build();
 
@@ -234,7 +234,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> out IEnumerable<int?> [|p|]) { throw new NotImplementedException(); }
+                    void M([+NullabilityAttributePlaceholder+] out IEnumerable<int?> [|p|]) { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -343,7 +343,7 @@ namespace CodeContractNullability.Test.Specs
 
                     class D : B
                     {
-                        public D(<annotate/> IEnumerable<string> [|p|]) : base(p) { }
+                        public D([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) : base(p) { }
                     }
                 ")
                 .Build();
@@ -421,7 +421,7 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         void I.M(IEnumerable<string> p) { }
 
-                        public void M(<annotate/> IEnumerable<string> [|p|]) { }
+                        public void M([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) { }
 
                         // unrelated overload
                         public void M([ItemNotNull] IEnumerable<object> p) { }
@@ -496,7 +496,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M(<annotate/> Lazy<string> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] Lazy<string> [|p|]) { }
                 ")
                 .Build();
 
@@ -526,7 +526,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> Task<string> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] Task<string> [|p|]) { }
                 ")
                 .Build();
 
@@ -542,7 +542,7 @@ namespace CodeContractNullability.Test.Specs
                 .WithReference(typeof(ValueTask<>).Assembly)
                 .Using(typeof(ValueTask<>).Namespace)
                 .InDefaultClass(@"
-                    void M(<annotate/> ValueTask<string> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] ValueTask<string> [|p|]) { }
                 ")
                 .Build();
 
@@ -597,7 +597,7 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            public new void M(<annotate/> IEnumerable<int?> [|p|]) { throw new NotImplementedException(); }
+                            public new void M([+NullabilityAttributePlaceholder+] IEnumerable<int?> [|p|]) { throw new NotImplementedException(); }
                         }
                     }
                 ")

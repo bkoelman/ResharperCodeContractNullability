@@ -123,7 +123,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    <annotate/> int? [|P|] { get; set; }
+                    [+NullabilityAttributePlaceholder+] int? [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -155,7 +155,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        <annotate/> T? [|P|] { get; set; }
+                        [+NullabilityAttributePlaceholder+] T? [|P|] { get; set; }
                     }
                 ")
                 .Build();
@@ -170,7 +170,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    <annotate/> string [|P|] { get; set; }
+                    [+NullabilityAttributePlaceholder+] string [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -216,7 +216,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    <annotate/> int? [|this|][int p]
+                    [+NullabilityAttributePlaceholder+] int? [|this|][int p]
                     {
                         get { throw new NotImplementedException(); }
                         set { throw new NotImplementedException(); }
@@ -411,7 +411,7 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         string I.P { get; set; }
 
-                        <annotate/> public string [|P|] { get; set; }
+                        [+NullabilityAttributePlaceholder+] public string [|P|] { get; set; }
                     }
                 ")
                 .Build();
@@ -443,7 +443,7 @@ namespace CodeContractNullability.Test.Specs
                                 set { throw new NotImplementedException(); }
                             }
 
-                            <annotate/> public int? [|this|][char p]
+                            [+NullabilityAttributePlaceholder+] public int? [|this|][char p]
                             {
                                 get { throw new NotImplementedException(); }
                                 set { throw new NotImplementedException(); }
@@ -597,7 +597,7 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            <annotate/> public new string [|P|] { get; set; }
+                            [+NullabilityAttributePlaceholder+] public new string [|P|] { get; set; }
                         }
                     }
                 ")

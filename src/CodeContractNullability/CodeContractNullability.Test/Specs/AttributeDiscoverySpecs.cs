@@ -39,7 +39,7 @@ namespace CodeContractNullability.Test.Specs
                     {
                         class C
                         {
-                            <annotate/> int? [|f|];
+                            [+NullabilityAttributePlaceholder+] int? [|f|];
                         }
                     }
                 ")
@@ -59,7 +59,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C
                     {
-                        <annotate/> int? [|f|];
+                        [+NullabilityAttributePlaceholder+] int? [|f|];
                     }
                 ")
                 .ExpectingImportForNamespace("NA")
@@ -109,7 +109,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C
                     {
-                        <annotate/> int? [|f|];
+                        [+NullabilityAttributePlaceholder+] int? [|f|];
                     }
                 ")
                 .Build();
@@ -151,7 +151,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C
                     {
-                        <annotate/> int? [|f|];
+                        [+NullabilityAttributePlaceholder+] int? [|f|];
                     }
                 ")
                 .ExpectingImportForNamespace("JetBrains.Annotations")
@@ -180,7 +180,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C
                     {
-                        <annotate/> int? [|f|];
+                        [+NullabilityAttributePlaceholder+] int? [|f|];
                     }
                 ")
                 .ExpectingImportForNamespace("OtherAssembly")

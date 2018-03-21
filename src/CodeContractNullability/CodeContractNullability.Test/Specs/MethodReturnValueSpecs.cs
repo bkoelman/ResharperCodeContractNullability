@@ -138,7 +138,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    <annotate/> int? [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+] int? [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -170,7 +170,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        <annotate/> T? [|M|]() { throw new NotImplementedException(); }
+                        [+NullabilityAttributePlaceholder+] T? [|M|]() { throw new NotImplementedException(); }
                     }
                 ")
                 .Build();
@@ -185,7 +185,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    <annotate/> string [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+] string [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -277,7 +277,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(Task).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> Task [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+] Task [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -292,7 +292,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> Task<string> [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+] Task<string> [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -308,7 +308,7 @@ namespace CodeContractNullability.Test.Specs
                 .WithReference(typeof(ValueTask<>).Assembly)
                 .Using(typeof(ValueTask<>).Namespace)
                 .InDefaultClass(@"
-                    <annotate/> ValueTask<string> [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+] ValueTask<string> [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -558,7 +558,7 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         string I.M() { throw new NotImplementedException(); }
 
-                        <annotate/> public string [|M|]() { throw new NotImplementedException(); }
+                        [+NullabilityAttributePlaceholder+] public string [|M|]() { throw new NotImplementedException(); }
                     }
                 ")
                 .Build();
@@ -725,7 +725,7 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            <annotate/> public new string [|M|]() { throw new NotImplementedException(); }
+                            [+NullabilityAttributePlaceholder+] public new string [|M|]() { throw new NotImplementedException(); }
                         }
                     }
                 ")

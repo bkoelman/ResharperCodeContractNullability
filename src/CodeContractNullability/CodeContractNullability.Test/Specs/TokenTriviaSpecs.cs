@@ -14,15 +14,15 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    // before
-    <annotate/>
+    // before[+
+    NullabilityAttributePlaceholder+]
     int? [|f|]; // on same line
     // after
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -35,15 +35,15 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    /* line before */
-    <annotate/>
+    /* line before */[+
+    NullabilityAttributePlaceholder+]
     int? /* intermediate */ [|f|] /* after */; /* line end */
     /* line after */
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -56,15 +56,15 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    // before
-    <annotate/>
+    // before[+
+    NullabilityAttributePlaceholder+]
     public int? [|P|] { get; set; } // on same line
     // after
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -77,15 +77,15 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    /* line before */
-    <annotate/>
+    /* line before */[+
+    NullabilityAttributePlaceholder+]
     public int? /* before */ [|P|] /* after */ { get; set; } /* line end */
     /* line after */
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -98,8 +98,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    // before
-    <annotate/>
+    // before[+
+    NullabilityAttributePlaceholder+]
     public int? [|this|][byte offset] // on same line
     // after
     {
@@ -110,7 +110,7 @@ namespace CodeContractNullability.Test.Specs
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -123,8 +123,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    /* line before */
-    <annotate/>
+    /* line before */[+
+    NullabilityAttributePlaceholder+]
     public int? /* before */ [|this|] /* after */ [byte offset] /* line end */
     /* line after */
     {
@@ -135,7 +135,7 @@ namespace CodeContractNullability.Test.Specs
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -149,7 +149,7 @@ namespace CodeContractNullability.Test.Specs
             string code = @"public class T
 {
     // before
-    public byte this[<annotate/> int? [|offset|]] // on same line
+    public byte this[[+NullabilityAttributePlaceholder+] int? [|offset|]] // on same line
     // after
     {
         get { throw new System.NotImplementedException(); }
@@ -159,7 +159,7 @@ namespace CodeContractNullability.Test.Specs
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(code, code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -173,7 +173,7 @@ namespace CodeContractNullability.Test.Specs
             string code = @"public class T
 {
     /* line before */
-    public byte this[/* before */<annotate/>int? /* intermediate */ [|offset|] /* after */ ] /* line end */
+    public byte this[/* before */[+NullabilityAttributePlaceholder +]int? /* intermediate */ [|offset|] /* after */ ] /* line end */
     /* line after */
     {
         get { throw new System.NotImplementedException(); }
@@ -183,7 +183,7 @@ namespace CodeContractNullability.Test.Specs
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(code, code.Replace("<annotate/>", "<annotate/> "))
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -196,15 +196,15 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    // before
-    <annotate/>
+    // before[+
+    NullabilityAttributePlaceholder+]
     int? [|M|]() { throw new System.NotImplementedException(); } // on same line
     // after
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -217,15 +217,15 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             string code = @"public class T
 {
-    /* line before */
-    <annotate/>
+    /* line before */[+
+    NullabilityAttributePlaceholder+]
     int? /* intermediate */ [|M|]/* after */() { throw new System.NotImplementedException(); } /* line end */
     /* line after */
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(RemoveLinesWithAnnotation(code), code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -239,13 +239,13 @@ namespace CodeContractNullability.Test.Specs
             string code = @"public class T
 {
     // before
-    void M(<annotate/> int? [|p|]) { } // on same line
+    void M([+NullabilityAttributePlaceholder+] int? [|p|]) { } // on same line
     // after
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(code, code)
+                .Exactly(code)
                 .Build();
 
             // Act and assert
@@ -259,13 +259,13 @@ namespace CodeContractNullability.Test.Specs
             string code = @"public class T
 {
     /* line before */
-    void M(/* before */<annotate/>int? /* intermediate */ [|p|] /* after */) { } /* line end */
+    void M(/* before */[+NullabilityAttributePlaceholder +]int? /* intermediate */ [|p|] /* after */) { } /* line end */
     /* line after */
 }
 " + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
             ParsedSourceCode source = new RawSourceCodeBuilder()
-                .Exactly(code, code.Replace("<annotate/>", "<annotate/> "))
+                .Exactly(code)
                 .Build();
 
             // Act and assert

@@ -9,26 +9,21 @@ namespace CodeContractNullability.Test.TestDataBuilders
         [NotNull]
         private string sourceText = string.Empty;
 
-        [NotNull]
-        private string expectedText = string.Empty;
-
         public ParsedSourceCode Build()
         {
             AnalyzerSettings settings = new AnalyzerSettingsBuilder().Build();
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
 
-            return new ExactSourceCode(sourceText, expectedText, SourceCodeBuilder.DefaultFilename, settings, map,
-                SourceCodeBuilder.DefaultReferences, string.Empty);
+            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultFilename, settings, map,
+                SourceCodeBuilder.DefaultReferences, new string[0], false);
         }
 
         [NotNull]
-        public RawSourceCodeBuilder Exactly([NotNull] string text, [NotNull] string expected)
+        public RawSourceCodeBuilder Exactly([NotNull] string text)
         {
             Guard.NotNull(text, nameof(text));
-            Guard.NotNull(expected, nameof(expected));
 
             sourceText = NormalizeLineBreaks(text);
-            expectedText = NormalizeLineBreaks(expected);
             return this;
         }
 
