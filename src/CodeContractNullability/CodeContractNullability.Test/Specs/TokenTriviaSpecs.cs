@@ -19,9 +19,9 @@ namespace CodeContractNullability.Test.Specs
     int? [|f|]; // on same line
     // after
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -40,9 +40,9 @@ namespace CodeContractNullability.Test.Specs
     int? /* intermediate */ [|f|] /* after */; /* line end */
     /* line after */
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -61,9 +61,9 @@ namespace CodeContractNullability.Test.Specs
     public int? [|P|] { get; set; } // on same line
     // after
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -82,9 +82,9 @@ namespace CodeContractNullability.Test.Specs
     public int? /* before */ [|P|] /* after */ { get; set; } /* line end */
     /* line after */
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -107,9 +107,9 @@ namespace CodeContractNullability.Test.Specs
         set { throw new System.NotImplementedException(); }
     }
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -132,9 +132,9 @@ namespace CodeContractNullability.Test.Specs
         set { throw new System.NotImplementedException(); }
     }
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -156,9 +156,9 @@ namespace CodeContractNullability.Test.Specs
         set { throw new System.NotImplementedException(); }
     }
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -180,9 +180,9 @@ namespace CodeContractNullability.Test.Specs
         set { throw new System.NotImplementedException(); }
     }
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -201,9 +201,9 @@ namespace CodeContractNullability.Test.Specs
     int? [|M|]() { throw new System.NotImplementedException(); } // on same line
     // after
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -222,9 +222,9 @@ namespace CodeContractNullability.Test.Specs
     int? /* intermediate */ [|M|]/* after */() { throw new System.NotImplementedException(); } /* line end */
     /* line after */
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -242,9 +242,9 @@ namespace CodeContractNullability.Test.Specs
     void M([+NullabilityAttributePlaceholder+] int? [|p|]) { } // on same line
     // after
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 
@@ -262,9 +262,9 @@ namespace CodeContractNullability.Test.Specs
     void M(/* before */[+NullabilityAttributePlaceholder +]int? /* intermediate */ [|p|] /* after */) { } /* line end */
     /* line after */
 }
-" + RawSourceCodeBuilder.PublicGlobalNullabilityAttributes;
+" + ExactSourceCodeBuilder.PublicGlobalNullabilityAttributes;
 
-            ParsedSourceCode source = new RawSourceCodeBuilder()
+            ParsedSourceCode source = new ExactSourceCodeBuilder()
                 .Exactly(code)
                 .Build();
 

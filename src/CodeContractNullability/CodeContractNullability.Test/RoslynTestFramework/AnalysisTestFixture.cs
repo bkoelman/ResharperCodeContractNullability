@@ -171,8 +171,12 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
             AnalysisResult analysisResult = RunDiagnostics(context.AnalyzerTestContext, messages);
 
-            ICollection<string> expectedCode = DocumentFactory.RemoveMarkupFrom(context);
-            context = context.WithExpected(expectedCode);
+            if (context.IgnoreWhitespaceDifferences)
+            {
+                ICollection<string> expectedCode = context.ExpectedCode
+                    .Select(e => DocumentFactory.FormatSourceCode(e, context.AnalyzerTestContext)).ToArray();
+                context = context.WithExpectedCode(expectedCode);
+            }
 
             CodeFixProvider fixProvider = CreateFixProvider();
             foreach (Diagnostic diagnostic in analysisResult.Diagnostics)
@@ -184,14 +188,14 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private void RunCodeFixes([NotNull] FixProviderTestContext context, [NotNull] Diagnostic diagnostic,
             [NotNull] CodeFixProvider fixProvider)
         {
-            for (int index = 0; index < context.Expected.Count; index++)
+            for (int index = 0; index < context.ExpectedCode.Count; index++)
             {
                 Document document = DocumentFactory.GetDocumentWithSpansFromMarkup(context.AnalyzerTestContext).Document;
 
                 ImmutableArray<CodeAction> codeFixes = GetCodeFixesForDiagnostic(diagnostic, document, fixProvider);
-                codeFixes.Should().HaveSameCount(context.Expected);
+                codeFixes.Should().HaveSameCount(context.ExpectedCode);
 
-                VerifyCodeAction(codeFixes[index], document, context.Expected[index]);
+                VerifyCodeAction(codeFixes[index], document, context.ExpectedCode[index], context.IgnoreWhitespaceDifferences);
             }
         }
 
@@ -209,7 +213,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         private static void VerifyCodeAction([NotNull] CodeAction codeAction, [NotNull] Document document,
-            [NotNull] string expectedCode)
+            [NotNull] string expectedCode, bool formatOutputDocument)
         {
             Guard.NotNull(codeAction, nameof(codeAction));
 
@@ -221,22 +225,23 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
                 operations.Should().HaveCount(1);
 
-                VerifyOperationText(operations.Single(), expectedCode, document);
+                VerifyOperationText(document, operations.Single(), expectedCode, formatOutputDocument);
             }
         }
 
-        private static void VerifyOperationText([NotNull] CodeActionOperation operation, [NotNull] string expectedCode,
-            [NotNull] Document document)
+        private static void VerifyOperationText([NotNull] Document sourceDocument, [NotNull] CodeActionOperation operation,
+            [NotNull] string expectedCode, bool formatOutputDocument)
         {
-            Workspace workspace = document.Project.Solution.Workspace;
+            Workspace workspace = sourceDocument.Project.Solution.Workspace;
             operation.Apply(workspace, CancellationToken.None);
 
-            Document newDocument = workspace.CurrentSolution.GetDocument(document.Id);
+            Document newDocument = workspace.CurrentSolution.GetDocument(sourceDocument.Id);
 
-            SourceText sourceText = newDocument.GetTextAsync().Result;
-            string text = sourceText.ToString();
+            string actualText = formatOutputDocument
+                ? DocumentFactory.FormatDocument(newDocument)
+                : newDocument.GetTextAsync().Result.ToString();
 
-            text.Should().Be(expectedCode);
+            actualText.Should().Be(expectedCode);
         }
 
         private sealed class AnalysisResult

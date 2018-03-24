@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class RawSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
+    public sealed class ExactSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
         private string sourceText = string.Empty;
@@ -19,7 +19,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public RawSourceCodeBuilder Exactly([NotNull] string text)
+        public ExactSourceCodeBuilder Exactly([NotNull] string text)
         {
             Guard.NotNull(text, nameof(text));
 

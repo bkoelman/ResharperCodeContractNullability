@@ -17,17 +17,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
             builder.AppendLine("public class Test");
             builder.AppendLine("{");
 
-            int index = 0;
-            foreach (string member in members)
-            {
-                if (index > 0)
-                {
-                    builder.AppendLine();
-                }
-
-                builder.AppendLine(member.Trim());
-                index++;
-            }
+            string code = GetLinesOfCode(members);
+            builder.AppendLine(code);
 
             builder.AppendLine("}");
             return builder.ToString();

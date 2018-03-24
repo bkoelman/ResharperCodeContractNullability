@@ -42,7 +42,7 @@ namespace CodeContractNullability.Test
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);
 
             var fixContext = new FixProviderTestContext(analyzerContext, new[] { fixNotNull, fixCanBeNull },
-                source.ReIndentExpected);
+                source.IgnoreWhitespaceDifferences);
 
             AssertDiagnosticsWithCodeFixes(fixContext, messages);
         }

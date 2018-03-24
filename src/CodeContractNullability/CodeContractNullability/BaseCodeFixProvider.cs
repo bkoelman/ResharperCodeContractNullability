@@ -78,6 +78,7 @@ namespace CodeContractNullability
             {
                 throw new InvalidOperationException("Internal error: failed to resolve attributes.");
             }
+
             return nullSymbols;
         }
 
@@ -141,7 +142,8 @@ namespace CodeContractNullability
             // Simplify and reformat all annotated nodes.
             Document simplified =
                 await Simplifier.ReduceAsync(documentWithImport, options, cancellationToken).ConfigureAwait(false);
-            Document formatted = await Formatter.FormatAsync(simplified, options, cancellationToken).ConfigureAwait(false);
+            Document formatted = await Formatter.FormatAsync(simplified, Formatter.Annotation, options, cancellationToken)
+                .ConfigureAwait(false);
             return formatted;
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
@@ -50,14 +51,22 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         [ItemNotNull]
-        public static readonly ImmutableHashSet<MetadataReference> DefaultReferences =
-            ImmutableHashSet.Create(new MetadataReference[]
+        public static readonly ImmutableHashSet<MetadataReference> DefaultReferences = GetDefaultReferences();
+
+        [NotNull]
+        [ItemNotNull]
+        private static ImmutableHashSet<MetadataReference> GetDefaultReferences()
+        {
+            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+
+            return ImmutableHashSet.Create(new MetadataReference[]
             {
-                /* mscorlib.dll */
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                /* System.dll */
-                MetadataReference.CreateFromFile(typeof(Component).Assembly.Location)
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll"))
             });
+        }
 
         public ParsedSourceCode Build()
         {
@@ -115,6 +124,50 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
 
             return sourceBuilder.ToString();
+        }
+
+        [NotNull]
+        protected string GetLinesOfCode([NotNull][ItemNotNull] IEnumerable<string> codeBlocks)
+        {
+            Guard.NotNull(codeBlocks, nameof(codeBlocks));
+
+            var builder = new StringBuilder();
+
+            bool isInFirstBlock = true;
+            foreach (string codeBlock in codeBlocks)
+            {
+                if (isInFirstBlock)
+                {
+                    isInFirstBlock = false;
+                }
+                else
+                {
+                    builder.AppendLine();
+                }
+
+                bool isOnFirstLineInBlock = true;
+                using (var reader = new StringReader(codeBlock.TrimEnd()))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (isOnFirstLineInBlock)
+                        {
+                            if (line.Trim().Length == 0)
+                            {
+                                continue;
+                            }
+
+                            isOnFirstLineInBlock = false;
+                        }
+
+                        builder.AppendLine(line);
+                    }
+                }
+            }
+
+            return builder.ToString();
+
         }
 
         internal void _WithSettings([NotNull] AnalyzerSettingsBuilder settingsBuilder)
@@ -237,14 +290,15 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 .Create("TempAssembly", new[] { tree })
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            PortableExecutableReference msCorLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-            compilation = compilation.AddReferences(msCorLib);
+            compilation = compilation.AddReferences(SourceCodeBuilder.DefaultReferences);
             compilation = compilation.AddReferences(references);
 
             var stream = new MemoryStream();
 
             EmitResult emitResult = compilation.Emit(stream);
             ValidateCompileErrors(emitResult);
+
+            stream.Seek(0, SeekOrigin.Begin);
 
             return stream;
         }

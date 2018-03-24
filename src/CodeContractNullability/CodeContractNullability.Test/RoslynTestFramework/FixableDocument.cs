@@ -45,7 +45,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             private const int SpanTextLength = 2;
 
             [NotNull]
-            private static readonly char[] SpanKinds = { '+', '-', '*' };
+            private static readonly char[] SpanKinds = { '|', '+', '-', '*' };
 
             [NotNull]
             [ItemNotNull]
@@ -121,7 +121,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 if (length > 0)
                 {
                     string text = markupCode.Substring(offset, length);
-                    blocks.Add(new FixedTextBlock(text));
+                    blocks.Add(new StaticTextBlock(text));
                 }
             }
 
@@ -137,6 +137,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
                 switch (spanKind)
                 {
+                    case '|':
+                    {
+                        blocks.Add(new MarkedTextBlock(spanInnerText));
+                        break;
+                    }
                     case '+':
                     {
                         blocks.Add(new InsertedTextBlock(spanInnerText));
@@ -174,7 +179,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 string text = markupCode.Substring(offset);
                 if (text.Length > 0)
                 {
-                    blocks.Add(new FixedTextBlock(text));
+                    blocks.Add(new StaticTextBlock(text));
                 }
             }
 
@@ -291,14 +296,27 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             }
         }
 
-        private sealed class FixedTextBlock : TextBlock
+        private sealed class StaticTextBlock : TextBlock
         {
-            public FixedTextBlock([NotNull] string text)
+            public StaticTextBlock([NotNull] string text)
                 : base(text, text)
             {
             }
 
             public override string ToString() => TextBefore;
+        }
+
+        private sealed class MarkedTextBlock : TextBlock
+        {
+            public MarkedTextBlock([NotNull] string textToMark)
+                : base("[|" + textToMark + "|]", textToMark)
+            {
+            }
+
+            public override string ToString()
+            {
+                return "|" + TextAfter;
+            }
         }
 
         private sealed class InsertedTextBlock : TextBlock

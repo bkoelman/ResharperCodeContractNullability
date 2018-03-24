@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -23,17 +24,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 builder.AppendLine("{");
             }
 
-            int index = 0;
-            foreach (string classCode in classes)
-            {
-                if (index > 0)
-                {
-                    builder.AppendLine();
-                }
-
-                builder.AppendLine(classCode.Trim());
-                index++;
-            }
+            string code = GetLinesOfCode(classes);
+            builder.AppendLine(code);
 
             if (generateNamespace)
             {

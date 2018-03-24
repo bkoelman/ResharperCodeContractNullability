@@ -27,7 +27,7 @@ namespace CodeContractNullability.Test
         [ItemNotNull]
         public ImmutableHashSet<MetadataReference> References { get; }
 
-        public bool ReIndentExpected { get; }
+        public bool IgnoreWhitespaceDifferences { get; }
 
         [NotNull]
         private readonly string attributePrefix;
@@ -35,7 +35,7 @@ namespace CodeContractNullability.Test
         public ParsedSourceCode([NotNull] string text, [NotNull] string filename, [NotNull] AnalyzerSettings settings,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            [ItemNotNull] [NotNull] IList<string> nestedTypes, bool reIndent)
+            [ItemNotNull] [NotNull] IList<string> nestedTypes, bool ignoreWhitespaceDifferences)
         {
             Guard.NotNull(text, nameof(text));
             Guard.NotNull(filename, nameof(filename));
@@ -50,7 +50,7 @@ namespace CodeContractNullability.Test
             ExternalAnnotationsMap = externalAnnotationsMap;
             References = references;
             attributePrefix = ExtractAttributePrefix(nestedTypes);
-            ReIndentExpected = reIndent;
+            IgnoreWhitespaceDifferences = ignoreWhitespaceDifferences;
         }
 
         [NotNull]

@@ -12,27 +12,27 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
         [NotNull]
         [ItemNotNull]
-        public ImmutableList<string> Expected { get; }
+        public ImmutableList<string> ExpectedCode { get; }
 
-        public bool ReformatExpected { get; }
+        public bool IgnoreWhitespaceDifferences { get; }
 
         public FixProviderTestContext([NotNull] AnalyzerTestContext analyzerTestContext,
-            [NotNull] [ItemNotNull] IEnumerable<string> expected, bool reformatExpected = true)
+            [NotNull] [ItemNotNull] IEnumerable<string> expectedCode, bool ignoreWhitespaceDifferences)
         {
             Guard.NotNull(analyzerTestContext, nameof(analyzerTestContext));
-            Guard.NotNull(expected, nameof(expected));
+            Guard.NotNull(expectedCode, nameof(expectedCode));
 
             AnalyzerTestContext = analyzerTestContext;
-            Expected = ImmutableList.CreateRange(expected);
-            ReformatExpected = reformatExpected;
+            ExpectedCode = ImmutableList.CreateRange(expectedCode);
+            IgnoreWhitespaceDifferences = ignoreWhitespaceDifferences;
         }
 
         [NotNull]
-        public FixProviderTestContext WithExpected([NotNull] [ItemNotNull] IEnumerable<string> expected)
+        public FixProviderTestContext WithExpectedCode([NotNull] [ItemNotNull] IEnumerable<string> expectedCode)
         {
-            Guard.NotNull(expected, nameof(expected));
+            Guard.NotNull(expectedCode, nameof(expectedCode));
 
-            return new FixProviderTestContext(AnalyzerTestContext, expected, ReformatExpected);
+            return new FixProviderTestContext(AnalyzerTestContext, expectedCode, IgnoreWhitespaceDifferences);
         }
     }
 }

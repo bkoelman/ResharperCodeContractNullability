@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -51,7 +50,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         [NotNull]
-        private ParseOptions GetParseOptions(DocumentationMode documentationMode, [NotNull] string languageName)
+        private static ParseOptions GetParseOptions(DocumentationMode documentationMode, [NotNull] string languageName)
         {
             return languageName == LanguageNames.VisualBasic
                 ? (ParseOptions)DefaultBasicParseOptions.WithDocumentationMode(documentationMode)
@@ -73,29 +72,25 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         [NotNull]
-        [ItemNotNull]
-        public ICollection<string> RemoveMarkupFrom([NotNull] FixProviderTestContext context)
+        public string FormatSourceCode([NotNull] string sourceCode, [NotNull] AnalyzerTestContext context)
         {
             Guard.NotNull(context, nameof(context));
+            Guard.NotNull(sourceCode, nameof(sourceCode));
 
-            return context.Expected
-                .Select(text => RemoveMarkupFrom(context.AnalyzerTestContext.WithMarkupCode(text), context.ReformatExpected))
-                .ToList();
+            Document document = GetDocumentWithSpansFromMarkup(context.WithMarkupCode(sourceCode)).Document;
+
+            return FormatDocument(document);
         }
 
         [NotNull]
-        private string RemoveMarkupFrom([NotNull] AnalyzerTestContext context, bool reformat)
+        public string FormatDocument([NotNull] Document document)
         {
-            Document document = GetDocumentWithSpansFromMarkup(context).Document;
+            Guard.NotNull(document, nameof(document));
+
             SyntaxNode syntaxRoot = document.GetSyntaxRootAsync().Result;
 
-            if (reformat)
-            {
-                SyntaxNode formattedSyntaxRoot = Formatter.Format(syntaxRoot, document.Project.Solution.Workspace);
-                return formattedSyntaxRoot.ToFullString();
-            }
-
-            return syntaxRoot.ToFullString();
+            SyntaxNode formattedSyntaxRoot = Formatter.Format(syntaxRoot, document.Project.Solution.Workspace);
+            return formattedSyntaxRoot.ToFullString();
         }
 
         private struct CodeWithSpans
