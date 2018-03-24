@@ -116,8 +116,9 @@ namespace CodeContractNullability.NullabilityAttributes
             [CanBeNull]
             public INamedTypeSymbol ItemCanBeNullAttributeSymbol { get; private set; }
 
-            private bool IsComplete => NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null &&
-                ItemNotNullAttributeSymbol != null && ItemCanBeNullAttributeSymbol != null;
+            private bool IsComplete =>
+                NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null && ItemNotNullAttributeSymbol != null &&
+                ItemCanBeNullAttributeSymbol != null;
 
             public override void VisitNamespace([NotNull] INamespaceSymbol symbol)
             {

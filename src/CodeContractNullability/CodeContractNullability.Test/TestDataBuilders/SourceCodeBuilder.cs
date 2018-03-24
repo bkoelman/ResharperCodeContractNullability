@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -127,7 +125,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        protected string GetLinesOfCode([NotNull][ItemNotNull] IEnumerable<string> codeBlocks)
+        protected string GetLinesOfCode([NotNull] [ItemNotNull] IEnumerable<string> codeBlocks)
         {
             Guard.NotNull(codeBlocks, nameof(codeBlocks));
 
@@ -167,7 +165,6 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
 
             return builder.ToString();
-
         }
 
         internal void _WithSettings([NotNull] AnalyzerSettingsBuilder settingsBuilder)

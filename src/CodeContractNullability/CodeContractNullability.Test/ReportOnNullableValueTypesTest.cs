@@ -21,7 +21,8 @@ namespace CodeContractNullability.Test
 
             AnalyzerTestContext analyzerContext = CreateTestContext(source);
 
-            var fixTestContext = new FixProviderTestContext(analyzerContext, new[] { string.Empty }, source.IgnoreWhitespaceDifferences);
+            var fixTestContext =
+                new FixProviderTestContext(analyzerContext, new[] { string.Empty }, source.IgnoreWhitespaceDifferences);
 
             AssertDiagnosticsWithCodeFixes(fixTestContext, messages);
         }

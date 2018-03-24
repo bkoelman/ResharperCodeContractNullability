@@ -81,6 +81,7 @@ namespace CodeContractNullability.ExternalAnnotations
                                     }
                                 }
                             }
+
                             if (childElement.Name == "attribute")
                             {
                                 if (ElementHasNullabilityDefinition(childElement))

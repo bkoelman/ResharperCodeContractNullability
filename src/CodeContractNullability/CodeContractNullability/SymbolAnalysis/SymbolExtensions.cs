@@ -191,6 +191,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 {
                     textBuilder.Insert(0, '.');
                 }
+
                 textBuilder.Insert(0, current.MetadataName);
                 current = current.ContainingSymbol;
             }

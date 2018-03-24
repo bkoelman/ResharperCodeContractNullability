@@ -49,6 +49,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
                 baseParameter = TryGetBaseParameterFor(baseParameter);
             }
+
             return false;
         }
 
@@ -99,6 +100,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     }
                 }
             }
+
             return false;
         }
 

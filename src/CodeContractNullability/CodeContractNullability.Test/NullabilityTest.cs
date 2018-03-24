@@ -1,8 +1,4 @@
-using System;
-using System.IO;
-using System.Text;
 using CodeContractNullability.Test.TestDataBuilders;
-using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis.CodeFixes;
 

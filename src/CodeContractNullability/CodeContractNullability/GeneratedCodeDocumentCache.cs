@@ -79,6 +79,7 @@ namespace CodeContractNullability
                     string filename = Path.GetFileName(filePath);
                     return FileNameRegex.IsMatch(filename);
                 }
+
                 return false;
             }
 

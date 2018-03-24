@@ -36,6 +36,7 @@ namespace CodeContractNullability.Utilities
             {
                 throw new Exception($"Failed to create instance of {typeof(TInterface)}.");
             }
+
             return result;
         }
 
@@ -47,6 +48,7 @@ namespace CodeContractNullability.Utilities
             {
                 activeInstance = specificInstance ?? InstantiateNotNull(createDefaultInstanceFactory);
             }
+
             return activeInstance;
         }
 

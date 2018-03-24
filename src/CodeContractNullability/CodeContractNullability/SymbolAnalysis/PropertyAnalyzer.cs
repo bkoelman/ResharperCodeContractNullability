@@ -32,6 +32,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
                 baseMember = baseMember.OverriddenProperty;
             }
+
             return false;
         }
     }

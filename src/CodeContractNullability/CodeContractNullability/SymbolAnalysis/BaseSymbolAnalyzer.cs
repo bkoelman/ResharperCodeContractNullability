@@ -132,6 +132,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -178,6 +179,7 @@ namespace CodeContractNullability.SymbolAnalysis
                     }
                 }
             }
+
             return false;
         }
 

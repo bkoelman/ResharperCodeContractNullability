@@ -159,6 +159,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 {
                     throw new Exception($"Missing {SpanEndText} in source.");
                 }
+
                 return end;
             }
 

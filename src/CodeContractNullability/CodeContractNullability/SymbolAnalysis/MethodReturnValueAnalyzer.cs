@@ -47,6 +47,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
                 baseMember = baseMember.OverriddenMethod;
             }
+
             return false;
         }
     }

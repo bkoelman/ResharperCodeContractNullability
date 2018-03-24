@@ -65,6 +65,7 @@ namespace CodeContractNullability.Test
                 attributePrefixBuilder.Append(typeName);
                 attributePrefixBuilder.Append('.');
             }
+
             return attributePrefixBuilder.ToString();
         }
 
