@@ -14,7 +14,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private const string DefaultFileName = "TestDocument";
         private const string DefaultAssemblyName = "TestProject";
         private const DocumentationMode DefaultDocumentationMode = DocumentationMode.None;
-        private const OperationFeature DefaultOperationFeature = OperationFeature.Disabled;
         private const TestValidationMode DefaultTestValidationMode = TestValidationMode.AllowCompileWarnings;
 
         [NotNull]
@@ -44,8 +43,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
         public DocumentationMode DocumentationMode { get; }
 
-        public OperationFeature OperationFeature { get; }
-
         [CanBeNull]
         public int? CompilerWarningLevel { get; }
 
@@ -58,8 +55,8 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
         private AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName, [NotNull] string fileName,
             [NotNull] string assemblyName, [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            DocumentationMode documentationMode, OperationFeature operationFeature, [CanBeNull] int? compilerWarningLevel,
-            TestValidationMode validationMode, DiagnosticsCaptureMode diagnosticsCaptureMode, [NotNull] AnalyzerOptions options)
+            DocumentationMode documentationMode, [CanBeNull] int? compilerWarningLevel, TestValidationMode validationMode,
+            DiagnosticsCaptureMode diagnosticsCaptureMode, [NotNull] AnalyzerOptions options)
         {
             MarkupCode = markupCode;
             LanguageName = languageName;
@@ -67,7 +64,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             AssemblyName = assemblyName;
             References = references;
             DocumentationMode = documentationMode;
-            OperationFeature = operationFeature;
             CompilerWarningLevel = compilerWarningLevel;
             ValidationMode = validationMode;
             DiagnosticsCaptureMode = diagnosticsCaptureMode;
@@ -76,7 +72,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
         public AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName, [NotNull] AnalyzerOptions options)
             : this(markupCode, languageName, DefaultFileName, DefaultAssemblyName, DefaultReferences, DefaultDocumentationMode,
-                DefaultOperationFeature, null, DefaultTestValidationMode, DiagnosticsCaptureMode.RequireInSourceTree, options)
+                null, DefaultTestValidationMode, DiagnosticsCaptureMode.RequireInSourceTree, options)
         {
             Guard.NotNull(markupCode, nameof(markupCode));
             Guard.NotNullNorWhiteSpace(languageName, nameof(languageName));
@@ -89,7 +85,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             Guard.NotNull(markupCode, nameof(markupCode));
 
             return new AnalyzerTestContext(markupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                OperationFeature, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
@@ -98,14 +94,14 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             Guard.NotNullNorWhiteSpace(fileName, nameof(fileName));
 
             return new AnalyzerTestContext(MarkupCode, LanguageName, fileName, AssemblyName, References, DocumentationMode,
-                OperationFeature, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext InAssemblyNamed([NotNull] string assemblyName)
         {
             return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, assemblyName, References, DocumentationMode,
-                OperationFeature, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
@@ -116,42 +112,35 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             ImmutableList<MetadataReference> referenceList = ImmutableList.CreateRange(references);
 
             return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, referenceList.ToImmutableHashSet(),
-                DocumentationMode, OperationFeature, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+                DocumentationMode, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext WithDocumentationMode(DocumentationMode mode)
         {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, mode, OperationFeature,
+            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, mode,
                 CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
-        }
-
-        [NotNull]
-        public AnalyzerTestContext WithOperationFeature(OperationFeature feature)
-        {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                feature, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext CompileAtWarningLevel(int warningLevel)
         {
             return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                OperationFeature, warningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+                warningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext InValidationMode(TestValidationMode validationMode)
         {
             return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                OperationFeature, CompilerWarningLevel, validationMode, DiagnosticsCaptureMode, Options);
+                CompilerWarningLevel, validationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext AllowingDiagnosticsOutsideSourceTree()
         {
             return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                OperationFeature, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode.AllowOutsideSourceTree, Options);
+                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode.AllowOutsideSourceTree, Options);
         }
     }
 }

@@ -24,12 +24,6 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 
         [NotNull]
-        private static readonly IEnumerable<KeyValuePair<string, string>> OperationFeatureFlag = new[]
-        {
-            new KeyValuePair<string, string>("IOperation", "true")
-        };
-
-        [NotNull]
         private static readonly CSharpParseOptions DefaultCSharpParseOptions = new CSharpParseOptions();
 
         [NotNull]
@@ -43,8 +37,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             var parser = new MarkupParser(context.MarkupCode);
             CodeWithSpans codeWithSpans = parser.Parse();
 
-            ParseOptions parseOptions = GetParseOptions(context.DocumentationMode, context.LanguageName,
-                context.OperationFeature);
+            ParseOptions parseOptions = GetParseOptions(context.DocumentationMode, context.LanguageName);
             CompilationOptions compilationOptions = GetCompilationOptions(context.CompilerWarningLevel, context.LanguageName);
 
             Document document = new AdhocWorkspace()
@@ -58,17 +51,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         }
 
         [NotNull]
-        private ParseOptions GetParseOptions(DocumentationMode documentationMode, [NotNull] string languageName,
-            OperationFeature operationFeature)
+        private ParseOptions GetParseOptions(DocumentationMode documentationMode, [NotNull] string languageName)
         {
-            // Bug workaround: Setting DocumentationMode to a non-default value resets Features.
-            ParseOptions optionsWithLostFeatures = languageName == LanguageNames.VisualBasic
+            return languageName == LanguageNames.VisualBasic
                 ? (ParseOptions)DefaultBasicParseOptions.WithDocumentationMode(documentationMode)
                 : DefaultCSharpParseOptions.WithDocumentationMode(documentationMode);
-
-            return operationFeature == OperationFeature.Enabled
-                ? optionsWithLostFeatures.WithFeatures(OperationFeatureFlag)
-                : optionsWithLostFeatures;
         }
 
         [NotNull]

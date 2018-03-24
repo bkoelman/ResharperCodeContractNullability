@@ -17,7 +17,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             if (symbolType == null || symbolName == null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Symbol type or name must be set.");
             }
 
             string nullability = isItem ? "item nullability" : "nullability";
