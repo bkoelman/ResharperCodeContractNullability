@@ -36,6 +36,13 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             var parser = new MarkupParser(context.MarkupCode);
             CodeWithSpans codeWithSpans = parser.Parse();
 
+            Document document = ToDocument(codeWithSpans.Code, context);
+            return new DocumentWithSpans(document, codeWithSpans.Spans);
+        }
+
+        [NotNull]
+        private static Document ToDocument([NotNull] string code, [NotNull] AnalyzerTestContext context)
+        {
             ParseOptions parseOptions = GetParseOptions(context.DocumentationMode, context.LanguageName);
             CompilationOptions compilationOptions = GetCompilationOptions(context.CompilerWarningLevel, context.LanguageName);
 
@@ -44,9 +51,9 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 .WithParseOptions(parseOptions)
                 .WithCompilationOptions(compilationOptions)
                 .AddMetadataReferences(context.References)
-                .AddDocument(context.FileName, codeWithSpans.Code);
+                .AddDocument(context.FileName, code);
 
-            return new DocumentWithSpans(document, codeWithSpans.Spans);
+            return document;
         }
 
         [NotNull]
@@ -77,8 +84,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             Guard.NotNull(context, nameof(context));
             Guard.NotNull(sourceCode, nameof(sourceCode));
 
-            Document document = GetDocumentWithSpansFromMarkup(context.WithMarkupCode(sourceCode)).Document;
-
+            Document document = ToDocument(sourceCode, context);
             return FormatDocument(document);
         }
 
