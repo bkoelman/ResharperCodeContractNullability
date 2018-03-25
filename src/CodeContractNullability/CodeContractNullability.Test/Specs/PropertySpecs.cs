@@ -123,7 +123,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] int? [|P|] { get; set; }
+                    [+NullabilityAttributePlaceholder+]
+                    int? [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -155,7 +156,8 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        [+NullabilityAttributePlaceholder+] T? [|P|] { get; set; }
+                        [+NullabilityAttributePlaceholder+]
+                        T? [|P|] { get; set; }
                     }
                 ")
                 .Build();
@@ -170,7 +172,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] string [|P|] { get; set; }
+                    [+NullabilityAttributePlaceholder+] 
+                    string [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -216,7 +219,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] int? [|this|][int p]
+                    [+NullabilityAttributePlaceholder+] 
+                    int? [|this|][int p]
                     {
                         get { throw new NotImplementedException(); }
                         set { throw new NotImplementedException(); }
@@ -408,10 +412,11 @@ namespace CodeContractNullability.Test.Specs
 
                     class C : I
                     {
+                        [+NullabilityAttributePlaceholder+] 
+                        public string [|P|] { get; set; }
+
                         // implicitly inherits decoration from interface
                         string I.P { get; set; }
-
-                        [+NullabilityAttributePlaceholder+] public string [|P|] { get; set; }
                     }
                 ")
                 .Build();
@@ -443,7 +448,8 @@ namespace CodeContractNullability.Test.Specs
                                 set { throw new NotImplementedException(); }
                             }
 
-                            [+NullabilityAttributePlaceholder+] public int? [|this|][char p]
+                            [+NullabilityAttributePlaceholder+] 
+                            public int? [|this|][char p]
                             {
                                 get { throw new NotImplementedException(); }
                                 set { throw new NotImplementedException(); }
@@ -597,7 +603,8 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            [+NullabilityAttributePlaceholder+] public new string [|P|] { get; set; }
+                            [+NullabilityAttributePlaceholder+] 
+                            public new string [|P|] { get; set; }
                         }
                     }
                 ")

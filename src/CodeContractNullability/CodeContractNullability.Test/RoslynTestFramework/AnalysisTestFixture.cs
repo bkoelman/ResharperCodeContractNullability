@@ -237,11 +237,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
             Document newDocument = workspace.CurrentSolution.GetDocument(sourceDocument.Id);
 
-            string actualText = formatOutputDocument
+            string actualCode = formatOutputDocument
                 ? DocumentFactory.FormatDocument(newDocument)
                 : newDocument.GetTextAsync().Result.ToString();
 
-            actualText.Should().Be(expectedCode);
+            actualCode.Should().Be(expectedCode);
         }
 
         private sealed class AnalysisResult

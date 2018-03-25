@@ -148,7 +148,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] int? [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    int? [|f|];
                 ")
                 .Build();
 
@@ -180,7 +181,8 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        [+NullabilityAttributePlaceholder+] T? [|f|];
+                        [+NullabilityAttributePlaceholder+]
+                        T? [|f|];
                     }
                 ")
                 .Build();
@@ -219,7 +221,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] string [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    string [|f|];
                 ")
                 .Build();
 
@@ -373,7 +376,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] int? [|f|], [|g|];
+                    [+NullabilityAttributePlaceholder+]
+                    int? [|f|], [|g|];
                 ")
                 .Build();
 

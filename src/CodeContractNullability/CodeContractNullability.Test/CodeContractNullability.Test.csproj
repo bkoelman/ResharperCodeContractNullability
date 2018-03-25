@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
   </PropertyGroup>
@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="OpenCover" Version="4.6.519" />

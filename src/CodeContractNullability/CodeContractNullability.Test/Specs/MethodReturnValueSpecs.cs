@@ -138,7 +138,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] int? [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+]
+                    int? [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -170,7 +171,8 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        [+NullabilityAttributePlaceholder+] T? [|M|]() { throw new NotImplementedException(); }
+                        [+NullabilityAttributePlaceholder+]
+                        T? [|M|]() { throw new NotImplementedException(); }
                     }
                 ")
                 .Build();
@@ -185,7 +187,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] string [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+]
+                    string [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -277,7 +280,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(Task).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] Task [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+]
+                    Task [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -292,7 +296,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] Task<string> [|M|]() { throw new NotImplementedException(); }
+                    [+NullabilityAttributePlaceholder+]
+                    Task<string> [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -301,19 +306,19 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_method_return_value_is_generic_value_task_it_must_be_reported_and_fixed()
+        public void When_method_return_value_is_generic_value_task_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .WithReference(typeof(ValueTask<>).Assembly)
                 .Using(typeof(ValueTask<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] ValueTask<string> [|M|]() { throw new NotImplementedException(); }
+                    ValueTask<string> M() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
             // Act and assert
-            VerifyNullabilityFix(source, CreateMessageForMethod("M"));
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Fact]
@@ -558,7 +563,8 @@ namespace CodeContractNullability.Test.Specs
                         // implicitly inherits decoration from interface
                         string I.M() { throw new NotImplementedException(); }
 
-                        [+NullabilityAttributePlaceholder+] public string [|M|]() { throw new NotImplementedException(); }
+                        [+NullabilityAttributePlaceholder+]
+                        public string [|M|]() { throw new NotImplementedException(); }
                     }
                 ")
                 .Build();
@@ -725,7 +731,8 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            [+NullabilityAttributePlaceholder+] public new string [|M|]() { throw new NotImplementedException(); }
+                            [+NullabilityAttributePlaceholder+]
+                            public new string [|M|]() { throw new NotImplementedException(); }
                         }
                     }
                 ")

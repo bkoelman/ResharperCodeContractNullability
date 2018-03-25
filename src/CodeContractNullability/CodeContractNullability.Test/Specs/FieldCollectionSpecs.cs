@@ -132,7 +132,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IList).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] IList [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    IList [|f|];
                 ")
                 .Build();
 
@@ -147,7 +148,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] IList<int?> [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    IList<int?> [|f|];
                 ")
                 .Build();
 
@@ -181,7 +183,8 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
-                        [+NullabilityAttributePlaceholder+] ISet<T?> [|f|];
+                        [+NullabilityAttributePlaceholder+]
+                        ISet<T?> [|f|];
                     }
                 ")
                 .Build();
@@ -197,7 +200,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] IEnumerable<string> [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    IEnumerable<string> [|f|];
                 ")
                 .Build();
 
@@ -276,7 +280,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(List<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] List<int?> [|f|], [|g|];
+                    [+NullabilityAttributePlaceholder+]
+                    List<int?> [|f|], [|g|];
                 ")
                 .Build();
 
@@ -290,7 +295,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] Lazy<string> [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    Lazy<string> [|f|];
                 ")
                 .Build();
 
@@ -320,7 +326,8 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(Task<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] Task<string> [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    Task<string> [|f|];
                 ")
                 .Build();
 
@@ -336,7 +343,8 @@ namespace CodeContractNullability.Test.Specs
                 .WithReference(typeof(ValueTask<>).Assembly)
                 .Using(typeof(ValueTask<>).Namespace)
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] ValueTask<string> [|f|];
+                    [+NullabilityAttributePlaceholder+]
+                    ValueTask<string> [|f|];
                 ")
                 .Build();
 
