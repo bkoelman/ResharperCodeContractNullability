@@ -54,7 +54,7 @@ namespace CodeContractNullability.Test
 
             AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
 
-            return new AnalyzerTestContext(source.GetText(), LanguageNames.CSharp, options)
+            return new AnalyzerTestContext(source.SourceText, source.SourceSpans, LanguageNames.CSharp, options)
                 .WithReferences(source.References)
                 .InFileNamed(source.Filename);
         }

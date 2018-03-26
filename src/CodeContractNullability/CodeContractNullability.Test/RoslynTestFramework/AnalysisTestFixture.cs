@@ -51,20 +51,17 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [NotNull]
         private AnalysisResult GetAnalysisResult([NotNull] AnalyzerTestContext context, [NotNull] [ItemNotNull] string[] messages)
         {
-            DocumentWithSpans documentWithSpans = DocumentFactory.GetDocumentWithSpansFromMarkup(context);
+            Document document = DocumentFactory.ToDocument(context.SourceCode, context);
 
-            IList<Diagnostic> diagnostics = GetSortedAnalyzerDiagnostics(context, documentWithSpans);
-            ImmutableArray<TextSpan> spans = documentWithSpans.TextSpans.OrderBy(s => s).ToImmutableArray();
-
-            return new AnalysisResult(diagnostics, spans, messages);
+            IList<Diagnostic> diagnostics = GetSortedAnalyzerDiagnostics(document, context);
+            return new AnalysisResult(diagnostics, context.SourceSpans, messages);
         }
 
         [NotNull]
         [ItemNotNull]
-        private IList<Diagnostic> GetSortedAnalyzerDiagnostics([NotNull] AnalyzerTestContext context,
-            [NotNull] DocumentWithSpans documentWithSpans)
+        private IList<Diagnostic> GetSortedAnalyzerDiagnostics([NotNull] Document document, [NotNull] AnalyzerTestContext context)
         {
-            IEnumerable<Diagnostic> diagnostics = EnumerateDiagnosticsForDocument(documentWithSpans.Document,
+            IEnumerable<Diagnostic> diagnostics = EnumerateDiagnosticsForDocument(document,
                 context.ValidationMode, context.DiagnosticsCaptureMode, context.Options).Where(d => d.Id == DiagnosticId);
 
             if (context.DiagnosticsCaptureMode == DiagnosticsCaptureMode.RequireInSourceTree)
@@ -190,7 +187,8 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         {
             for (int index = 0; index < context.ExpectedCode.Count; index++)
             {
-                Document document = DocumentFactory.GetDocumentWithSpansFromMarkup(context.AnalyzerTestContext).Document;
+                Document document =
+                    DocumentFactory.ToDocument(context.AnalyzerTestContext.SourceCode, context.AnalyzerTestContext);
 
                 ImmutableArray<CodeAction> codeFixes = GetCodeFixesForDiagnostic(diagnostic, document, fixProvider);
                 codeFixes.Should().HaveSameCount(context.ExpectedCode);

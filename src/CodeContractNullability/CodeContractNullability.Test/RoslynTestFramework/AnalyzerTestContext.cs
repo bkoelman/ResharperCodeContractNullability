@@ -6,6 +6,7 @@ using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
 
 namespace CodeContractNullability.Test.RoslynTestFramework
 {
@@ -26,7 +27,10 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             });
 
         [NotNull]
-        public string MarkupCode { get; }
+        public string SourceCode { get; }
+
+        [NotNull]
+        public IList<TextSpan> SourceSpans { get; }
 
         [NotNull]
         public string LanguageName { get; }
@@ -53,12 +57,14 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [NotNull]
         public AnalyzerOptions Options { get; }
 
-        private AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName, [NotNull] string fileName,
-            [NotNull] string assemblyName, [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            DocumentationMode documentationMode, [CanBeNull] int? compilerWarningLevel, TestValidationMode validationMode,
+        private AnalyzerTestContext([NotNull] string sourceCode, [NotNull] IList<TextSpan> sourceSpans,
+            [NotNull] string languageName, [NotNull] string fileName, [NotNull] string assemblyName,
+            [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references, DocumentationMode documentationMode,
+            [CanBeNull] int? compilerWarningLevel, TestValidationMode validationMode,
             DiagnosticsCaptureMode diagnosticsCaptureMode, [NotNull] AnalyzerOptions options)
         {
-            MarkupCode = markupCode;
+            SourceCode = sourceCode;
+            SourceSpans = sourceSpans;
             LanguageName = languageName;
             FileName = fileName;
             AssemblyName = assemblyName;
@@ -70,22 +76,15 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             Options = options;
         }
 
-        public AnalyzerTestContext([NotNull] string markupCode, [NotNull] string languageName, [NotNull] AnalyzerOptions options)
-            : this(markupCode, languageName, DefaultFileName, DefaultAssemblyName, DefaultReferences, DefaultDocumentationMode,
-                null, DefaultTestValidationMode, DiagnosticsCaptureMode.RequireInSourceTree, options)
+        public AnalyzerTestContext([NotNull] string sourceCode, [NotNull] IList<TextSpan> sourceSpans,
+            [NotNull] string languageName, [NotNull] AnalyzerOptions options)
+            : this(sourceCode, sourceSpans, languageName, DefaultFileName, DefaultAssemblyName, DefaultReferences,
+                DefaultDocumentationMode, null, DefaultTestValidationMode, DiagnosticsCaptureMode.RequireInSourceTree, options)
         {
-            Guard.NotNull(markupCode, nameof(markupCode));
+            Guard.NotNull(sourceCode, nameof(sourceCode));
+            Guard.NotNull(sourceSpans, nameof(sourceSpans));
             Guard.NotNullNorWhiteSpace(languageName, nameof(languageName));
             Guard.NotNull(options, nameof(options));
-        }
-
-        [NotNull]
-        public AnalyzerTestContext WithMarkupCode([NotNull] string markupCode)
-        {
-            Guard.NotNull(markupCode, nameof(markupCode));
-
-            return new AnalyzerTestContext(markupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
@@ -93,15 +92,15 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         {
             Guard.NotNullNorWhiteSpace(fileName, nameof(fileName));
 
-            return new AnalyzerTestContext(MarkupCode, LanguageName, fileName, AssemblyName, References, DocumentationMode,
-                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, fileName, AssemblyName, References,
+                DocumentationMode, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext InAssemblyNamed([NotNull] string assemblyName)
         {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, assemblyName, References, DocumentationMode,
-                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, FileName, assemblyName, References,
+                DocumentationMode, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
@@ -111,36 +110,37 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
             ImmutableList<MetadataReference> referenceList = ImmutableList.CreateRange(references);
 
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, referenceList.ToImmutableHashSet(),
-                DocumentationMode, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, FileName, AssemblyName,
+                referenceList.ToImmutableHashSet(), DocumentationMode, CompilerWarningLevel, ValidationMode,
+                DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext WithDocumentationMode(DocumentationMode mode)
         {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, mode,
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, FileName, AssemblyName, References, mode,
                 CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext CompileAtWarningLevel(int warningLevel)
         {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                warningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, FileName, AssemblyName, References,
+                DocumentationMode, warningLevel, ValidationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext InValidationMode(TestValidationMode validationMode)
         {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                CompilerWarningLevel, validationMode, DiagnosticsCaptureMode, Options);
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, FileName, AssemblyName, References,
+                DocumentationMode, CompilerWarningLevel, validationMode, DiagnosticsCaptureMode, Options);
         }
 
         [NotNull]
         public AnalyzerTestContext AllowingDiagnosticsOutsideSourceTree()
         {
-            return new AnalyzerTestContext(MarkupCode, LanguageName, FileName, AssemblyName, References, DocumentationMode,
-                CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode.AllowOutsideSourceTree, Options);
+            return new AnalyzerTestContext(SourceCode, SourceSpans, LanguageName, FileName, AssemblyName, References,
+                DocumentationMode, CompilerWarningLevel, ValidationMode, DiagnosticsCaptureMode.AllowOutsideSourceTree, Options);
         }
     }
 }

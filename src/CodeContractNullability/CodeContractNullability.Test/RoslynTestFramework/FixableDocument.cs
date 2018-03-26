@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
+using Microsoft.CodeAnalysis.Text;
 
 namespace CodeContractNullability.Test.RoslynTestFramework
 {
@@ -10,14 +12,16 @@ namespace CodeContractNullability.Test.RoslynTestFramework
     {
         // Supported markers:
         //
+        //   [|demo|] marks the span "demo"
         //   [+demo+] expects "demo" will be inserted
         //   [-demo-] expects "demo" will be removed
-        //   [*before##after*] expects that "before" will be replaced with "after"
+        //   [*before##after*] expects "before" will be replaced with "after"
         //
         // Example:
-        // Input:    abc[+INS+]def[-DEL-]ghi[*YYY##ZZZ*]jkl
+        // Input:    [|ab|][|c|][+INS+]def[-DEL-]ghi[*YYY##ZZZ*]jkl
         // Source:   abcdefDELghiYYYjkl
         // Expected: abcINSdefghiZZZjkl
+        // Spans:    [0..2], [2..3]
 
         [NotNull]
         [ItemNotNull]
@@ -29,12 +33,18 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         [NotNull]
         public string ExpectedText => string.Concat(blocks.Select(x => x.TextAfter));
 
+        [NotNull]
+        public IList<TextSpan> SourceSpans { get; }
+
         public FixableDocument([NotNull] string text)
         {
             Guard.NotNull(text, nameof(text));
 
             var parser = new MarkupParser(text);
-            blocks = parser.Parse();
+            parser.Parse();
+
+            blocks = parser.TextBlocks;
+            SourceSpans = parser.TextSpans.OrderBy(s => s).ToImmutableArray();
         }
 
         private sealed class MarkupParser
@@ -56,7 +66,10 @@ namespace CodeContractNullability.Test.RoslynTestFramework
 
             [NotNull]
             [ItemNotNull]
-            private readonly IList<TextBlock> blocks = new List<TextBlock>();
+            public IList<TextBlock> TextBlocks { get; } = new List<TextBlock>();
+
+            [NotNull]
+            public IList<TextSpan> TextSpans { get; } = new List<TextSpan>();
 
             public MarkupParser([NotNull] string markupCode)
             {
@@ -64,15 +77,14 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 this.markupCode = markupCode;
             }
 
-            [NotNull]
-            [ItemNotNull]
-            public IList<TextBlock> Parse()
+            public void Parse()
             {
-                blocks.Clear();
+                TextBlocks.Clear();
+                TextSpans.Clear();
 
                 ParseMarkupCode();
 
-                return blocks;
+                CalculateSpans();
             }
 
             private void ParseMarkupCode()
@@ -81,13 +93,29 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 stateMachine.Run();
             }
 
+            private void CalculateSpans()
+            {
+                int offset = 0;
+                foreach (var block in TextBlocks)
+                {
+                    int blockLength = block.TextBefore.Length;
+
+                    if (block is MarkedTextBlock)
+                    {
+                        TextSpans.Add(TextSpan.FromBounds(offset, offset + blockLength));
+                    }
+
+                    offset += blockLength;
+                }
+            }
+
             private int GetNextSpanStart(int offset, out char spanKind)
             {
                 while (true)
                 {
                     int index = markupCode.IndexOf(SpanOpenText, offset, StringComparison.Ordinal);
 
-                    if (index == -1 || markupCode.Length < index + 1)
+                    if (index == -1 || index >= markupCode.Length - 1)
                     {
                         spanKind = '?';
                         return -1;
@@ -121,7 +149,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 if (length > 0)
                 {
                     string text = markupCode.Substring(offset, length);
-                    blocks.Add(new StaticTextBlock(text));
+                    TextBlocks.Add(new StaticTextBlock(text));
                 }
             }
 
@@ -139,17 +167,17 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 {
                     case '|':
                     {
-                        blocks.Add(new MarkedTextBlock(spanInnerText));
+                        TextBlocks.Add(new MarkedTextBlock(spanInnerText));
                         break;
                     }
                     case '+':
                     {
-                        blocks.Add(new InsertedTextBlock(spanInnerText));
+                        TextBlocks.Add(new InsertedTextBlock(spanInnerText));
                         break;
                     }
                     case '-':
                     {
-                        blocks.Add(new DeletedTextBlock(spanInnerText));
+                        TextBlocks.Add(new DeletedTextBlock(spanInnerText));
                         break;
                     }
                     case '*':
@@ -166,7 +194,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                             throw new Exception($"Multiple '{ReplaceSeparator}' in source.");
                         }
 
-                        blocks.Add(new ReplacedTextBlock(parts[0], parts[1]));
+                        TextBlocks.Add(new ReplacedTextBlock(parts[0], parts[1]));
                         break;
                     }
                 }
@@ -179,7 +207,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
                 string text = markupCode.Substring(offset);
                 if (text.Length > 0)
                 {
-                    blocks.Add(new StaticTextBlock(text));
+                    TextBlocks.Add(new StaticTextBlock(text));
                 }
             }
 
@@ -309,7 +337,7 @@ namespace CodeContractNullability.Test.RoslynTestFramework
         private sealed class MarkedTextBlock : TextBlock
         {
             public MarkedTextBlock([NotNull] string textToMark)
-                : base("[|" + textToMark + "|]", textToMark)
+                : base(textToMark, textToMark)
             {
             }
 

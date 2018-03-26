@@ -6,6 +6,7 @@ using CodeContractNullability.Test.RoslynTestFramework;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 
 namespace CodeContractNullability.Test
 {
@@ -13,6 +14,12 @@ namespace CodeContractNullability.Test
     {
         [NotNull]
         private readonly FixableDocument document;
+
+        [NotNull]
+        public string SourceText => document.SourceText;
+
+        [NotNull]
+        public IList<TextSpan> SourceSpans => document.SourceSpans;
 
         [NotNull]
         public string Filename { get; }
@@ -67,12 +74,6 @@ namespace CodeContractNullability.Test
             }
 
             return attributePrefixBuilder.ToString();
-        }
-
-        [NotNull]
-        public string GetText()
-        {
-            return document.SourceText;
         }
 
         [NotNull]
