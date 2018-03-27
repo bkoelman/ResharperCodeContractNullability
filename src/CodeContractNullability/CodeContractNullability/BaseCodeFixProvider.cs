@@ -140,8 +140,8 @@ namespace CodeContractNullability
                 .ConfigureAwait(false);
 
             // Simplify and reformat all annotated nodes.
-            Document simplified =
-                await Simplifier.ReduceAsync(documentWithImport, options, cancellationToken).ConfigureAwait(false);
+            Document simplified = await Simplifier
+                .ReduceAsync(documentWithImport, Simplifier.Annotation, options, cancellationToken).ConfigureAwait(false);
             Document formatted = await Formatter.FormatAsync(simplified, Formatter.Annotation, options, cancellationToken)
                 .ConfigureAwait(false);
             return formatted;
