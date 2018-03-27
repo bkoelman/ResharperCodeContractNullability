@@ -176,9 +176,11 @@ namespace CodeContractNullability.Test.RoslynTestFramework
             }
 
             CodeFixProvider fixProvider = CreateFixProvider();
-            foreach (Diagnostic diagnostic in analysisResult.Diagnostics)
+
+            Diagnostic firstDiagnostic = analysisResult.Diagnostics.FirstOrDefault();
+            if (firstDiagnostic != null)
             {
-                RunCodeFixes(context, diagnostic, fixProvider);
+                RunCodeFixes(context, firstDiagnostic, fixProvider);
             }
         }
 
