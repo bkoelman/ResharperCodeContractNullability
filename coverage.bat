@@ -4,9 +4,9 @@ md coverage
 
 set configuration=Debug
 set opencover="%USERPROFILE%\.nuget\packages\OpenCover\4.6.519\tools\OpenCover.Console.exe"
-set reportgenerator="%USERPROFILE%\.nuget\packages\ReportGenerator\3.0.0\tools\ReportGenerator.exe"
-set testrunner="%USERPROFILE%\.nuget\packages\xunit.runner.console\2.2.0\tools\xunit.console.x86.exe"
-set target=".\src\CodeContractNullability\CodeContractNullability.Test\bin\%configuration%\net452\CodeContractNullability.Test.dll -noshadow"
+set reportgenerator="%USERPROFILE%\.nuget\packages\ReportGenerator\3.1.2\tools\ReportGenerator.exe"
+set testrunner="%USERPROFILE%\.nuget\packages\xunit.runner.console\2.3.1\tools\net452\xunit.console.x86.exe"
+set target=".\src\CodeContractNullability\CodeContractNullability.Test\bin\%configuration%\net46\CodeContractNullability.Test.dll -noshadow"
 set filter="+[CodeContractNullability*]*  -[CodeContractNullability.Test*]*"
 set coveragefile=".\coverage\CodeCoverage.xml"
 
