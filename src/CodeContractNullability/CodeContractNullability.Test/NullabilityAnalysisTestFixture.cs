@@ -56,7 +56,7 @@ namespace CodeContractNullability.Test
 
             return new AnalyzerTestContext(source.SourceText, source.SourceSpans, LanguageNames.CSharp, options)
                 .WithReferences(source.References)
-                .InFileNamed(source.Filename);
+                .InFileNamed(source.FileName);
         }
 
         protected override DiagnosticAnalyzer CreateAnalyzer()

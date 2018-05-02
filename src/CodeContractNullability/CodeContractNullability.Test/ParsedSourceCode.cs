@@ -22,7 +22,7 @@ namespace CodeContractNullability.Test
         public IList<TextSpan> SourceSpans => document.SourceSpans;
 
         [NotNull]
-        public string Filename { get; }
+        public string FileName { get; }
 
         [NotNull]
         public AnalyzerSettings Settings { get; }
@@ -42,20 +42,20 @@ namespace CodeContractNullability.Test
         [NotNull]
         private readonly string attributePrefix;
 
-        public ParsedSourceCode([NotNull] string text, [NotNull] string filename, [NotNull] AnalyzerSettings settings,
+        public ParsedSourceCode([NotNull] string text, [NotNull] string fileName, [NotNull] AnalyzerSettings settings,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
             [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
             [ItemNotNull] [NotNull] IList<string> nestedTypes, bool ignoreWhitespaceDifferences)
         {
             Guard.NotNull(text, nameof(text));
-            Guard.NotNull(filename, nameof(filename));
+            Guard.NotNull(fileName, nameof(fileName));
             Guard.NotNull(settings, nameof(settings));
             Guard.NotNull(externalAnnotationsMap, nameof(externalAnnotationsMap));
             Guard.NotNull(references, nameof(references));
             Guard.NotNull(nestedTypes, nameof(nestedTypes));
 
             document = new FixableDocument(text);
-            Filename = filename;
+            FileName = fileName;
             Settings = settings;
             ExternalAnnotationsMap = externalAnnotationsMap;
             References = references;

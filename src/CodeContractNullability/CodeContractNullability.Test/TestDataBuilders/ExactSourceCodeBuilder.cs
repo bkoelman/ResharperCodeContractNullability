@@ -14,7 +14,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             AnalyzerSettings settings = new AnalyzerSettingsBuilder().Build();
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
 
-            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultFilename, settings, map,
+            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultFileName, settings, map,
                 SourceCodeBuilder.DefaultReferences, new string[0], false);
         }
 

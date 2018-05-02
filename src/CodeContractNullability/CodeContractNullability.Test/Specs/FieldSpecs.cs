@@ -306,7 +306,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new ClassSourceCodeBuilder()
-                .Named("MainForm.Designer.cs")
+                .InFileNamed("MainForm.Designer.cs")
                 .WithReference(typeof(Control).Assembly)
                 .Using(typeof(Control).Namespace)
                 .Using(typeof(Button).Namespace)
