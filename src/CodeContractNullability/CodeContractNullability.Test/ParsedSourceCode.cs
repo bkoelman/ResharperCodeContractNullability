@@ -2,10 +2,11 @@
 using System.Collections.Immutable;
 using System.Text;
 using CodeContractNullability.ExternalAnnotations.Storage;
+using CodeContractNullability.Test.TestDataBuilders;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynTestFramework;
 
 namespace CodeContractNullability.Test
@@ -16,23 +17,10 @@ namespace CodeContractNullability.Test
         private readonly FixableDocument document;
 
         [NotNull]
-        public string SourceText => document.SourceText;
-
-        [NotNull]
-        public IList<TextSpan> SourceSpans => document.SourceSpans;
-
-        [NotNull]
-        public string FileName { get; }
-
-        [NotNull]
-        public AnalyzerSettings Settings { get; }
+        public AnalyzerTestContext TestContext { get; }
 
         [NotNull]
         public ExternalAnnotationsMap ExternalAnnotationsMap { get; }
-
-        [NotNull]
-        [ItemNotNull]
-        public ImmutableHashSet<MetadataReference> References { get; }
 
         [NotNull]
         public string ExpectedText => document.ExpectedText;
@@ -55,12 +43,15 @@ namespace CodeContractNullability.Test
             Guard.NotNull(nestedTypes, nameof(nestedTypes));
 
             document = new FixableDocument(text);
-            FileName = fileName;
-            Settings = settings;
             ExternalAnnotationsMap = externalAnnotationsMap;
-            References = references;
             attributePrefix = ExtractAttributePrefix(nestedTypes);
             IgnoreWhitespaceDifferences = ignoreWhitespaceDifferences;
+
+            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(settings);
+
+            TestContext = new AnalyzerTestContext(document.SourceText, document.SourceSpans, LanguageNames.CSharp, options)
+                .WithReferences(references)
+                .InFileNamed(fileName);
         }
 
         [NotNull]

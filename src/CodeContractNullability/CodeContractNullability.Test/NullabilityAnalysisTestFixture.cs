@@ -3,7 +3,6 @@ using CodeContractNullability.NullabilityAttributes;
 using CodeContractNullability.Test.TestDataBuilders;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynTestFramework;
 
@@ -26,9 +25,9 @@ namespace CodeContractNullability.Test
         {
             Guard.NotNull(source, nameof(source));
 
-            AnalyzerTestContext analyzerContext = CreateTestContext(source);
+            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
 
-            AssertDiagnostics(analyzerContext, messages);
+            AssertDiagnostics(source.TestContext, messages);
         }
 
         protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source,
@@ -36,27 +35,15 @@ namespace CodeContractNullability.Test
         {
             Guard.NotNull(source, nameof(source));
 
-            AnalyzerTestContext analyzerContext = CreateTestContext(source);
+            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
 
             string fixNotNull = source.GetExpectedTextForAttribute(NotNullAttributeName);
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);
 
-            var fixContext = new FixProviderTestContext(analyzerContext, new[] { fixNotNull, fixCanBeNull },
+            var fixContext = new FixProviderTestContext(source.TestContext, new[] { fixNotNull, fixCanBeNull },
                 source.IgnoreWhitespaceDifferences);
 
             AssertDiagnosticsWithCodeFixes(fixContext, messages);
-        }
-
-        [NotNull]
-        protected AnalyzerTestContext CreateTestContext([NotNull] ParsedSourceCode source)
-        {
-            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
-
-            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(source.Settings);
-
-            return new AnalyzerTestContext(source.SourceText, source.SourceSpans, LanguageNames.CSharp, options)
-                .WithReferences(source.References)
-                .InFileNamed(source.FileName);
         }
 
         protected override DiagnosticAnalyzer CreateAnalyzer()

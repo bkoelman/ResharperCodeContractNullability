@@ -19,9 +19,7 @@ namespace CodeContractNullability.Test
         {
             Guard.NotNull(source, nameof(source));
 
-            AnalyzerTestContext analyzerContext = CreateTestContext(source);
-
-            var fixTestContext = new FixProviderTestContext(analyzerContext, new[] { source.ExpectedText }, false);
+            var fixTestContext = new FixProviderTestContext(source.TestContext, new[] { source.ExpectedText }, false);
 
             AssertDiagnosticsWithCodeFixes(fixTestContext, messages);
         }
