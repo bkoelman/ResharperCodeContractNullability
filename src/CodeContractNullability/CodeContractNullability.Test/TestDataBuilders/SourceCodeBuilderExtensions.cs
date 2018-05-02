@@ -6,6 +6,7 @@ using FluentAssertions;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Emit;
 
 namespace CodeContractNullability.Test.TestDataBuilders
@@ -13,13 +14,14 @@ namespace CodeContractNullability.Test.TestDataBuilders
     public static class SourceCodeBuilderExtensions
     {
         [NotNull]
-        public static TBuilder WithSettings<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] AnalyzerSettingsBuilder settingsBuilder)
+        public static TBuilder WithHeader<TBuilder>([NotNull] this TBuilder source, [NotNull] string text)
             where TBuilder : SourceCodeBuilder
         {
-            Guard.NotNull(settingsBuilder, nameof(settingsBuilder));
+            Guard.NotNull(source, nameof(source));
+            Guard.NotNull(text, nameof(text));
 
-            source._WithSettings(settingsBuilder);
+            source.Editor.WithHeaderText(text);
+
             return source;
         }
 
@@ -28,22 +30,48 @@ namespace CodeContractNullability.Test.TestDataBuilders
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
+
             if (!string.IsNullOrWhiteSpace(codeNamespace))
             {
-                source._Using(codeNamespace);
+                source.Editor.IncludeNamespaceImport(codeNamespace);
             }
 
             return source;
         }
 
         [NotNull]
-        public static TBuilder WithHeader<TBuilder>([NotNull] this TBuilder source, [NotNull] string text)
+        public static TBuilder WithNullabilityAttributes<TBuilder>([NotNull] this TBuilder source,
+            [NotNull] NullabilityAttributesBuilder builder)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
-            Guard.NotNull(text, nameof(text));
+            Guard.NotNull(builder, nameof(builder));
 
-            source._WithHeader(text);
+            source.Editor.SetNullabilityAttributes(builder);
+
+            return source;
+        }
+
+        [NotNull]
+        public static TBuilder WithoutNullabilityAttributes<TBuilder>([NotNull] this TBuilder source)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(source, nameof(source));
+
+            source.Editor.SetNullabilityAttributes(null);
+
+            return source;
+        }
+
+        [NotNull]
+        public static TBuilder InFileNamed<TBuilder>([NotNull] this TBuilder source, [NotNull] string fileName)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(source, nameof(source));
+            Guard.NotNullNorWhiteSpace(fileName, nameof(fileName));
+
+            source.Editor.UpdateTestContext(context => context.InFileNamed(fileName));
+
             return source;
         }
 
@@ -54,7 +82,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(assembly, nameof(assembly));
 
-            source._WithReference(assembly);
+            PortableExecutableReference reference = MetadataReference.CreateFromFile(assembly.Location);
+
+            source.Editor.UpdateTestContext(context => context.WithReferences(context.References.Add(reference)));
+
             return source;
         }
 
@@ -66,7 +97,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(code, nameof(code));
 
             Stream assemblyStream = GetInMemoryAssemblyStreamForCode(code);
-            source._WithReference(assemblyStream);
+            PortableExecutableReference reference = MetadataReference.CreateFromStream(assemblyStream);
+
+            source.Editor.UpdateTestContext(context => context.WithReferences(context.References.Add(reference)));
+
             return source;
         }
 
@@ -79,7 +113,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 .Create("TempAssembly", new[] { tree })
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            compilation = compilation.AddReferences(SourceCodeBuilder.DefaultReferences);
+            compilation = compilation.AddReferences(SourceCodeBuilder.DefaultTestContext.References);
             compilation = compilation.AddReferences(references);
 
             var stream = new MemoryStream();
@@ -100,17 +134,6 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder InFileNamed<TBuilder>([NotNull] this TBuilder source, [NotNull] string filename)
-            where TBuilder : SourceCodeBuilder
-        {
-            Guard.NotNull(source, nameof(source));
-            Guard.NotNullNorWhiteSpace(filename, nameof(filename));
-
-            source._InFileNamed(filename);
-            return source;
-        }
-
-        [NotNull]
         public static TBuilder ExternallyAnnotated<TBuilder>([NotNull] this TBuilder source,
             [NotNull] ExternalAnnotationsBuilder builder)
             where TBuilder : SourceCodeBuilder
@@ -118,29 +141,23 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(builder, nameof(builder));
 
-            source._ExternallyAnnotated(builder);
+            source.Editor.WithExternalAnnotations(builder);
+
             return source;
         }
 
         [NotNull]
-        public static TBuilder WithNullabilityAttributes<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] NullabilityAttributesBuilder builder)
+        public static TBuilder WithSettings<TBuilder>([NotNull] this TBuilder source,
+            [NotNull] AnalyzerSettingsBuilder settingsBuilder)
             where TBuilder : SourceCodeBuilder
         {
-            Guard.NotNull(source, nameof(source));
-            Guard.NotNull(builder, nameof(builder));
+            Guard.NotNull(settingsBuilder, nameof(settingsBuilder));
 
-            source._WithNullabilityAttributes(builder);
-            return source;
-        }
+            AnalyzerSettings settings = settingsBuilder.Build();
+            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(settings);
 
-        [NotNull]
-        public static TBuilder WithoutNullabilityAttributes<TBuilder>([NotNull] this TBuilder source)
-            where TBuilder : SourceCodeBuilder
-        {
-            Guard.NotNull(source, nameof(source));
+            source.Editor.UpdateTestContext(context => context.WithOptions(options));
 
-            source._WithoutNullabilityAttributes();
             return source;
         }
 
@@ -152,7 +169,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(expectedImportText, nameof(expectedImportText));
 
-            source._ExpectingImportForNamespace(expectedImportText);
+            source.Editor.ExpectingImportForNamespace(expectedImportText);
+
             return source;
         }
     }

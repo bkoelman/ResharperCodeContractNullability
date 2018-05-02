@@ -76,8 +76,8 @@ namespace CodeContractNullability
             {
                 if (filePath != null)
                 {
-                    string filename = Path.GetFileName(filePath);
-                    return FileNameRegex.IsMatch(filename);
+                    string fileName = Path.GetFileName(filePath);
+                    return FileNameRegex.IsMatch(fileName);
                 }
 
                 return false;

@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Text;
 using CodeContractNullability.ExternalAnnotations.Storage;
-using CodeContractNullability.Test.TestDataBuilders;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 using RoslynTestFramework;
 
 namespace CodeContractNullability.Test
@@ -30,28 +26,20 @@ namespace CodeContractNullability.Test
         [NotNull]
         private readonly string attributePrefix;
 
-        public ParsedSourceCode([NotNull] string text, [NotNull] string fileName, [NotNull] AnalyzerSettings settings,
-            [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
-            [NotNull] [ItemNotNull] ImmutableHashSet<MetadataReference> references,
-            [ItemNotNull] [NotNull] IList<string> nestedTypes, bool ignoreWhitespaceDifferences)
+        public ParsedSourceCode([NotNull] string sourceText, [NotNull] AnalyzerTestContext testContext,
+            [NotNull] ExternalAnnotationsMap externalAnnotationsMap, [ItemNotNull] [NotNull] IList<string> nestedTypes,
+            bool ignoreWhitespaceDifferences)
         {
-            Guard.NotNull(text, nameof(text));
-            Guard.NotNull(fileName, nameof(fileName));
-            Guard.NotNull(settings, nameof(settings));
+            Guard.NotNull(sourceText, nameof(sourceText));
+            Guard.NotNull(testContext, nameof(testContext));
             Guard.NotNull(externalAnnotationsMap, nameof(externalAnnotationsMap));
-            Guard.NotNull(references, nameof(references));
             Guard.NotNull(nestedTypes, nameof(nestedTypes));
 
-            document = new FixableDocument(text);
+            document = new FixableDocument(sourceText);
+            TestContext = testContext.WithCode(document.SourceText, document.SourceSpans);
             ExternalAnnotationsMap = externalAnnotationsMap;
             attributePrefix = ExtractAttributePrefix(nestedTypes);
             IgnoreWhitespaceDifferences = ignoreWhitespaceDifferences;
-
-            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(settings);
-
-            TestContext = new AnalyzerTestContext(document.SourceText, document.SourceSpans, LanguageNames.CSharp, options)
-                .WithReferences(references)
-                .InFileNamed(fileName);
         }
 
         [NotNull]

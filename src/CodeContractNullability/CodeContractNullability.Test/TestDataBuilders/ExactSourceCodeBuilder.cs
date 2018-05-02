@@ -1,3 +1,4 @@
+using System;
 using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -11,11 +12,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         public ParsedSourceCode Build()
         {
-            AnalyzerSettings settings = new AnalyzerSettingsBuilder().Build();
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
 
-            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultFileName, settings, map,
-                SourceCodeBuilder.DefaultReferences, new string[0], false);
+            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, Array.Empty<string>(), false);
         }
 
         [NotNull]

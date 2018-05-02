@@ -1,66 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Text;
+using RoslynTestFramework;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
     public abstract class SourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
-        private AnalyzerSettings settings = new AnalyzerSettingsBuilder().Build();
+        public static readonly AnalyzerTestContext DefaultTestContext = new AnalyzerTestContext(string.Empty,
+            Array.Empty<TextSpan>(), LanguageNames.CSharp, new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
+
+        [NotNull]
+        private AnalyzerTestContext testContext = DefaultTestContext;
+
+        [CanBeNull]
+        private string headerText;
 
         [NotNull]
         [ItemNotNull]
         private readonly HashSet<string> namespaceImports = new HashSet<string> { "System" };
 
         [CanBeNull]
-        private string headerText;
-
-        [NotNull]
-        private string sourceFileName = DefaultFileName;
+        private NullabilityAttributesDefinition nullabilityAttributes =
+            new NullabilityAttributesBuilder().InGlobalNamespace().Build();
 
         [NotNull]
         private ExternalAnnotationsBuilder externalAnnotationsBuilder = new ExternalAnnotationsBuilder();
 
         [NotNull]
-        [ItemNotNull]
-        private readonly HashSet<MetadataReference> references = new HashSet<MetadataReference>(DefaultReferences);
-
-        [NotNull]
         private string codeNamespaceImportExpected = string.Empty;
 
-        [CanBeNull]
-        private NullabilityAttributesDefinition nullabilityAttributes =
-            new NullabilityAttributesBuilder().InGlobalNamespace().Build();
-
         [NotNull]
-        protected abstract string GetSourceCode();
+        internal readonly CodeEditor Editor;
 
-        public const string DefaultFileName = "Test.cs";
-
-        [NotNull]
-        [ItemNotNull]
-        public static readonly ImmutableHashSet<MetadataReference> DefaultReferences = GetDefaultReferences();
-
-        [NotNull]
-        [ItemNotNull]
-        private static ImmutableHashSet<MetadataReference> GetDefaultReferences()
+        protected SourceCodeBuilder()
         {
-            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
-
-            return ImmutableHashSet.Create(new MetadataReference[]
-            {
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "mscorlib.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Core.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll"))
-            });
+            Editor = new CodeEditor(this);
         }
 
         public ParsedSourceCode Build()
@@ -71,15 +54,14 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
             IList<string> nestedTypes = nullabilityAttributes?.NestedTypes ?? new string[0];
 
-            return new ParsedSourceCode(sourceText, sourceFileName, settings, externalAnnotationsBuilder.Build(),
-                ImmutableHashSet.Create(references.ToArray()), nestedTypes, true);
+            return new ParsedSourceCode(sourceText, testContext, externalAnnotationsBuilder.Build(), nestedTypes, true);
         }
 
         private void ApplyNullability()
         {
             if (!string.IsNullOrEmpty(nullabilityAttributes?.CodeNamespace))
             {
-                _ExpectingImportForNamespace(nullabilityAttributes.CodeNamespace);
+                Editor.ExpectingImportForNamespace(nullabilityAttributes.CodeNamespace);
             }
         }
 
@@ -120,6 +102,9 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
             return sourceBuilder.ToString();
         }
+
+        [NotNull]
+        protected abstract string GetSourceCode();
 
         [NotNull]
         protected string GetLinesOfCode([NotNull] [ItemNotNull] IEnumerable<string> codeBlocks)
@@ -164,54 +149,48 @@ namespace CodeContractNullability.Test.TestDataBuilders
             return builder.ToString();
         }
 
-        internal void _WithSettings([NotNull] AnalyzerSettingsBuilder settingsBuilder)
+        internal sealed class CodeEditor
         {
-            settings = settingsBuilder.Build();
-        }
+            [NotNull]
+            private readonly SourceCodeBuilder owner;
 
-        internal void _Using([NotNull] string codeNamespace)
-        {
-            namespaceImports.Add(codeNamespace);
-        }
+            public CodeEditor([NotNull] SourceCodeBuilder owner)
+            {
+                Guard.NotNull(owner, nameof(owner));
+                this.owner = owner;
+            }
 
-        internal void _WithReference([NotNull] Assembly assembly)
-        {
-            references.Add(MetadataReference.CreateFromFile(assembly.Location));
-        }
+            public void UpdateTestContext([NotNull] Func<AnalyzerTestContext, AnalyzerTestContext> change)
+            {
+                Guard.NotNull(change, nameof(change));
 
-        internal void _WithReference([NotNull] Stream assemblyStream)
-        {
-            references.Add(MetadataReference.CreateFromStream(assemblyStream));
-        }
+                owner.testContext = change(owner.testContext);
+            }
 
-        internal void _InFileNamed([NotNull] string filename)
-        {
-            sourceFileName = filename;
-        }
+            public void WithHeaderText([NotNull] string text)
+            {
+                owner.headerText = text;
+            }
 
-        internal void _ExternallyAnnotated([NotNull] ExternalAnnotationsBuilder builder)
-        {
-            externalAnnotationsBuilder = builder;
-        }
+            public void IncludeNamespaceImport([NotNull] string codeNamespace)
+            {
+                owner.namespaceImports.Add(codeNamespace);
+            }
 
-        internal void _WithNullabilityAttributes([NotNull] NullabilityAttributesBuilder builder)
-        {
-            nullabilityAttributes = builder.Build();
-        }
+            public void SetNullabilityAttributes([CanBeNull] NullabilityAttributesBuilder builder)
+            {
+                owner.nullabilityAttributes = builder?.Build();
+            }
 
-        internal void _WithoutNullabilityAttributes()
-        {
-            nullabilityAttributes = null;
-        }
+            public void WithExternalAnnotations([NotNull] ExternalAnnotationsBuilder builder)
+            {
+                owner.externalAnnotationsBuilder = builder;
+            }
 
-        internal void _ExpectingImportForNamespace([NotNull] string codeNamespace)
-        {
-            codeNamespaceImportExpected = codeNamespace;
-        }
-
-        internal void _WithHeader([NotNull] string text)
-        {
-            headerText = text;
+            public void ExpectingImportForNamespace([NotNull] string codeNamespace)
+            {
+                owner.codeNamespaceImportExpected = codeNamespace;
+            }
         }
     }
 }
