@@ -13,7 +13,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_not_defined_it_must_not_report_any_diagnostics()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithoutNullabilityAttributes()
                 .InGlobalScope(@"
                     class C
@@ -31,7 +31,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_in_global_namespace_they_must_be_found()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InGlobalNamespace())
                 .InGlobalScope(@"
@@ -54,7 +54,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_in_different_namespace_it_must_add_namespace_import()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("NA"))
                 .InGlobalScope(@"
@@ -75,7 +75,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_some_attributes_are_private_none_must_be_found()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithoutNullabilityAttributes()
                 .InGlobalScope(@"
                     class C
@@ -101,7 +101,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_public_nested_they_must_be_found()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .NestedInTypes(new[]
                     {
@@ -125,7 +125,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_public_nested_in_private_class_they_must_not_be_found()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .NestedInTypes(new[]
                     {
@@ -148,7 +148,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_in_JetBrains_assembly_it_must_add_namespace_import()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithoutNullabilityAttributes()
                 .WithReference(typeof(JetBrainsNotNullAttribute).Assembly)
                 .InGlobalScope(@"
@@ -169,7 +169,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_public_in_external_assembly_it_must_add_namespace_import()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithoutNullabilityAttributes()
                 .WithReferenceToExternalAssemblyFor(@"
                     using System;
@@ -199,7 +199,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_attributes_are_internal_in_external_assembly_they_must_not_be_found()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithoutNullabilityAttributes()
                 .WithReferenceToExternalAssemblyFor(@"
                     using System;

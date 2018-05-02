@@ -14,7 +14,7 @@ namespace CodeContractNullability.Test.Specs
             When_deriving_constructed_arrays_from_externally_annotated_interface_with_open_array_types_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     public interface I<T>
                     {
@@ -48,7 +48,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_deriving_constructed_arrays_from_externally_annotated_class_with_open_array_types_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     public abstract class B<T>
                     {
@@ -83,7 +83,7 @@ namespace CodeContractNullability.Test.Specs
             When_parameter_in_nongeneric_class_that_derives_from_generic_base_class_that_implements_annotated_generic_interface_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     public interface IErrorDemoInterface<T>
                     {

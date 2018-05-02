@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.Emit;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public static class SourceCodeBuilderExtensions
+    internal static class SourceCodeBuilderExtensions
     {
         [NotNull]
         public static TBuilder WithHeader<TBuilder>([NotNull] this TBuilder source, [NotNull] string text)

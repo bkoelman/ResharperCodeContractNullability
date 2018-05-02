@@ -17,7 +17,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_annotated_with_not_nullable_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("N.M"))
                 .InGlobalScope(@"
@@ -37,7 +37,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_annotated_with_nullable_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("N1"))
                 .InGlobalScope(@"
@@ -62,7 +62,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -114,7 +114,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_type_is_generic_value_type_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
@@ -177,7 +177,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_type_is_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     class C<T> where T : struct
                     {
@@ -195,7 +195,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_generic_field_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     namespace N
                     {
@@ -284,7 +284,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_custom_event_handler_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(EventHandler<>).Namespace)
                 .Using(typeof(EventArgs).Namespace)
                 .InGlobalScope(@"
@@ -305,7 +305,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_in_designer_generated_file_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InFileNamed("MainForm.Designer.cs")
                 .WithReference(typeof(Control).Assembly)
                 .Using(typeof(Control).Namespace)
@@ -351,7 +351,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_containing_type_is_decorated_with_conditional_its_members_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithReference(typeof(ConditionalAttribute).Assembly)
                 .Using(typeof(ConditionalAttribute).Namespace)
                 .InGlobalScope(@"

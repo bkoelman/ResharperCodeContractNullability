@@ -5,7 +5,8 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class MemberSourceCodeBuilder : SourceCodeBuilder
+    /// <summary />
+    internal sealed class MemberSourceCodeBuilder : SourceCodeBuilder
     {
         [NotNull]
         [ItemNotNull]
@@ -14,14 +15,29 @@ namespace CodeContractNullability.Test.TestDataBuilders
         protected override string GetSourceCode()
         {
             var builder = new StringBuilder();
+
+            AppendClassStart(builder);
+            AppendClassMembers(builder);
+            AppendClassEnd(builder);
+
+            return builder.ToString();
+        }
+
+        private static void AppendClassStart([NotNull] StringBuilder builder)
+        {
             builder.AppendLine("public class Test");
             builder.AppendLine("{");
+        }
 
+        private void AppendClassMembers([NotNull] StringBuilder builder)
+        {
             string code = GetLinesOfCode(members);
             builder.AppendLine(code);
+        }
 
+        private static void AppendClassEnd([NotNull] StringBuilder builder)
+        {
             builder.AppendLine("}");
-            return builder.ToString();
         }
 
         [NotNull]

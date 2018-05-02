@@ -12,7 +12,7 @@ using RoslynTestFramework;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public abstract class SourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
+    internal abstract class SourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
         public static readonly AnalyzerTestContext DefaultTestContext = new AnalyzerTestContext(string.Empty,
@@ -70,11 +70,26 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             var sourceBuilder = new StringBuilder();
 
+            WriteHeaderText(sourceBuilder);
+            WriteNamespaceImports(sourceBuilder);
+
+            sourceBuilder.Append(GetSourceCode());
+
+            WriteNullabilityAttributes(sourceBuilder);
+
+            return sourceBuilder.ToString();
+        }
+
+        private void WriteHeaderText([NotNull] StringBuilder sourceBuilder)
+        {
             if (!string.IsNullOrEmpty(headerText))
             {
                 sourceBuilder.AppendLine(headerText);
             }
+        }
 
+        private void WriteNamespaceImports([NotNull] StringBuilder sourceBuilder)
+        {
             bool hasNamespaceImportsAtTop = false;
             foreach (string ns in namespaceImports)
             {
@@ -92,15 +107,14 @@ namespace CodeContractNullability.Test.TestDataBuilders
             {
                 sourceBuilder.AppendLine();
             }
+        }
 
-            sourceBuilder.Append(GetSourceCode());
-
+        private void WriteNullabilityAttributes([NotNull] StringBuilder sourceBuilder)
+        {
             if (nullabilityAttributes != null)
             {
                 sourceBuilder.Append(nullabilityAttributes.SourceText);
             }
-
-            return sourceBuilder.ToString();
         }
 
         [NotNull]

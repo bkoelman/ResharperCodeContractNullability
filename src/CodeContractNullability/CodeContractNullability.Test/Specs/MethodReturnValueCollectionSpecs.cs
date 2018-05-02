@@ -32,7 +32,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_is_annotated_with_item_not_nullable_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     class C
@@ -51,7 +51,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_is_annotated_with_item_nullable_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     class C
@@ -85,7 +85,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_type_is_collection_of_generic_value_type_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
@@ -152,7 +152,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_type_is_collection_of_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(List<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
@@ -330,7 +330,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_method_is_lambda_named_by_compiler_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C1
@@ -360,7 +360,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_method_is_anonymous_named_by_compiler_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     class C1
@@ -390,7 +390,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_in_base_class_is_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     class B
@@ -417,7 +417,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_in_implicit_interface_is_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     interface I
@@ -442,7 +442,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_in_explicit_interface_is_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     interface I
@@ -468,7 +468,7 @@ namespace CodeContractNullability.Test.Specs
             When_return_value_in_implicit_interface_is_not_annotated_with_explicit_interface_it_must_be_reported_and_fixed()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     interface I
@@ -496,7 +496,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_return_value_in_implicit_interface_is_annotated_with_explicit_interface_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     interface I
@@ -581,7 +581,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_base_method_inherits_item_annotation_from_interface_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     namespace N
@@ -613,7 +613,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_override_breaks_inheritance_it_must_be_reported_and_fixed()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace N

@@ -13,7 +13,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_property_in_generic_class_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace SampleNamespace
@@ -38,7 +38,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_variable_length_parameter_in_method_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     namespace TestSystem
                     {
@@ -75,7 +75,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_generic_parameters_in_method_of_generic_class_are_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     namespace SystemCollections
                     {
@@ -104,7 +104,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_nested_generic_parameters_in_method_of_generic_interface_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace SystemCollections
@@ -132,7 +132,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_generic_parameters_in_generic_method_of_nongeneric_class_are_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InGlobalScope(@"
                     namespace SystemCollections
@@ -167,7 +167,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_in_nested_class_is_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InGlobalScope(@"
                     namespace TestSystem
                     {
@@ -195,7 +195,7 @@ namespace CodeContractNullability.Test.Specs
             When_generic_parameters_in_generic_method_in_generic_nested_classes_are_externally_annotated_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(KeyValuePair<,>).Namespace)
                 .InGlobalScope(@"
                     namespace TestSystem

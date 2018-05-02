@@ -18,7 +18,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_annotated_with_item_not_nullable_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("N.M"))
                 .Using(typeof(IEnumerable<>).Namespace)
@@ -39,7 +39,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_annotated_with_item_nullable_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .WithNullabilityAttributes(new NullabilityAttributesBuilder()
                     .InCodeNamespace("N1"))
                 .Using(typeof(IEnumerable<>).Namespace)
@@ -94,7 +94,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_item_type_is_generic_value_type_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(IList<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
@@ -178,7 +178,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_item_type_is_generic_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .Using(typeof(ISet<>).Namespace)
                 .InGlobalScope(@"
                     class C<T> where T : struct
@@ -230,7 +230,7 @@ namespace CodeContractNullability.Test.Specs
         public void When_field_is_in_designer_generated_file_it_must_be_skipped()
         {
             // Arrange
-            ParsedSourceCode source = new ClassSourceCodeBuilder()
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
                 .InFileNamed("MainForm.Designer.cs")
                 .WithReference(typeof(Control).Assembly)
                 .Using(typeof(IList<>).Namespace)
