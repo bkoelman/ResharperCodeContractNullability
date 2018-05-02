@@ -1,0 +1,3 @@
+[submodule "src/CodeContractNullability/CodeContractNullability.Test/RoslynTestFramework"]
+	path = src/CodeContractNullability/CodeContractNullability.Test/RoslynTestFramework
+	url = https://github.com/bkoelman/RoslynTestFramework
