@@ -2,11 +2,11 @@
 using System.Collections.Immutable;
 using System.Text;
 using CodeContractNullability.ExternalAnnotations.Storage;
-using CodeContractNullability.Test.RoslynTestFramework;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using RoslynTestFramework;
 
 namespace CodeContractNullability.Test
 {

@@ -1,11 +1,11 @@
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.NullabilityAttributes;
-using CodeContractNullability.Test.RoslynTestFramework;
 using CodeContractNullability.Test.TestDataBuilders;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using RoslynTestFramework;
 
 namespace CodeContractNullability.Test
 {

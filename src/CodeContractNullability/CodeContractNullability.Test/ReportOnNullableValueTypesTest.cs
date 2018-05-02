@@ -1,6 +1,6 @@
-using CodeContractNullability.Test.RoslynTestFramework;
 using CodeContractNullability.Utilities;
 using Microsoft.CodeAnalysis.CodeFixes;
+using RoslynTestFramework;
 
 namespace CodeContractNullability.Test
 {

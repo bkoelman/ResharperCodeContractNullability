@@ -12,6 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="CodeContractNullability.Test.csproj.DotSettings" />
+    <None Remove="RoslynTestFramework\.git" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
