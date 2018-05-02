@@ -34,6 +34,9 @@ namespace CodeContractNullability.Test
         [ItemNotNull]
         public ImmutableHashSet<MetadataReference> References { get; }
 
+        [NotNull]
+        public string ExpectedText => document.ExpectedText;
+
         public bool IgnoreWhitespaceDifferences { get; }
 
         [NotNull]
