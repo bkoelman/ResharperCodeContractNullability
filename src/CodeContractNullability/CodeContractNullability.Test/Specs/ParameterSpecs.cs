@@ -225,6 +225,34 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_in_parameter_is_nullable_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .InDefaultClass(@"
+                    void M([+NullabilityAttributePlaceholder+] in int? [|p|]) { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_in_parameter_is_value_type_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .InDefaultClass(@"
+                    void M(in int p) { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Fact]
         public void When_out_parameter_is_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange
