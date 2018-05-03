@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -250,6 +251,21 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof(IList<>).Namespace)
                 .InDefaultClass(@"
                     void M(out IList<int> p) { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Fact]
+        public void When_parameter_type_is_tuple_of_reference_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof(ValueTuple<>).Namespace)
+                .InDefaultClass(@"
+                    void M((string, string) p) { }
                 ")
                 .Build();
 

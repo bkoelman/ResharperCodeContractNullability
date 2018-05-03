@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -207,6 +208,21 @@ namespace CodeContractNullability.Test.Specs
 
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForField("f"));
+        }
+
+        [Fact]
+        public void When_field_type_is_tuple_of_reference_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof(ValueTuple<>).Namespace)
+                .InDefaultClass(@"
+                    (string, string) f;
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Fact]

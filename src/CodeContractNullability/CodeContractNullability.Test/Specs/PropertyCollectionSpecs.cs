@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -183,6 +184,21 @@ namespace CodeContractNullability.Test.Specs
 
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForProperty("P"));
+        }
+
+        [Fact]
+        public void When_property_type_is_tuple_of_reference_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .Using(typeof(ValueTuple<>).Namespace)
+                .InDefaultClass(@"
+                    (string, string) P { get; set; }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
         }
 
         [Fact]
