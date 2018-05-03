@@ -175,7 +175,7 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    IEnumerable<string> [|M|]() { throw new NotImplementedException(); }
+                    private protected IEnumerable<string> [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 

@@ -188,7 +188,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    string [|M|]() { throw new NotImplementedException(); }
+                    private protected string [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 

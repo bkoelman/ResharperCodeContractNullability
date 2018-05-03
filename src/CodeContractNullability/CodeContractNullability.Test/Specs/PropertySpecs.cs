@@ -173,7 +173,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+] 
-                    string [|P|] { get; set; }
+                    private protected string [|P|] { get; set; }
                 ")
                 .Build();
 

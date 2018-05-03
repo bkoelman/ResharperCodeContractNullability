@@ -155,7 +155,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    void M([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) { }
+                    private protected void M([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) { }
                 ")
                 .Build();
 
