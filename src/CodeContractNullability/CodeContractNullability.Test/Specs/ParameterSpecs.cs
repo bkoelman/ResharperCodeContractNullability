@@ -123,7 +123,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M([+NullabilityAttributePlaceholder+] int? [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] int? [|p|]) => throw new NotImplementedException();
                 ")
                 .Build();
 
