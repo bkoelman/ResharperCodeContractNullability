@@ -53,8 +53,7 @@ namespace CodeContractNullability.Test.Specs
                 ")
                 .ExternallyAnnotated(new ExternalAnnotationsBuilder()
                     .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                        .Named(
-                            "M:TestSystem.StringFormatter.Format(System.IFormatProvider,System.String,System.Object[])")
+                        .Named("M:TestSystem.StringFormatter.Format(System.IFormatProvider,System.String,System.Object[])")
                         .NotNull()
                         .WithParameter(new ExternalAnnotationParameterBuilder()
                             .Named("provider")

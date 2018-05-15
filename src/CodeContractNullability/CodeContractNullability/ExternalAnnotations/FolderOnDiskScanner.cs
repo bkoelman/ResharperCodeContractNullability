@@ -27,7 +27,8 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         public IEnumerable<string> GetFoldersToScan()
         {
-            foreach (ExternalAnnotationsLocation location in from folder in EnumerateExternalAnnotationLocations()
+            foreach (ExternalAnnotationsLocation location in
+                from folder in EnumerateExternalAnnotationLocations()
                 orderby folder.Category, folder.Scope, folder.VsVersion
                 select folder)
             {
