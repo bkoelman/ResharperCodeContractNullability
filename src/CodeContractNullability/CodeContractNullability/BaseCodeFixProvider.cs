@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeContractNullability.NullabilityAttributes;
@@ -34,7 +36,8 @@ namespace CodeContractNullability
         {
             // Note: this may annotate too much. For instance, when an interface is annotated, its implementation should not.
             // But because at the time of analysis, both are not annotated, a diagnostic is created for both.
-            return WellKnownFixAllProviders.BatchFixer;
+
+            return NullabilityFixAllProvider.Instance;
         }
 
         [NotNull]
@@ -43,7 +46,8 @@ namespace CodeContractNullability
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
                 NullabilityAttributeSymbols nullSymbols =
-                    await GetNullabilityAttributesFromDiagnostic(context, diagnostic).ConfigureAwait(false);
+                    await GetNullabilityAttributesFromDiagnostic(diagnostic, context.Document, context.CancellationToken)
+                        .ConfigureAwait(false);
 
                 SyntaxNode syntaxRoot =
                     await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
@@ -63,17 +67,16 @@ namespace CodeContractNullability
 
         [NotNull]
         [ItemNotNull]
-        private static async Task<NullabilityAttributeSymbols> GetNullabilityAttributesFromDiagnostic(CodeFixContext context,
-            [NotNull] Diagnostic diagnostic)
+        private static async Task<NullabilityAttributeSymbols> GetNullabilityAttributesFromDiagnostic(
+            [NotNull] Diagnostic diagnostic, [NotNull] Document document, CancellationToken cancellationToken)
         {
             NullabilityAttributeMetadataNames names =
                 NullabilityAttributeMetadataNames.FromImmutableDictionary(diagnostic.Properties);
 
-            Compilation compilation =
-                await context.Document.Project.GetCompilationAsync(context.CancellationToken).ConfigureAwait(false);
+            Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             var attributeProvider = new CachingNullabilityAttributeProvider(names);
-            NullabilityAttributeSymbols nullSymbols = attributeProvider.GetSymbols(compilation, context.CancellationToken);
+            NullabilityAttributeSymbols nullSymbols = attributeProvider.GetSymbols(compilation, cancellationToken);
             if (nullSymbols == null)
             {
                 throw new InvalidOperationException("Internal error: failed to resolve attributes.");
@@ -85,68 +88,136 @@ namespace CodeContractNullability
         private void RegisterFixesForSyntaxNode(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
             [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
         {
-            RegisterFixForNotNull(context, syntaxNode, diagnostic, nullSymbols);
-            RegisterFixForCanBeNull(context, syntaxNode, diagnostic, nullSymbols);
-        }
+            INamedTypeSymbol nullabilityNotNullAttribute = GetNullabilityAttribute(nullSymbols, appliesToItem, false);
+            RegisterFixForAttribute(context, syntaxNode, diagnostic, nullabilityNotNullAttribute);
 
-        private void RegisterFixForNotNull(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
-        {
-            INamedTypeSymbol notNullAttribute = appliesToItem ? nullSymbols.ItemNotNull : nullSymbols.NotNull;
-
-            Func<CancellationToken, Task<Document>> fixForNotNull = cancellationToken =>
-                WithAttributeAsync(notNullAttribute, context.Document, syntaxNode, cancellationToken);
-
-            string notNullText = "Decorate with " + GetDisplayNameFor(notNullAttribute);
-            RegisterCodeFixFor(fixForNotNull, notNullText, context, diagnostic);
-        }
-
-        private void RegisterFixForCanBeNull(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
-        {
-            INamedTypeSymbol canBeNullAttribute = appliesToItem ? nullSymbols.ItemCanBeNull : nullSymbols.CanBeNull;
-
-            Func<CancellationToken, Task<Document>> fixForCanBeNull = cancellationToken =>
-                WithAttributeAsync(canBeNullAttribute, context.Document, syntaxNode, cancellationToken);
-
-            string canBeNullText = "Decorate with " + GetDisplayNameFor(canBeNullAttribute);
-            RegisterCodeFixFor(fixForCanBeNull, canBeNullText, context, diagnostic);
+            INamedTypeSymbol nullabilityCanBeNullAttribute = GetNullabilityAttribute(nullSymbols, appliesToItem, true);
+            RegisterFixForAttribute(context, syntaxNode, diagnostic, nullabilityCanBeNullAttribute);
         }
 
         [NotNull]
-        private static string GetDisplayNameFor([NotNull] INamedTypeSymbol attribute)
+        private static INamedTypeSymbol GetNullabilityAttribute([NotNull] NullabilityAttributeSymbols nullSymbols,
+            bool appliesToItem, bool canBeNull)
         {
-            return attribute.Name.Replace("Attribute", "");
+            return appliesToItem
+                ? (canBeNull ? nullSymbols.ItemCanBeNull : nullSymbols.ItemNotNull)
+                : (canBeNull ? nullSymbols.CanBeNull : nullSymbols.NotNull);
+        }
+
+        private void RegisterFixForAttribute(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
+            [NotNull] Diagnostic diagnostic, [NotNull] INamedTypeSymbol nullabilityAttribute)
+        {
+            string description = "Decorate with " + nullabilityAttribute.Name.Replace("Attribute", "");
+
+            Func<CancellationToken, Task<Document>> fixAction = cancellationToken =>
+                ApplyCodeFixAsync(syntaxNode, context.Document, nullabilityAttribute, cancellationToken);
+
+            CodeAction codeAction = CodeAction.Create(description, fixAction, description);
+            context.RegisterCodeFix(codeAction, diagnostic);
         }
 
         [NotNull]
         [ItemNotNull]
-        private async Task<Document> WithAttributeAsync([NotNull] INamedTypeSymbol attribute, [NotNull] Document document,
-            [NotNull] SyntaxNode syntaxNode, CancellationToken cancellationToken)
+        private async Task<Document> ApplyCodeFixAsync([NotNull] SyntaxNode syntaxNode, [NotNull] Document document,
+            [NotNull] INamedTypeSymbol attribute, CancellationToken cancellationToken)
+        {
+            DocumentEditor editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+
+            AddNullabilityAttributeToSyntaxNode(syntaxNode, editor, attribute);
+
+            Document documentWithAttribute = editor.GetChangedDocument();
+
+            return await ImportNamespacesAsync(documentWithAttribute, cancellationToken).ConfigureAwait(false);
+        }
+
+        private static void AddNullabilityAttributeToSyntaxNode([NotNull] SyntaxNode syntaxNode, [NotNull] DocumentEditor editor,
+            [NotNull] INamedTypeSymbol attributeToAdd)
+        {
+            SyntaxNode attributeSyntax = editor.Generator.Attribute(editor.Generator.TypeExpression(attributeToAdd))
+                .WithAdditionalAnnotations(Simplifier.Annotation, Formatter.Annotation, NamespaceImportAnnotation);
+
+            editor.AddAttribute(syntaxNode, attributeSyntax);
+        }
+
+        [ItemNotNull]
+        private static async Task<Document> ImportNamespacesAsync([NotNull] Document document,
+            CancellationToken cancellationToken)
         {
             OptionSet options = document.Project.Solution.Workspace.Options;
 
-            DocumentEditor editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
-
-            // Add NotNull/CanBeNull/ItemNotNull/ItemCanBeNull attribute.
-            SyntaxNode attributeSyntax = editor.Generator.Attribute(editor.Generator.TypeExpression(attribute))
-                .WithAdditionalAnnotations(Simplifier.Annotation, Formatter.Annotation, NamespaceImportAnnotation);
-            editor.AddAttribute(syntaxNode, attributeSyntax);
-            Document documentWithAttribute = editor.GetChangedDocument();
-
-            // Add namespace import.
-            Document documentWithImport = await ImportAdder
-                .AddImportsAsync(documentWithAttribute, NamespaceImportAnnotation, options, cancellationToken)
+            return await ImportAdder.AddImportsAsync(document, NamespaceImportAnnotation, options, cancellationToken)
                 .ConfigureAwait(false);
-
-            return documentWithImport;
         }
 
-        private void RegisterCodeFixFor([NotNull] Func<CancellationToken, Task<Document>> applyFixAction,
-            [NotNull] string description, CodeFixContext context, [NotNull] Diagnostic diagnostic)
+        [NotNull]
+        private static INamedTypeSymbol GetNullabilityAttributeForEquivalenceKey(
+            [NotNull] NullabilityAttributeSymbols nullSymbols, [NotNull] string equivalenceKey)
         {
-            CodeAction codeAction = CodeAction.Create(description, applyFixAction, description);
-            context.RegisterCodeFix(codeAction, diagnostic);
+            switch (equivalenceKey)
+            {
+                case "Decorate with NotNull":
+                {
+                    return nullSymbols.NotNull;
+                }
+                case "Decorate with CanBeNull":
+                {
+                    return nullSymbols.CanBeNull;
+                }
+                case "Decorate with ItemNotNull":
+                {
+                    return nullSymbols.ItemNotNull;
+                }
+                case "Decorate with ItemCanBeNull":
+                {
+                    return nullSymbols.ItemCanBeNull;
+                }
+            }
+
+            throw new NotSupportedException($"Unsupported equivalence key '${equivalenceKey}'.");
+        }
+
+        private sealed class NullabilityFixAllProvider : DocumentBasedFixAllProvider
+        {
+            [NotNull]
+            public static FixAllProvider Instance { get; } = new NullabilityFixAllProvider();
+
+            protected override string GetCodeActionTitle(string codeActionEquivalenceKey) => codeActionEquivalenceKey;
+
+            protected override async Task<SyntaxNode> FixAllInDocumentAsync(FixAllContext fixAllContext, Document document,
+                ImmutableArray<Diagnostic> diagnostics)
+            {
+                if (diagnostics.IsEmpty)
+                {
+                    return null;
+                }
+
+                DocumentEditor editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken)
+                    .ConfigureAwait(false);
+
+                NullabilityAttributeSymbols nullSymbols =
+                    await GetNullabilityAttributesFromDiagnostic(diagnostics.First(), document, fixAllContext.CancellationToken)
+                        .ConfigureAwait(false);
+
+                SyntaxNode syntaxRoot = await document.GetSyntaxRootAsync(fixAllContext.CancellationToken).ConfigureAwait(false);
+
+                foreach (Diagnostic diagnostic in diagnostics)
+                {
+                    fixAllContext.CancellationToken.ThrowIfCancellationRequested();
+
+                    SyntaxNode targetSyntax = syntaxRoot.FindNode(diagnostic.Location.SourceSpan, false, true);
+
+                    INamedTypeSymbol attributeToAdd =
+                        GetNullabilityAttributeForEquivalenceKey(nullSymbols, fixAllContext.CodeActionEquivalenceKey);
+                    AddNullabilityAttributeToSyntaxNode(targetSyntax, editor, attributeToAdd);
+                }
+
+                Document documentChanged = editor.GetChangedDocument();
+
+                Document documentFormatted = await ImportNamespacesAsync(documentChanged, fixAllContext.CancellationToken)
+                    .ConfigureAwait(false);
+
+                return await documentFormatted.GetSyntaxRootAsync().ConfigureAwait(false);
+            }
         }
     }
 }
