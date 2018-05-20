@@ -10,7 +10,7 @@
     <!-- https://github.com/NuGet/Home/issues/5630 -->
     <PackageId>ResharperCodeContractNullability.NuGetBugRequiresNewId</PackageId>
     <Title>Resharper Code Contract Nullability</Title>
-    <Version>1.0.9-pre</Version>
+    <Version>1.0.9</Version>
     <Authors>Bart Koelman</Authors>
     <Company />
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
@@ -19,7 +19,7 @@
     <Description>Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html
 
 You need Visual Studio 2015/2017 and Resharper v9 or higher to use this analyzer. See package "ResharperCodeContractNullabilityFxCop" if you use Visual Studio 2013 or lower.</Description>
-    <PackageReleaseNotes>Added support for ValueTask&lt;T&gt;.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfix: apply fix would reformat entire document; fix all in document/project/solution: 5x faster, no longer uses excessive memory and causes a lot less merge conflicts (resulting in more changes); enable concurrent execution, if available.</PackageReleaseNotes>
     <Copyright>Apache License, Version 2.0</Copyright>
     <PackageTags>resharper code contracts annotations nullability analyzer canbenull notnull itemcanbenull itemnotnull rnul rinul</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
