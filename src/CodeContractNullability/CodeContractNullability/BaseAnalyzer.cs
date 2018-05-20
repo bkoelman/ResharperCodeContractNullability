@@ -1,5 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Threading;
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.NullabilityAttributes;
 using CodeContractNullability.SymbolAnalysis;
@@ -19,6 +22,19 @@ namespace CodeContractNullability
         public const string DisableReportOnNullableValueTypesDiagnosticId = "XNUL";
 
         protected const string Category = "Nullability";
+
+        [NotNull]
+        [ItemCanBeNull]
+        private static readonly Lazy<MethodInfo> LazyEnableConcurrentExecutionMethod =
+            new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("EnableConcurrentExecution"),
+                LazyThreadSafetyMode.PublicationOnly);
+
+        [NotNull]
+        [ItemCanBeNull]
+        private static readonly Lazy<MethodInfo> LazyConfigureGeneratedCodeAnalysisMethod =
+            new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("ConfigureGeneratedCodeAnalysis"),
+                LazyThreadSafetyMode.PublicationOnly);
+
         private readonly bool appliesToItem;
 
         [NotNull]
@@ -89,7 +105,28 @@ perform the following additional steps after applying this code fix.
         {
             Guard.NotNull(context, nameof(context));
 
+            TryEnableConcurrentExecution(context);
+            TrySkipGeneratedCode(context);
+
             context.RegisterCompilationStartAction(StartAnalyzeCompilation);
+        }
+
+        private void TryEnableConcurrentExecution([NotNull] AnalysisContext context)
+        {
+            MethodInfo method = LazyEnableConcurrentExecutionMethod.Value;
+            if (method != null)
+            {
+                method.Invoke(context, new object[0]);
+            }
+        }
+
+        private void TrySkipGeneratedCode([NotNull] AnalysisContext context)
+        {
+            MethodInfo method = LazyConfigureGeneratedCodeAnalysisMethod.Value;
+            if (method != null)
+            {
+                method.Invoke(context, new object[] { 0 });
+            }
         }
 
         private void StartAnalyzeCompilation([NotNull] CompilationStartAnalysisContext context)
