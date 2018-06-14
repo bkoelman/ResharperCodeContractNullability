@@ -21,14 +21,14 @@ namespace CodeContractNullability.Test
         [NotNull]
         public string ExpectedText => document.ExpectedText;
 
-        public bool IgnoreWhitespaceDifferences { get; }
+        public TextComparisonMode CodeComparisonMode { get; }
 
         [NotNull]
         private readonly string attributePrefix;
 
         public ParsedSourceCode([NotNull] string sourceText, [NotNull] AnalyzerTestContext testContext,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap, [ItemNotNull] [NotNull] IList<string> nestedTypes,
-            bool ignoreWhitespaceDifferences)
+            TextComparisonMode codeComparisonMode)
         {
             Guard.NotNull(sourceText, nameof(sourceText));
             Guard.NotNull(testContext, nameof(testContext));
@@ -39,7 +39,7 @@ namespace CodeContractNullability.Test
             TestContext = testContext.WithCode(document.SourceText, document.SourceSpans);
             ExternalAnnotationsMap = externalAnnotationsMap;
             attributePrefix = ExtractAttributePrefix(nestedTypes);
-            IgnoreWhitespaceDifferences = ignoreWhitespaceDifferences;
+            CodeComparisonMode = codeComparisonMode;
         }
 
         [NotNull]

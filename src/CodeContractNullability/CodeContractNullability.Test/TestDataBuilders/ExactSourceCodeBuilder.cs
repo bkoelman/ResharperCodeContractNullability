@@ -2,6 +2,7 @@ using System;
 using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
+using RoslynTestFramework;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
@@ -14,7 +15,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
 
-            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, Array.Empty<string>(), false);
+            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, Array.Empty<string>(),
+                TextComparisonMode.ExactMatch);
         }
 
         [NotNull]

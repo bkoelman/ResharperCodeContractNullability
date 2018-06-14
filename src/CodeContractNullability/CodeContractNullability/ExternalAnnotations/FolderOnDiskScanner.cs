@@ -18,10 +18,18 @@ namespace CodeContractNullability.ExternalAnnotations
         private readonly string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         [NotNull]
-        private static readonly Scope[] Scopes = { Scope.System, Scope.User };
+        private static readonly Scope[] Scopes =
+        {
+            Scope.System,
+            Scope.User
+        };
 
         [NotNull]
-        private static readonly Category[] Categories = { Category.ExternalAnnotations, Category.Extensions };
+        private static readonly Category[] Categories =
+        {
+            Category.ExternalAnnotations,
+            Category.Extensions
+        };
 
         [NotNull]
         [ItemNotNull]

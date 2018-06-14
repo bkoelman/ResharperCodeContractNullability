@@ -110,7 +110,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
             CSharpCompilation compilation = CSharpCompilation
-                .Create("TempAssembly", new[] { tree })
+                .Create("TempAssembly", new[]
+                {
+                    tree
+                })
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             compilation = compilation.AddReferences(SourceCodeBuilder.DefaultTestContext.References);

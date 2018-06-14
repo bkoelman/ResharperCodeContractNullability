@@ -40,8 +40,14 @@ namespace CodeContractNullability.Test
             string fixNotNull = source.GetExpectedTextForAttribute(NotNullAttributeName);
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);
 
-            var fixContext = new FixProviderTestContext(source.TestContext, new[] { fixNotNull, fixCanBeNull },
-                source.IgnoreWhitespaceDifferences);
+            string[] expectedCode =
+            {
+                fixNotNull,
+                fixCanBeNull
+            };
+
+            var fixContext = new FixProviderTestContext(source.TestContext, expectedCode,
+                source.CodeComparisonMode);
 
             AssertDiagnosticsWithCodeFixes(fixContext, messages);
         }

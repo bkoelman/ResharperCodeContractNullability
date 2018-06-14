@@ -98,7 +98,12 @@ namespace CodeContractNullability
             {
                 using (var textWriter = new StreamWriter(stream))
                 {
-                    var xmlSettings = new XmlWriterSettings { Encoding = encoding, Indent = true };
+                    var xmlSettings = new XmlWriterSettings
+                    {
+                        Encoding = encoding,
+                        Indent = true
+                    };
+
                     using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, xmlSettings))
                     {
                         writeAction(xmlWriter);

@@ -125,7 +125,10 @@ perform the following additional steps after applying this code fix.
             MethodInfo method = LazyConfigureGeneratedCodeAnalysisMethod.Value;
             if (method != null)
             {
-                method.Invoke(context, new object[] { 0 });
+                method.Invoke(context, new object[]
+                {
+                    0
+                });
             }
         }
 

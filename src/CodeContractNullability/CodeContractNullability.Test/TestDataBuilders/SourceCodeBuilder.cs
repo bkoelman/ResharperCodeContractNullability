@@ -26,7 +26,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         [ItemNotNull]
-        private readonly HashSet<string> namespaceImports = new HashSet<string> { "System" };
+        private readonly HashSet<string> namespaceImports = new HashSet<string>
+        {
+            "System"
+        };
 
         [CanBeNull]
         private NullabilityAttributesDefinition nullabilityAttributes =
@@ -54,7 +57,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
             IList<string> nestedTypes = nullabilityAttributes?.NestedTypes ?? new string[0];
 
-            return new ParsedSourceCode(sourceText, testContext, externalAnnotationsBuilder.Build(), nestedTypes, true);
+            return new ParsedSourceCode(sourceText, testContext, externalAnnotationsBuilder.Build(), nestedTypes,
+                TextComparisonMode.IgnoreWhitespaceDifferences);
         }
 
         private void ApplyNullability()
