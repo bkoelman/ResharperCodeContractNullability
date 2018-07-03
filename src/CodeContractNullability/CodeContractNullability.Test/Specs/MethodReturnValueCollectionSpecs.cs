@@ -176,7 +176,7 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    private protected IEnumerable<string> [|M|]() { throw new NotImplementedException(); }
+                    IEnumerable<string> [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -200,6 +200,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
 
+#if !NET45
         [Fact]
         public void When_return_value_type_is_tuple_of_reference_it_must_be_skipped()
         {
@@ -207,13 +208,14 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(ValueTuple<>).Namespace)
                 .InDefaultClass(@"
-                    (string, string) M() { throw new NotImplementedException(); }
+                    private protected (string, string) M() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+#endif
 
         [Fact]
         public void When_method_is_compiler_generated_it_must_be_skipped()

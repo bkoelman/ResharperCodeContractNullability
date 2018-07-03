@@ -15,8 +15,11 @@ namespace CodeContractNullability.Test.TestDataBuilders
     internal abstract class SourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
-        public static readonly AnalyzerTestContext DefaultTestContext = new AnalyzerTestContext(string.Empty,
-            Array.Empty<TextSpan>(), LanguageNames.CSharp, new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
+        private static readonly TextSpan[] EmptyTextSpanArray = new TextSpan[0];
+
+        [NotNull]
+        public static readonly AnalyzerTestContext DefaultTestContext = new AnalyzerTestContext(string.Empty, EmptyTextSpanArray,
+            LanguageNames.CSharp, new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
 
         [NotNull]
         private AnalyzerTestContext testContext = DefaultTestContext;

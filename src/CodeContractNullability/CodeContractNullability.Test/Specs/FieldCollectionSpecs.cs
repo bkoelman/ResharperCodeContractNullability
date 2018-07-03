@@ -202,7 +202,7 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    private protected IEnumerable<string> [|f|];
+                    IEnumerable<string> [|f|];
                 ")
                 .Build();
 
@@ -210,6 +210,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
+#if !NET45
         [Fact]
         public void When_field_type_is_tuple_of_reference_it_must_be_skipped()
         {
@@ -217,13 +218,14 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(ValueTuple<>).Namespace)
                 .InDefaultClass(@"
-                    (string, string) f;
+                    private protected (string, string) f;
                 ")
                 .Build();
 
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+#endif
 
         [Fact]
         public void When_field_is_compiler_generated_it_must_be_skipped()

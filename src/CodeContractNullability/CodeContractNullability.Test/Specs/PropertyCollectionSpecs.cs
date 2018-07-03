@@ -162,7 +162,7 @@ namespace CodeContractNullability.Test.Specs
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    private protected IEnumerable<string> [|P|] { get; set; }
+                    IEnumerable<string> [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -186,6 +186,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
+#if !NET45
         [Fact]
         public void When_property_type_is_tuple_of_reference_it_must_be_skipped()
         {
@@ -193,13 +194,14 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(ValueTuple<>).Namespace)
                 .InDefaultClass(@"
-                    (string, string) P { get; set; }
+                    private protected (string, string) P { get; set; }
                 ")
                 .Build();
 
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+#endif
 
         [Fact]
         public void When_property_is_compiler_generated_it_must_be_skipped()

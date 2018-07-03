@@ -132,6 +132,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
+#if !NET45
         [Fact]
         public void When_return_value_type_is_generic_enum_it_must_be_reported_and_fixed()
         {
@@ -194,7 +195,7 @@ namespace CodeContractNullability.Test.Specs
                     class C<T> where T : MulticastDelegate
                     {
                         [+NullabilityAttributePlaceholder+]
-                        T [|M|]() { throw new NotImplementedException(); }
+                        private protected T [|M|]() => throw new NotImplementedException();
                     }
                 ")
                 .Build();
@@ -202,6 +203,7 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForMethod("M"));
         }
+#endif
 
         [Fact]
         public void When_return_value_type_is_nullable_it_must_be_reported_and_fixed()
@@ -210,7 +212,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    int? [|M|]() => throw new NotImplementedException();
+                    int? [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 
@@ -259,7 +261,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    private protected string [|M|]() { throw new NotImplementedException(); }
+                    string [|M|]() { throw new NotImplementedException(); }
                 ")
                 .Build();
 

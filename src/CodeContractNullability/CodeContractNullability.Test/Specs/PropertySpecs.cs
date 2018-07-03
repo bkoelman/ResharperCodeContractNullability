@@ -117,6 +117,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
+#if !NET45
         [Fact]
         public void When_property_type_is_generic_enum_it_must_be_reported_and_fixed()
         {
@@ -179,7 +180,11 @@ namespace CodeContractNullability.Test.Specs
                     class C<T> where T : MulticastDelegate
                     {
                         [+NullabilityAttributePlaceholder+]
-                        T [|P|] { get; set; }
+                        private protected T [|P|]
+                        {
+                            get => throw new NotImplementedException();
+                            set => throw new NotImplementedException();
+                        }
                     }
                 ")
                 .Build();
@@ -187,6 +192,7 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
+#endif
 
         [Fact]
         public void When_property_type_is_nullable_it_must_be_reported_and_fixed()
@@ -195,11 +201,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
                     [+NullabilityAttributePlaceholder+]
-                    int? [|P|] 
-                    { 
-                        get => throw new NotImplementedException();
-                        set => throw new NotImplementedException();
-                    }
+                    int? [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -247,8 +249,8 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] 
-                    private protected string [|P|] { get; set; }
+                    [+NullabilityAttributePlaceholder+]
+                    string [|P|] { get; set; }
                 ")
                 .Build();
 
@@ -294,7 +296,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    [+NullabilityAttributePlaceholder+] 
+                    [+NullabilityAttributePlaceholder+]
                     int? [|this|][int p]
                     {
                         get { throw new NotImplementedException(); }
@@ -487,7 +489,7 @@ namespace CodeContractNullability.Test.Specs
 
                     class C : I
                     {
-                        [+NullabilityAttributePlaceholder+] 
+                        [+NullabilityAttributePlaceholder+]
                         public string [|P|] { get; set; }
 
                         // implicitly inherits decoration from interface
@@ -523,7 +525,7 @@ namespace CodeContractNullability.Test.Specs
                                 set { throw new NotImplementedException(); }
                             }
 
-                            [+NullabilityAttributePlaceholder+] 
+                            [+NullabilityAttributePlaceholder+]
                             public int? [|this|][char p]
                             {
                                 get { throw new NotImplementedException(); }
@@ -678,7 +680,7 @@ namespace CodeContractNullability.Test.Specs
 
                         public class C : B
                         {
-                            [+NullabilityAttributePlaceholder+] 
+                            [+NullabilityAttributePlaceholder+]
                             public new string [|P|] { get; set; }
                         }
                     }

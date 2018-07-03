@@ -156,7 +156,7 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(IEnumerable<>).Namespace)
                 .InDefaultClass(@"
-                    private protected void M([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] IEnumerable<string> [|p|]) { }
                 ")
                 .Build();
 
@@ -258,6 +258,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
+#if !NET45
         [Fact]
         public void When_parameter_type_is_tuple_of_reference_it_must_be_skipped()
         {
@@ -265,13 +266,14 @@ namespace CodeContractNullability.Test.Specs
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .Using(typeof(ValueTuple<>).Namespace)
                 .InDefaultClass(@"
-                    void M((string, string) p) { }
+                    private protected void M((string, string) p) { }
                 ")
                 .Build();
 
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+#endif
 
         [Fact]
         public void When_parameter_is_compiler_generated_it_must_be_skipped()

@@ -117,6 +117,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
+#if !NET45
         [Fact]
         public void When_parameter_type_is_generic_enum_it_must_be_reported_and_fixed()
         {
@@ -176,7 +177,7 @@ namespace CodeContractNullability.Test.Specs
                 .InGlobalScope(@"
                     class C<T> where T : MulticastDelegate
                     {
-                        void M([+NullabilityAttributePlaceholder+] T [|p|]) { }
+                        private protected void M([+NullabilityAttributePlaceholder+] T [|p|]) => throw new NotImplementedException();
                     }
                 ")
                 .Build();
@@ -184,6 +185,7 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
+#endif
 
         [Fact]
         public void When_parameter_type_is_nullable_it_must_be_reported_and_fixed()
@@ -191,7 +193,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    void M([+NullabilityAttributePlaceholder+] int? [|p|]) => throw new NotImplementedException();
+                    void M([+NullabilityAttributePlaceholder+] int? [|p|]) { }
                 ")
                 .Build();
 
@@ -238,7 +240,7 @@ namespace CodeContractNullability.Test.Specs
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
                 .InDefaultClass(@"
-                    private protected void M([+NullabilityAttributePlaceholder+] string [|p|]) { }
+                    void M([+NullabilityAttributePlaceholder+] string [|p|]) { }
                 ")
                 .Build();
 
@@ -292,6 +294,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
+#if !NET45
         [Fact]
         public void When_in_parameter_is_nullable_it_must_be_reported_and_fixed()
         {
@@ -319,6 +322,7 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
+#endif
 
         [Fact]
         public void When_out_parameter_is_nullable_it_must_be_reported_and_fixed()

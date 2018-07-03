@@ -1,4 +1,3 @@
-using System;
 using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -9,13 +8,17 @@ namespace CodeContractNullability.Test.TestDataBuilders
     internal sealed class ExactSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
+        [ItemNotNull]
+        private static readonly string[] EmptyStringArray = new string[0];
+
+        [NotNull]
         private string sourceText = string.Empty;
 
         public ParsedSourceCode Build()
         {
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
 
-            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, Array.Empty<string>(),
+            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, EmptyStringArray,
                 TextComparisonMode.ExactMatch);
         }
 
