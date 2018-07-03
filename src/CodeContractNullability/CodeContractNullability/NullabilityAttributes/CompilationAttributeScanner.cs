@@ -12,7 +12,7 @@ namespace CodeContractNullability.NullabilityAttributes
     /// Scans through the source code and assembly references of a <see cref="Compilation" /> to locate the (Item)NotNullAttribute and
     /// (Item)CanBeNullAttribute types.
     /// </summary>
-    public sealed class CompilationAttributeScanner
+    internal sealed class CompilationAttributeScanner
     {
         private const string AttributeNameForNotNull = "NotNullAttribute";
         private const string AttributeNameForCanBeNull = "CanBeNullAttribute";

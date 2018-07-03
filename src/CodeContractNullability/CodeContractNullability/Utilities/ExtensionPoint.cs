@@ -22,7 +22,7 @@ namespace CodeContractNullability.Utilities
         [CanBeNull]
         private TInterface activeInstance;
 
-        public ExtensionPoint([NotNull] Func<TInterface> createDefaultInstance)
+        internal ExtensionPoint([NotNull] Func<TInterface> createDefaultInstance)
         {
             Guard.NotNull(createDefaultInstance, nameof(createDefaultInstance));
             createDefaultInstanceFactory = createDefaultInstance;
@@ -41,7 +41,7 @@ namespace CodeContractNullability.Utilities
         }
 
         [NotNull]
-        public TInterface GetCached()
+        internal TInterface GetCached()
         {
             // ReSharper disable once ConvertIfStatementToNullCoalescingExpression
             if (activeInstance == null)

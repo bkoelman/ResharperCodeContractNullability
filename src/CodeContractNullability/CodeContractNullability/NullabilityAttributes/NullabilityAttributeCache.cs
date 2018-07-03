@@ -9,7 +9,7 @@ namespace CodeContractNullability.NullabilityAttributes
     /// Provides cached access to the (Item)NotNullAttribute and (Item)CanBeNullAttribute symbols in a compilation. The cache is used for
     /// hinting, resulting in potential faster lookups over (similar) compilations and solutions.
     /// </summary>
-    public sealed class CachingNullabilityAttributeProvider : INullabilityAttributeProvider
+    internal sealed class CachingNullabilityAttributeProvider : INullabilityAttributeProvider
     {
         [NotNull]
         private static readonly FreshReference<NullabilityAttributeMetadataNames> LastSeenNames =
@@ -28,8 +28,7 @@ namespace CodeContractNullability.NullabilityAttributes
             this.names.Value = names;
         }
 
-        public NullabilityAttributeSymbols GetSymbols(Compilation compilation,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public NullabilityAttributeSymbols GetSymbols(Compilation compilation, CancellationToken cancellationToken = default)
         {
             Guard.NotNull(compilation, nameof(compilation));
 

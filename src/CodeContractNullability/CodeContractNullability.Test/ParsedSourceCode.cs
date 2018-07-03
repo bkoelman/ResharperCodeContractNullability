@@ -7,7 +7,7 @@ using RoslynTestFramework;
 
 namespace CodeContractNullability.Test
 {
-    public sealed class ParsedSourceCode
+    internal sealed class ParsedSourceCode
     {
         [NotNull]
         private readonly FixableDocument document;

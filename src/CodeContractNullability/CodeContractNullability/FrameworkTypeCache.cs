@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability
 {
-    public sealed class FrameworkTypeCache
+    internal sealed class FrameworkTypeCache
     {
         [NotNull]
         private readonly Compilation compilation;

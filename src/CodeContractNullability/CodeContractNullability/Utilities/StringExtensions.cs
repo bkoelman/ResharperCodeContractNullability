@@ -2,7 +2,7 @@
 
 namespace CodeContractNullability.Utilities
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         [NotNull]
         public static string ToCamelCase([NotNull] this string memberTypePascalCase)

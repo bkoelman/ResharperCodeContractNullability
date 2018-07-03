@@ -7,7 +7,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <summary>
     /// Performs analysis of a property.
     /// </summary>
-    public sealed class PropertyAnalyzer : BaseSymbolAnalyzer<IPropertySymbol>
+    internal sealed class PropertyAnalyzer : BaseSymbolAnalyzer<IPropertySymbol>
     {
         public PropertyAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
             : base(context, scope)

@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class NullabilityAttributesDefinition
+    internal sealed class NullabilityAttributesDefinition
     {
         private const string AttributesDeclarationText = @"
 [System.AttributeUsage(

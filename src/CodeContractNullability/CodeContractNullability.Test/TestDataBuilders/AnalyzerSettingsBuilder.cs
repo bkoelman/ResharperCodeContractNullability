@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class AnalyzerSettingsBuilder : ITestDataBuilder<AnalyzerSettings>
+    internal sealed class AnalyzerSettingsBuilder : ITestDataBuilder<AnalyzerSettings>
     {
         private bool disableReportOnNullableValueTypes;
 

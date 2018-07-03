@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
-    public sealed class AnalysisScope
+    internal sealed class AnalysisScope
     {
         [NotNull]
         public IExternalAnnotationsResolver ExternalAnnotations { get; }

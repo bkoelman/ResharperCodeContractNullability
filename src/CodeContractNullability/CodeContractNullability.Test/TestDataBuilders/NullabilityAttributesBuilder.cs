@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class NullabilityAttributesBuilder : ITestDataBuilder<NullabilityAttributesDefinition>
+    internal sealed class NullabilityAttributesBuilder : ITestDataBuilder<NullabilityAttributesDefinition>
     {
         [NotNull]
         private string codeNamespace = "Namespace.For.JetBrains.Annotation.Attributes";

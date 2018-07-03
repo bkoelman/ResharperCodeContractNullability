@@ -7,7 +7,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <summary>
     /// Performs analysis of a field.
     /// </summary>
-    public sealed class FieldAnalyzer : BaseSymbolAnalyzer<IFieldSymbol>
+    internal sealed class FieldAnalyzer : BaseSymbolAnalyzer<IFieldSymbol>
     {
         public FieldAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
             : base(context, scope)

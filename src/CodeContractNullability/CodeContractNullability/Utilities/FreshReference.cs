@@ -19,7 +19,7 @@ namespace CodeContractNullability.Utilities
     /// to access members of the wrapped object reference noncached or atomically, locking is probably a better solution.
     /// </para>
     /// </remarks>
-    public sealed class FreshReference<T>
+    internal sealed class FreshReference<T>
         where T : class
     {
         [CanBeNull]

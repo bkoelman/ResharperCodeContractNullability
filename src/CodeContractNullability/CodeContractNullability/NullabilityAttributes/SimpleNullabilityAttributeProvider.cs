@@ -9,8 +9,7 @@ namespace CodeContractNullability.NullabilityAttributes
     /// </summary>
     public sealed class SimpleNullabilityAttributeProvider : INullabilityAttributeProvider
     {
-        public NullabilityAttributeSymbols GetSymbols(Compilation compilation,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public NullabilityAttributeSymbols GetSymbols(Compilation compilation, CancellationToken cancellationToken = default)
         {
             Guard.NotNull(compilation, nameof(compilation));
 

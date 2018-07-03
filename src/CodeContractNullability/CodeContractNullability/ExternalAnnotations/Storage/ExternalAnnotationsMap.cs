@@ -24,7 +24,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
         {
         }
 
-        public bool Contains([NotNull] ISymbol symbol, bool appliesToItem)
+        internal bool Contains([NotNull] ISymbol symbol, bool appliesToItem)
         {
             Guard.NotNull(symbol, nameof(symbol));
 

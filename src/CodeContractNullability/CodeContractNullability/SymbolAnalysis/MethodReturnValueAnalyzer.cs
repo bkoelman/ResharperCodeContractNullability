@@ -7,7 +7,7 @@ namespace CodeContractNullability.SymbolAnalysis
     /// <summary>
     /// Performs analysis of the return value of a method.
     /// </summary>
-    public sealed class MethodReturnValueAnalyzer : BaseSymbolAnalyzer<IMethodSymbol>
+    internal sealed class MethodReturnValueAnalyzer : BaseSymbolAnalyzer<IMethodSymbol>
     {
         public MethodReturnValueAnalyzer(SymbolAnalysisContext context, [NotNull] AnalysisScope scope)
             : base(context, scope)

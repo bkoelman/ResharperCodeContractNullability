@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Utilities
 {
-    public static class EnumerableExtensions
+    internal static class EnumerableExtensions
     {
         [NotNull]
         [ItemNotNull]

@@ -17,7 +17,7 @@ namespace CodeContractNullability.ExternalAnnotations
     /// from such a built-in type, we need to have those definitions available because Resharper reports nullability annotation as
     /// unneeded when a base type is already decorated.
     /// </remarks>
-    public static class FolderExternalAnnotationsLoader
+    internal static class FolderExternalAnnotationsLoader
     {
         [NotNull]
         private static readonly FolderOnDiskScanner Scanner = new FolderOnDiskScanner();

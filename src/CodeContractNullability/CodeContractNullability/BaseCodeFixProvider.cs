@@ -109,11 +109,10 @@ namespace CodeContractNullability
         {
             string description = "Decorate with " + nullabilityAttribute.Name.Replace("Attribute", "");
 
-            Func<CancellationToken, Task<Document>> fixAction = cancellationToken =>
-                ApplyCodeFixAsync(syntaxNode, context.Document, nullabilityAttribute, cancellationToken);
-
-            CodeAction codeAction = CodeAction.Create(description, fixAction, description);
-            context.RegisterCodeFix(codeAction, diagnostic);
+            context.RegisterCodeFix(
+                CodeAction.Create(description,
+                    cancellationToken => ApplyCodeFixAsync(syntaxNode, context.Document, nullabilityAttribute, cancellationToken),
+                    description), diagnostic);
         }
 
         [NotNull]

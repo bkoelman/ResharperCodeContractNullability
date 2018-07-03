@@ -14,7 +14,7 @@ namespace CodeContractNullability
         public bool DisableReportOnNullableValueTypes { get; private set; }
 
         [NotNull]
-        public static readonly AnalyzerSettings Default = new AnalyzerSettings();
+        internal static readonly AnalyzerSettings Default = new AnalyzerSettings();
 
         public AnalyzerSettings()
         {

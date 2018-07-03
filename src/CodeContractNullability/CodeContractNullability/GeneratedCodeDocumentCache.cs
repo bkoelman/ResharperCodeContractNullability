@@ -22,7 +22,7 @@ namespace CodeContractNullability
     /// <see
     ///     href="https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/eea978e9953973f32bce5d8e376a14a5ee0e6d9a/StyleCop.Analyzers/StyleCop.Analyzers/GeneratedCodeAnalysisExtensions.cs" />
     /// </remarks>
-    public sealed class GeneratedCodeDocumentCache
+    internal sealed class GeneratedCodeDocumentCache
     {
         [NotNull]
         private readonly FileCommentScanner scanner = new FileCommentScanner();
@@ -105,7 +105,7 @@ namespace CodeContractNullability
             {
                 SyntaxToken firstToken = root.GetFirstToken();
 
-                if (firstToken == default(SyntaxToken))
+                if (firstToken == default)
                 {
                     SyntaxToken lastToken = ((CompilationUnitSyntax)root).EndOfFileToken;
                     return !lastToken.HasLeadingTrivia ? (SyntaxTriviaList?)null : lastToken.LeadingTrivia;

@@ -15,7 +15,7 @@ namespace CodeContractNullability.Test
             return new DisableReportOnNullableValueTypesCodeFixProvider();
         }
 
-        protected override void VerifyNullabilityFix(ParsedSourceCode source, params string[] messages)
+        private protected override void VerifyNullabilityFix(ParsedSourceCode source, params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 

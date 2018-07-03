@@ -7,7 +7,7 @@ namespace CodeContractNullability.Utilities
     /// <summary>
     /// Logs the execution duration of a code block for diagnostics purposes.
     /// </summary>
-    public sealed class CodeTimer : IDisposable
+    internal sealed class CodeTimer : IDisposable
     {
         [NotNull]
         private readonly string text;

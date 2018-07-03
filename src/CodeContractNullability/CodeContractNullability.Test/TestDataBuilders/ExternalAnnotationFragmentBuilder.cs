@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class ExternalAnnotationFragmentBuilder : ITestDataBuilder<XElement>
+    internal sealed class ExternalAnnotationFragmentBuilder : ITestDataBuilder<XElement>
     {
         /* Example output:
             <member name=""M:TestSystem.StringFormatter.Format(System.IFormatProvider,System.String,System.Object[])"">

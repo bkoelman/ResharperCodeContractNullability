@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class ExternalAnnotationParameterBuilder : ITestDataBuilder<XElement>
+    internal sealed class ExternalAnnotationParameterBuilder : ITestDataBuilder<XElement>
     {
         [CanBeNull]
         private bool? isNotNull;

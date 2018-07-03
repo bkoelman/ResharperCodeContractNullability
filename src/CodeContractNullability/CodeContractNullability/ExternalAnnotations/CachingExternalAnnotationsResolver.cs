@@ -15,7 +15,7 @@ namespace CodeContractNullability.ExternalAnnotations
     /// set typically come from NuGet packages or assembly references. From that set, each per-assembly file is monitored for filesystem
     /// changes and flushed accordingly.
     /// </summary>
-    public sealed class CachingExternalAnnotationsResolver : IExternalAnnotationsResolver
+    internal sealed class CachingExternalAnnotationsResolver : IExternalAnnotationsResolver
     {
         [NotNull]
         [ItemNotNull]

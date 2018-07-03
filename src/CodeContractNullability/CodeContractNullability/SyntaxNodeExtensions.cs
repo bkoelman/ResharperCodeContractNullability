@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 namespace CodeContractNullability
 {
     /// <summary />
-    public static class SyntaxNodeExtensions
+    internal static class SyntaxNodeExtensions
     {
         [CanBeNull]
         public static TNode GetAncestorOrThis<TNode>([CanBeNull] this SyntaxNode node)

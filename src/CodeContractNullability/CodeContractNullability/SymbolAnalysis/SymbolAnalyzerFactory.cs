@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
-    public sealed class SymbolAnalyzerFactory
+    internal sealed class SymbolAnalyzerFactory
     {
         [NotNull]
         private readonly AnalysisScope scope;

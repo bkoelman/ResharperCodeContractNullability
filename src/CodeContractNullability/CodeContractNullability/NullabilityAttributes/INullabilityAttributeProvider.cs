@@ -10,7 +10,6 @@ namespace CodeContractNullability.NullabilityAttributes
     public interface INullabilityAttributeProvider
     {
         [CanBeNull]
-        NullabilityAttributeSymbols GetSymbols([NotNull] Compilation compilation,
-            CancellationToken cancellationToken = default(CancellationToken));
+        NullabilityAttributeSymbols GetSymbols([NotNull] Compilation compilation, CancellationToken cancellationToken = default);
     }
 }

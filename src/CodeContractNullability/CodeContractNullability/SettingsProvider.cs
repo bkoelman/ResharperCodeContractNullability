@@ -22,7 +22,7 @@ namespace CodeContractNullability
         public static Encoding CreateEncoding() => new UTF8Encoding();
 
         [NotNull]
-        public static AnalyzerSettings LoadSettings([NotNull] AnalyzerOptions options, CancellationToken cancellationToken)
+        internal static AnalyzerSettings LoadSettings([NotNull] AnalyzerOptions options, CancellationToken cancellationToken)
         {
             Guard.NotNull(options, nameof(options));
 
@@ -48,7 +48,7 @@ namespace CodeContractNullability
             return AnalyzerSettings.Default;
         }
 
-        public static bool IsSettingsFile([NotNull] string filePath)
+        internal static bool IsSettingsFile([NotNull] string filePath)
         {
             string fileName = Path.GetFileName(filePath);
             return string.Equals(fileName, SettingsFileName, StringComparison.OrdinalIgnoreCase);

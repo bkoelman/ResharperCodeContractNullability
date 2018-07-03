@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class ExternalAnnotationsBuilder : ITestDataBuilder<ExternalAnnotationsMap>
+    internal sealed class ExternalAnnotationsBuilder : ITestDataBuilder<ExternalAnnotationsMap>
     {
         [NotNull]
         [ItemNotNull]

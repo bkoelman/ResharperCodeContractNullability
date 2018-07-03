@@ -6,7 +6,7 @@ using RoslynTestFramework;
 
 namespace CodeContractNullability.Test.TestDataBuilders
 {
-    public sealed class ExactSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
+    internal sealed class ExactSourceCodeBuilder : ITestDataBuilder<ParsedSourceCode>
     {
         [NotNull]
         private string sourceText = string.Empty;

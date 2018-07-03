@@ -10,7 +10,7 @@ namespace CodeContractNullability.ExternalAnnotations
     /// Attempts to find and parse a side-by-side [AssemblyName].ExternalAnnotations.xml file that resides in the same folder as the
     /// assembly that contains the requested symbol.
     /// </summary>
-    public static class AssemblyExternalAnnotationsLoader
+    internal static class AssemblyExternalAnnotationsLoader
     {
         [CanBeNull]
         public static string GetPathForExternalSymbolOrNull([NotNull] ISymbol symbol, [NotNull] Compilation compilation)
