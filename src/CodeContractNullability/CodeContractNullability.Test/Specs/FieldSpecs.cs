@@ -143,6 +143,77 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_field_type_is_generic_enum_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : Enum
+                    {
+                        [+NullabilityAttributePlaceholder+]
+                        T [|f|];
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
+        }
+
+        [Fact]
+        public void When_field_type_is_generic_unmanaged_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : unmanaged
+                    {
+                        T f;
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Fact]
+        public void When_field_type_is_generic_delegate_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : Delegate
+                    {
+                        [+NullabilityAttributePlaceholder+]
+                        T [|f|];
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
+        }
+
+        [Fact]
+        public void When_field_type_is_generic_multicast_delegate_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : MulticastDelegate
+                    {
+                        [+NullabilityAttributePlaceholder+]
+                        T [|f|];
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForField("f"));
+        }
+
+        [Fact]
         public void When_field_type_is_nullable_it_must_be_reported_and_fixed()
         {
             // Arrange

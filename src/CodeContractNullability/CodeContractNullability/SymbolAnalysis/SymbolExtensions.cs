@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace CodeContractNullability.SymbolAnalysis
 {
-    public static class SymbolExtensions
+    internal static class SymbolExtensions
     {
         public static bool HasNullabilityAnnotation([NotNull] this ISymbol memberSymbol, bool appliesToItem)
         {
