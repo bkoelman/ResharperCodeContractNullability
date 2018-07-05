@@ -34,6 +34,7 @@ namespace CodeContractNullability.Test
             [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
+            Guard.NotNull(messages, nameof(messages));
 
             externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
 
