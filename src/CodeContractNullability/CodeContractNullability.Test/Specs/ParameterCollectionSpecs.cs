@@ -258,7 +258,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-#if !NET45
+#if !NET452
         [Fact]
         public void When_parameter_type_is_tuple_of_reference_it_must_be_skipped()
         {

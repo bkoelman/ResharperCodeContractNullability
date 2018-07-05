@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net46;net45</TargetFrameworks>
+    <TargetFrameworks>net46;net452</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;JETBRAINS_ANNOTATIONS</DefineConstants>
@@ -27,7 +27,7 @@
   <ItemGroup Condition = "'$(TargetFramework)' == 'net46'">
     <PackageReference Include="Microsoft.CodeAnalysis" Version="2.8.2" />
   </ItemGroup>
-  <ItemGroup Condition = "'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition = "'$(TargetFramework)' == 'net452'">
     <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
   </ItemGroup>

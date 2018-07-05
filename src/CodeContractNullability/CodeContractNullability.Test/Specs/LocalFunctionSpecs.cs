@@ -8,7 +8,7 @@ namespace CodeContractNullability.Test.Specs
     /// </summary>
     public sealed class LocalFunctionSpecs : NullabilityTest
     {
-#if !NET45
+#if !NET452
         [Fact]
         public void When_local_function_parameter_is_nullable_it_must_be_skipped()
         {

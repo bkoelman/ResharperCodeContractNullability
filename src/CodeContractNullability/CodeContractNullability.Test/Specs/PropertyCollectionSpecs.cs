@@ -186,7 +186,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source, CreateMessageForProperty("P"));
         }
 
-#if !NET45
+#if !NET452
         [Fact]
         public void When_property_type_is_tuple_of_reference_it_must_be_skipped()
         {

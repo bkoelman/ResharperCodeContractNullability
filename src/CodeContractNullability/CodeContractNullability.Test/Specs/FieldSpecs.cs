@@ -142,7 +142,7 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-#if !NET45
+#if !NET452
         [Fact]
         public void When_field_type_is_generic_enum_it_must_be_reported_and_fixed()
         {
