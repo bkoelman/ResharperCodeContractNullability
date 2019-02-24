@@ -19,7 +19,7 @@
     <PackageReference Include="OpenCover" Version="4.7.922" />
     <PackageReference Include="ReportGenerator" Version="4.0.13.1" />
     <PackageReference Include="ResharperCodeContractNullability" Version="1.0.9" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.console" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -31,7 +31,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.10.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" />
