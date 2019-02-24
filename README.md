@@ -39,7 +39,8 @@ After each commit, a new prerelease NuGet package is automatically published to 
 
 ## Running on your build server
 
-This assumes your project uses ResharperCodeContractNullability (via NuGet), but Resharper is not installed on your build server. To make the analyzer run there, make sure to install External Annotations on the server as a pre-build step:
+This assumes your project uses ResharperCodeContractNullability via NuGet, but Resharper is not installed on your build server. To make the analyzer succeed there, simply add another NuGet reference to your project.
 
-* ```nuget install JetBrains.ExternalAnnotations -Version 10.2.29```
-* ```xcopy JetBrains.ExternalAnnotations.10.2.29\*.xml "%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations" /s /i /r /y /q```
+* From the NuGet package manager console:
+
+  `Install-Package JetBrains.ExternalAnnotations -Version 10.2.29`
