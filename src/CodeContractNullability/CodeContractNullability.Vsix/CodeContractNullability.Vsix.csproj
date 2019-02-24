@@ -86,7 +86,7 @@
       <VsixPackageVersion>$([System.Text.RegularExpressions.Regex]::Match($(In), $(Pattern)))</VsixPackageVersion>
     </PropertyGroup>
   </Target>
-  <Target Name="ExcludeFilesFromVSIX" BeforeTargets="CreateVsixContainer" AfterTargets="GetVsixSourceItems">
+  <Target Name="ExcludeFilesFromVSIX" AfterTargets="GetVsixSourceItems">
     <ItemGroup>
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\tools\install.ps1" />
       <VsixSourceItem Remove="$(SolutionDir)CodeContractNullability\CodeContractNullability\tools\uninstall.ps1" />
