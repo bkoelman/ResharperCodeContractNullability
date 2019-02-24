@@ -18,18 +18,14 @@ namespace CodeContractNullability.ExternalAnnotations
         private readonly string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         [NotNull]
-        private static readonly Scope[] Scopes =
-        {
-            Scope.System,
-            Scope.User
-        };
+        private readonly string nuGetDirectory =
+            Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.nuget\packages\jetbrains.externalannotations");
 
         [NotNull]
-        private static readonly Category[] Categories =
-        {
-            Category.ExternalAnnotations,
-            Category.Extensions
-        };
+        private static readonly Scope[] Scopes = Enum.GetValues(typeof(Scope)).Cast<Scope>().ToArray();
+
+        [NotNull]
+        private static readonly Category[] Categories = Enum.GetValues(typeof(Category)).Cast<Category>().ToArray();
 
         [NotNull]
         [ItemNotNull]
@@ -37,7 +33,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             foreach (ExternalAnnotationsLocation location in
                 from folder in EnumerateExternalAnnotationLocations()
-                orderby folder.Category, folder.Scope, folder.VsVersion
+                orderby folder.Category, folder.Scope, folder.Version
                 select folder)
             {
                 yield return location.Path;
@@ -48,16 +44,23 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         public IEnumerable<string> GetFoldersToProbe()
         {
-            yield return GetProbingFolder(programFilesX86Folder, "ExternalAnnotations");
-            yield return GetProbingFolder(programFilesX86Folder, "Extensions");
-            yield return GetProbingFolder(localAppDataFolder, "ExternalAnnotations");
-            yield return GetProbingFolder(localAppDataFolder, "Extensions");
+            yield return GetResharperProbingFolder(programFilesX86Folder, "ExternalAnnotations");
+            yield return GetResharperProbingFolder(programFilesX86Folder, "Extensions");
+            yield return GetNuGetProbingFolder(nuGetDirectory);
+            yield return GetResharperProbingFolder(localAppDataFolder, "ExternalAnnotations");
+            yield return GetResharperProbingFolder(localAppDataFolder, "Extensions");
         }
 
         [NotNull]
-        private static string GetProbingFolder([NotNull] string startFolder, [NotNull] string lastFolder)
+        private static string GetResharperProbingFolder([NotNull] string startFolder, [NotNull] string lastFolder)
         {
             return Path.Combine(startFolder, "JetBrains", "Installations", "ReSharperPlatformVs??", lastFolder);
+        }
+
+        [NotNull]
+        private static string GetNuGetProbingFolder([NotNull] string nuGetDirectory)
+        {
+            return Path.Combine(nuGetDirectory, "*", "DotFiles", "ExternalAnnotations");
         }
 
         [NotNull]
@@ -66,11 +69,47 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             foreach (Scope scope in Scopes)
             {
-                foreach (Category category in Categories)
+                if (scope == Scope.NuGet)
                 {
-                    foreach (ExternalAnnotationsLocation location in EnumerateResharperSubfolders(scope, category))
+                    foreach (ExternalAnnotationsLocation location in EnumerateNuGetSubfolders())
                     {
                         yield return location;
+                    }
+                }
+                else
+                {
+                    foreach (Category category in Categories)
+                    {
+                        foreach (ExternalAnnotationsLocation location in EnumerateResharperSubfolders(scope, category))
+                        {
+                            yield return location;
+                        }
+                    }
+                }
+            }
+        }
+
+        [NotNull]
+        [ItemNotNull]
+        private IEnumerable<ExternalAnnotationsLocation> EnumerateNuGetSubfolders()
+        {
+            if (!Directory.Exists(nuGetDirectory))
+            {
+                yield break;
+            }
+
+            const string subFolder = @"DotFiles\ExternalAnnotations";
+
+            foreach (string versionPath in Directory.GetDirectories(nuGetDirectory))
+            {
+                string versionFolder = Path.GetFileName(versionPath);
+                if (versionFolder != null && Version.TryParse(versionFolder, out Version packageVersion))
+                {
+                    string path = Path.Combine(versionPath, subFolder);
+                    if (Directory.Exists(path))
+                    {
+                        yield return new ExternalAnnotationsLocation(Scope.NuGet, Category.ExternalAnnotations, packageVersion,
+                            path);
                     }
                 }
             }
@@ -101,7 +140,7 @@ namespace CodeContractNullability.ExternalAnnotations
                         string path = Path.Combine(platformPath, subFolder);
                         if (Directory.Exists(path))
                         {
-                            yield return new ExternalAnnotationsLocation(scope, category, vsVersion, path);
+                            yield return new ExternalAnnotationsLocation(scope, category, new Version(vsVersion, 0), path);
                         }
                     }
                 }
@@ -112,18 +151,21 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             public Scope Scope { get; }
             public Category Category { get; }
-            public int VsVersion { get; }
+
+            [NotNull]
+            public Version Version { get; }
 
             [NotNull]
             public string Path { get; }
 
-            public ExternalAnnotationsLocation(Scope scope, Category category, int vsVersion, [NotNull] string path)
+            public ExternalAnnotationsLocation(Scope scope, Category category, [NotNull] Version version, [NotNull] string path)
             {
+                Guard.NotNull(version, nameof(version));
                 Guard.NotNull(path, nameof(path));
 
                 Scope = scope;
                 Category = category;
-                VsVersion = vsVersion;
+                Version = version;
                 Path = path;
             }
         }
@@ -137,7 +179,8 @@ namespace CodeContractNullability.ExternalAnnotations
         private enum Scope
         {
             System,
-            User
+            User,
+            NuGet
         }
     }
 }
