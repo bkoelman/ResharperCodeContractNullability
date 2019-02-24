@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using CodeContractNullability.ExternalAnnotations.Storage;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -109,6 +110,9 @@ namespace CodeContractNullability.ExternalAnnotations
                 }
             }
             catch (UnauthorizedAccessException)
+            {
+            }
+            catch (SerializationException)
             {
             }
             catch (IOException)
