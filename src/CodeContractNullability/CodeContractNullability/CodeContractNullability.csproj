@@ -40,11 +40,11 @@ You need Visual Studio 2015/2017 and Resharper v9 or higher to use this analyzer
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" PrivateAssets="all" />
     <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.29" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" PrivateAssets="all" />
-    <PackageReference Include="MsgPack.Cli" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="MsgPack.Cli" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="ResharperCodeContractNullability" Version="1.0.9" />
   </ItemGroup>
   <!--
