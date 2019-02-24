@@ -8,7 +8,7 @@
     <!-- https://github.com/NuGet/Home/issues/5630 -->
     <PackageId>ResharperCodeContractNullability.NuGetBugRequiresNewId</PackageId>
     <Title>Resharper Code Contract Nullability</Title>
-    <Version>1.0.10</Version>
+    <Version>1.0.11-pre</Version>
     <Authors>Bart Koelman</Authors>
     <Company />
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
@@ -45,7 +45,10 @@ You need Visual Studio 2015/2017 and Resharper v9 or higher to use this analyzer
     <PackageReference Include="Microsoft.CodeAnalysis" Version="1.0.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" PrivateAssets="all" />
     <PackageReference Include="MsgPack.Cli" Version="1.0.1" PrivateAssets="all" />
-    <PackageReference Include="ResharperCodeContractNullability" Version="1.0.9" />
+    <PackageReference Include="ResharperCodeContractNullability" Version="1.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <!--
     To bypass the NuGet cache during install/uninstall debugging, uncomment the target below.
