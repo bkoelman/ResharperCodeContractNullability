@@ -9,7 +9,12 @@ namespace CodeContractNullability.ExternalAnnotations
 {
     internal sealed class FolderOnDiskScanner
     {
+        private const string RiderFolderNamePrefix = "JetBrains Rider";
         private const string ResharperFolderNamePrefix = "ReSharperPlatformVs";
+
+        [NotNull]
+        private readonly string programFilesFolder = Environment.GetEnvironmentVariable("ProgramW6432") ??
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
         [NotNull]
         private readonly string programFilesX86Folder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
@@ -18,8 +23,8 @@ namespace CodeContractNullability.ExternalAnnotations
         private readonly string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         [NotNull]
-        private readonly string nuGetDirectory =
-            Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.nuget\packages\jetbrains.externalannotations");
+        private readonly string nuGetUserDirectory = Path.Combine(Environment.ExpandEnvironmentVariables("%USERPROFILE%"),
+            ".nuget", "packages", "jetbrains.externalannotations");
 
         [NotNull]
         private static readonly Scope[] Scopes = Enum.GetValues(typeof(Scope)).Cast<Scope>().ToArray();
@@ -44,17 +49,25 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         public IEnumerable<string> GetFoldersToProbe()
         {
+            yield return GetRiderProbingFolder(programFilesFolder);
             yield return GetResharperProbingFolder(programFilesX86Folder, "ExternalAnnotations");
             yield return GetResharperProbingFolder(programFilesX86Folder, "Extensions");
-            yield return GetNuGetProbingFolder(nuGetDirectory);
+            yield return GetNuGetProbingFolder(nuGetUserDirectory);
             yield return GetResharperProbingFolder(localAppDataFolder, "ExternalAnnotations");
             yield return GetResharperProbingFolder(localAppDataFolder, "Extensions");
         }
 
         [NotNull]
+        private static string GetRiderProbingFolder([NotNull] string startFolder)
+        {
+            return Path.Combine(startFolder, "JetBrains", RiderFolderNamePrefix + "*", "lib", "ReSharperHost",
+                "ExternalAnnotations");
+        }
+
+        [NotNull]
         private static string GetResharperProbingFolder([NotNull] string startFolder, [NotNull] string lastFolder)
         {
-            return Path.Combine(startFolder, "JetBrains", "Installations", "ReSharperPlatformVs??", lastFolder);
+            return Path.Combine(startFolder, "JetBrains", "Installations", ResharperFolderNamePrefix + "*", lastFolder);
         }
 
         [NotNull]
@@ -69,21 +82,37 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             foreach (Scope scope in Scopes)
             {
-                if (scope == Scope.NuGet)
+                switch (scope)
                 {
-                    foreach (ExternalAnnotationsLocation location in EnumerateNuGetSubfolders())
+                    case Scope.NuGet:
                     {
-                        yield return location;
-                    }
-                }
-                else
-                {
-                    foreach (Category category in Categories)
-                    {
-                        foreach (ExternalAnnotationsLocation location in EnumerateResharperSubfolders(scope, category))
+                        foreach (ExternalAnnotationsLocation location in EnumerateNuGetSubfolders())
                         {
                             yield return location;
                         }
+
+                        break;
+                    }
+                    case Scope.SystemRider:
+                    {
+                        foreach (ExternalAnnotationsLocation location in EnumerateRiderSubfolders())
+                        {
+                            yield return location;
+                        }
+
+                        break;
+                    }
+                    default:
+                    {
+                        foreach (Category category in Categories)
+                        {
+                            foreach (ExternalAnnotationsLocation location in EnumerateResharperSubfolders(scope, category))
+                            {
+                                yield return location;
+                            }
+                        }
+
+                        break;
                     }
                 }
             }
@@ -93,19 +122,17 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         private IEnumerable<ExternalAnnotationsLocation> EnumerateNuGetSubfolders()
         {
-            if (!Directory.Exists(nuGetDirectory))
+            if (!Directory.Exists(nuGetUserDirectory))
             {
                 yield break;
             }
 
-            const string subFolder = @"DotFiles\ExternalAnnotations";
-
-            foreach (string versionPath in Directory.GetDirectories(nuGetDirectory))
+            foreach (string versionPath in Directory.GetDirectories(nuGetUserDirectory))
             {
                 string versionFolder = Path.GetFileName(versionPath);
                 if (versionFolder != null && Version.TryParse(versionFolder, out Version packageVersion))
                 {
-                    string path = Path.Combine(versionPath, subFolder);
+                    string path = Path.Combine(versionPath, "DotFiles", "ExternalAnnotations");
                     if (Directory.Exists(path))
                     {
                         yield return new ExternalAnnotationsLocation(Scope.NuGet, Category.ExternalAnnotations, packageVersion,
@@ -117,9 +144,39 @@ namespace CodeContractNullability.ExternalAnnotations
 
         [NotNull]
         [ItemNotNull]
+        private IEnumerable<ExternalAnnotationsLocation> EnumerateRiderSubfolders()
+        {
+            string installationsFolder = Path.Combine(programFilesFolder, "JetBrains");
+
+            if (!Directory.Exists(installationsFolder))
+            {
+                yield break;
+            }
+
+            foreach (string versionPath in Directory.GetDirectories(installationsFolder, RiderFolderNamePrefix + "*"))
+            {
+                string versionFolder = Path.GetFileName(versionPath);
+                if (versionFolder?.Length > RiderFolderNamePrefix.Length)
+                {
+                    if (Version.TryParse(versionFolder.Substring(RiderFolderNamePrefix.Length).TrimStart(),
+                        out Version riderVersion))
+                    {
+                        string path = Path.Combine(versionPath, "lib", "ReSharperHost", "ExternalAnnotations");
+                        if (Directory.Exists(path))
+                        {
+                            yield return new ExternalAnnotationsLocation(Scope.SystemRider, Category.ExternalAnnotations,
+                                riderVersion, path);
+                        }
+                    }
+                }
+            }
+        }
+
+        [NotNull]
+        [ItemNotNull]
         private IEnumerable<ExternalAnnotationsLocation> EnumerateResharperSubfolders(Scope scope, Category category)
         {
-            string startFolder = scope == Scope.System ? programFilesX86Folder : localAppDataFolder;
+            string startFolder = scope == Scope.SystemResharper ? programFilesX86Folder : localAppDataFolder;
             string subFolder = category == Category.ExternalAnnotations ? "ExternalAnnotations" : "Extensions";
 
             string installationsFolder = Path.Combine(startFolder, "JetBrains", "Installations");
@@ -178,7 +235,8 @@ namespace CodeContractNullability.ExternalAnnotations
 
         private enum Scope
         {
-            System,
+            SystemRider,
+            SystemResharper,
             User,
             NuGet
         }
