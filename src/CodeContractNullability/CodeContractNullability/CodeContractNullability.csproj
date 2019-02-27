@@ -11,7 +11,7 @@
     <Version>1.0.11-pre</Version>
     <Authors>Bart Koelman</Authors>
     <Company />
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/bkoelman/ResharperCodeContractNullability</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Reports diagnostics, helping you to annotate your source tree with (Item)NotNull / (Item)CanBeNull attributes. See also: https://www.jetbrains.com/resharper/help/Code_Analysis__Code_Annotations.html
