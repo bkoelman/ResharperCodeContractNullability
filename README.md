@@ -43,4 +43,4 @@ This assumes your project uses ResharperCodeContractNullability via NuGet, but R
 
 * From the NuGet package manager console:
 
-  `Install-Package JetBrains.ExternalAnnotations -Version 10.2.29`
+  `Install-Package JetBrains.ExternalAnnotations`
