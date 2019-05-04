@@ -219,32 +219,26 @@ namespace CodeContractNullability.Conversion
                 {
                     return methodSyntax.ReturnType;
                 }
-
                 case OperatorDeclarationSyntax operatorSyntax:
                 {
                     return operatorSyntax.ReturnType;
                 }
-
                 case ConversionOperatorDeclarationSyntax conversionOperatorSyntax:
                 {
                     return conversionOperatorSyntax.Type;
                 }
-
                 case DelegateDeclarationSyntax delegateSyntax:
                 {
                     return delegateSyntax.ReturnType;
                 }
-
                 case BasePropertyDeclarationSyntax propertySyntax:
                 {
                     return propertySyntax.Type;
                 }
-
                 case BaseFieldDeclarationSyntax fieldSyntax:
                 {
                     return fieldSyntax.Declaration.Type;
                 }
-
                 case ParameterSyntax parameterSyntax:
                 {
                     return parameterSyntax.Type;
@@ -265,22 +259,18 @@ namespace CodeContractNullability.Conversion
                 {
                     return methodSymbol.ReturnType;
                 }
-
                 case IPropertySymbol propertySymbol:
                 {
                     return propertySymbol.Type;
                 }
-
                 case IParameterSymbol parameterSymbol:
                 {
                     return parameterSymbol.Type;
                 }
-
                 case IFieldSymbol fieldSymbol:
                 {
                     return fieldSymbol.Type;
                 }
-
                 case INamedTypeSymbol typeSymbol when typeSymbol.TypeKind == TypeKind.Delegate:
                 {
                     return typeSymbol.DelegateInvokeMethod.ReturnType;

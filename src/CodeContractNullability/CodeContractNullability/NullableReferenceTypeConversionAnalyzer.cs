@@ -156,15 +156,25 @@ namespace CodeContractNullability
             switch (context.Symbol)
             {
                 case IFieldSymbol _:
+                {
                     return "field";
+                }
                 case IPropertySymbol _:
+                {
                     return "property";
+                }
                 case IMethodSymbol _:
+                {
                     return "method";
+                }
                 case INamedTypeSymbol typeSymbol when typeSymbol.TypeKind == TypeKind.Delegate:
+                {
                     return "delegate";
+                }
                 case IParameterSymbol _:
+                {
                     return "parameter";
+                }
             }
 
             return string.Empty;
