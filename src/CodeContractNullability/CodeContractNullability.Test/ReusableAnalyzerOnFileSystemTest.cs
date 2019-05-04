@@ -38,15 +38,25 @@ namespace CodeContractNullability.Test
             switch (symbolType)
             {
                 case SymbolType.Field:
+                {
                     return CreateMessageForField(name);
+                }
                 case SymbolType.Property:
+                {
                     return CreateMessageForProperty(name);
+                }
                 case SymbolType.Method:
+                {
                     return CreateMessageForMethod(name);
+                }
                 case SymbolType.Parameter:
+                {
                     return CreateMessageForParameter(name);
+                }
                 default:
+                {
                     throw new NotSupportedException();
+                }
             }
         }
 
