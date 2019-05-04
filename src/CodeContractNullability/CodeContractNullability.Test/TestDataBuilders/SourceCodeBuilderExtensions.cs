@@ -97,7 +97,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(code, nameof(code));
 
-            Stream assemblyStream = GetInMemoryAssemblyStreamForCode(code);
+            Stream assemblyStream = GetInMemoryAssemblyStreamForCode(code, "TempAssembly");
             PortableExecutableReference reference = MetadataReference.CreateFromStream(assemblyStream);
 
             source.Editor.UpdateTestContext(context => context.WithReferences(context.References.Add(reference)));
@@ -106,12 +106,37 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        private static Stream GetInMemoryAssemblyStreamForCode([NotNull] string code,
+        public static TBuilder WithReferenceToExternalAssemblyOnDiskFor<TBuilder>([NotNull] this TBuilder source,
+            [NotNull] string assemblyPath, [NotNull] string code)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(source, nameof(source));
+            Guard.NotNull(code, nameof(code));
+            Guard.NotNull(assemblyPath, nameof(assemblyPath));
+
+            string assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
+            Stream assemblyStream = GetInMemoryAssemblyStreamForCode(code, assemblyName);
+
+#pragma warning disable FS01 // Usage of non-testable file system.
+            using (FileStream fileStream = File.Open(assemblyPath, FileMode.CreateNew))
+#pragma warning restore FS01 // Usage of non-testable file system.
+            {
+                assemblyStream.CopyTo(fileStream);
+            }
+
+            PortableExecutableReference reference = MetadataReference.CreateFromFile(assemblyPath);
+            source.Editor.UpdateTestContext(context => context.WithReferences(context.References.Add(reference)));
+
+            return source;
+        }
+
+        [NotNull]
+        private static Stream GetInMemoryAssemblyStreamForCode([NotNull] string code, [NotNull] string assemblyName,
             [NotNull] [ItemNotNull] params MetadataReference[] references)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
             CSharpCompilation compilation = CSharpCompilation
-                .Create("TempAssembly", new[]
+                .Create(assemblyName, new[]
                 {
                     tree
                 })

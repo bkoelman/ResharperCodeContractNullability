@@ -20,7 +20,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             if (fragments.Any())
             {
-                string document = GetDocument();
+                string document = GetText();
                 return Parse(document);
             }
 
@@ -28,7 +28,15 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        private string GetDocument()
+        public string GetXml()
+        {
+            string text = GetText();
+            XDocument document = XDocument.Parse(text);
+            return document.ToString();
+        }
+
+        [NotNull]
+        private string GetText()
         {
             var textBuilder = new StringBuilder();
             textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""utf-8""?>

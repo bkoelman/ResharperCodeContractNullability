@@ -28,6 +28,13 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
+        public TypeSourceCodeBuilder ClearGlobalScope()
+        {
+            types.Clear();
+            return this;
+        }
+
+        [NotNull]
         public TypeSourceCodeBuilder InGlobalScope([NotNull] string typeCode)
         {
             Guard.NotNull(typeCode, nameof(typeCode));

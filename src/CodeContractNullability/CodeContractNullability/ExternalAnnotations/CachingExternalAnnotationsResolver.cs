@@ -28,7 +28,7 @@ namespace CodeContractNullability.ExternalAnnotations
 
         [NotNull]
         private readonly ConcurrentDictionary<string, AssemblyCacheEntry> assemblyCache =
-            new ConcurrentDictionary<string, AssemblyCacheEntry>();
+            new ConcurrentDictionary<string, AssemblyCacheEntry>(StringComparer.OrdinalIgnoreCase);
 
         public CachingExternalAnnotationsResolver([NotNull] IFileSystem fileSystem,
             [NotNull] ICacheProvider<ExternalAnnotationsMap> cacheProvider)
@@ -72,6 +72,13 @@ namespace CodeContractNullability.ExternalAnnotations
             }
 
             return false;
+        }
+
+        public bool IsFileInSideBySideCache([NotNull] string path)
+        {
+            Guard.NotNull(path, nameof(path));
+
+            return assemblyCache.ContainsKey(path);
         }
 
         [NotNull]

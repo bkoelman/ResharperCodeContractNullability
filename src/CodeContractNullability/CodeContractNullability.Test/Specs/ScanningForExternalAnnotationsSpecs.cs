@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using CodeContractNullability.ExternalAnnotations;
+using CodeContractNullability.Test.TestDataBuilders;
 using FluentAssertions;
+using JetBrains.Annotations;
 using TestableFileSystem.Fakes.Builders;
 using TestableFileSystem.Interfaces;
 using Xunit;
@@ -11,25 +13,46 @@ namespace CodeContractNullability.Test.Specs
     public sealed class ScanningForExternalAnnotationsSpecs
     {
         [Fact]
-        public void When_scanning_for_external_annotations_it_must_succeed()
+        public void When_external_annotations_are_not_found_it_must_fail()
         {
             // Arrange
-            string localAppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string filePath = Path.Combine(localAppDataFolder,
-                @"JetBrains\Installations\ReSharperPlatformVs15_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
+            IFileSystem fileSystem = new FakeFileSystemBuilder()
+                .Build();
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().ThrowExactly<MissingExternalAnnotationsException>();
+        }
+
+        [Theory]
+        [InlineData(
+            @"%PROGRAMFILES%\JetBrains\JetBrains Rider 2018.2.1\lib\ReSharperHost\ExternalAnnotations\ExternalAnnotations")]
+        [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations")]
+        [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\Extensions")]
+        [InlineData(@"%USERPROFILE%\.nuget\packages\jetbrains.externalannotations\10.2.57\DotFiles\ExternalAnnotations")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\Extensions")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions")]
+        public void When_external_annotations_are_found_it_must_succeed([NotNull] string externalAnnotationsDirectory)
+        {
+            // Arrange
+            string externalAnnotationsPath =
+                Path.Combine(Environment.ExpandEnvironmentVariables(externalAnnotationsDirectory),
+                    @".NETFramework\mscorlib\Annotations.xml");
 
             IFileSystem fileSystem = new FakeFileSystemBuilder()
-                .IncludingTextFile(filePath,
-                    @"<?xml version=""1.0"" encoding=""utf-8""?>
-                    <assembly name=""mscorlib"">
-                      <member name=""M:System.String.Format(System.String,System.Object)"">
-                        <attribute ctor=""M:JetBrains.Annotations.NotNullAttribute.#ctor""/>
-                        <parameter name=""format"">
-                          <attribute ctor=""M:JetBrains.Annotations.NotNullAttribute.#ctor""/>
-                        </parameter>
-                      </member>
-                    </assembly>
-                ")
+                .IncludingTextFile(externalAnnotationsPath, new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:System.String.IsNullOrEmpty(System.String)")
+                        .WithParameter(new ExternalAnnotationParameterBuilder()
+                            .Named("value")
+                            .CanBeNull()))
+                    .GetXml())
                 .Build();
 
             var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
@@ -39,6 +62,89 @@ namespace CodeContractNullability.Test.Specs
 
             // Assert
             action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void When_side_by_side_external_annotations_file_changes_it_must_update_analyzer_cache()
+        {
+            // Arrange
+            using (var assemblyScope = new TempAssemblyScope())
+            {
+                string systemAnnotationsPath = Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
+
+                string sideBySideAnnotationsPath = assemblyScope.TempPath + ".ExternalAnnotations.xml";
+
+                IFileSystem fileSystem = new FakeFileSystemBuilder()
+                    .IncludingTextFile(systemAnnotationsPath, new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrEmpty(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                    .IncludingTextFile(sideBySideAnnotationsPath, new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:ExternalAssembly.I.M")
+                            .NotNull())
+                        .GetXml())
+                    .Build();
+
+                TypeSourceCodeBuilder sourceBuilder = new TypeSourceCodeBuilder()
+                    .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                    .WithReferenceToExternalAssemblyOnDiskFor(assemblyScope.AssemblyPath, @"
+                        using System;
+
+                        namespace ExternalAssembly
+                        {
+                            public interface I
+                            {
+                                string M();
+                            }
+                        }
+                    ");
+
+                ParsedSourceCode initialSource = sourceBuilder
+                    .InGlobalScope(@"
+                        public class C : ExternalAssembly.I
+                        {
+                            public string M()
+                            {
+                                throw null;
+                            }
+                        }
+                    ")
+                    .Build();
+
+                // Method ExternalAssembly.I.M() is externally annotated in side-by-side xml file, so expect no diagnostics.
+                var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
+                analyzerTest.VerifyNullabilityDiagnostics(initialSource);
+
+                // Update contents of the side-by-side xml file: remove the external annotation.
+                fileSystem.File.WriteAllText(sideBySideAnnotationsPath, new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:ExternalAssembly.I.M"))
+                    .GetXml());
+
+                // Update source text (add markers) without recreating analyzer instance.
+                ParsedSourceCode updatedSource = sourceBuilder
+                    .ClearGlobalScope()
+                    .InGlobalScope(@"
+                        public class C : ExternalAssembly.I
+                        {
+                            public string [|M|]()
+                            {
+                                throw null;
+                            }
+                        }
+                    ")
+                    .Build();
+
+                analyzerTest.WaitForFileEvictionFromSideBySideCache(sideBySideAnnotationsPath);
+
+                // After update of the side-by-side file on disk, analyzer should detect the change and report a diagnostic this time.
+                analyzerTest.VerifyNullabilityDiagnostics(updatedSource, analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+            }
         }
     }
 }
