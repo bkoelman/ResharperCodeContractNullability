@@ -73,6 +73,15 @@
     <Reference Include="MsgPack, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MsgPack.Cli.1.0.1\lib\net46\MsgPack.dll</HintPath>
     </Reference>
+    <Reference Include="TestableFileSystem.Interfaces, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\TestableFileSystem.Interfaces.2.0.1\lib\net45\TestableFileSystem.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="TestableFileSystem.Wrappers, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\TestableFileSystem.Wrappers.2.0.1\lib\net45\TestableFileSystem.Wrappers.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\TestableFileSystem.Interfaces.2.0.1\analyzers\dotnet\cs\TestableFileSystem.Analyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
