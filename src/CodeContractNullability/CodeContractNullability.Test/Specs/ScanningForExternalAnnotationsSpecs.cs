@@ -30,7 +30,7 @@ namespace CodeContractNullability.Test.Specs
 
         [Theory]
         [InlineData(
-            @"%PROGRAMFILES%\JetBrains\JetBrains Rider 2018.2.1\lib\ReSharperHost\ExternalAnnotations\ExternalAnnotations")]
+            @"%SystemDrive%\Program Files\JetBrains\JetBrains Rider 2018.2.1\lib\ReSharperHost\ExternalAnnotations\ExternalAnnotations")]
         [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations")]
         [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\Extensions")]
         [InlineData(@"%USERPROFILE%\.nuget\packages\jetbrains.externalannotations\10.2.57\DotFiles\ExternalAnnotations")]
