@@ -172,7 +172,7 @@ namespace CodeContractNullability
                 }
             }
 
-            throw new NotSupportedException($"Unsupported equivalence key '${equivalenceKey}'.");
+            throw new NotSupportedException($"Unsupported equivalence key '{equivalenceKey}'.");
         }
 
         private sealed class NullabilityFixAllProvider : DocumentBasedFixAllProvider
