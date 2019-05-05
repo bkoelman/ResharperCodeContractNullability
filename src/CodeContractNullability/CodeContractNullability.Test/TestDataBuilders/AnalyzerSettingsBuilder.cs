@@ -34,7 +34,16 @@ namespace CodeContractNullability.Test.TestDataBuilders
             Guard.NotNull(settings, nameof(settings));
 
             string content = SettingsProvider.ToFileContent(settings);
-            return new AnalyzerOptions(ImmutableArray.Create<AdditionalText>(new FakeAdditionalText(content)));
+            return ToOptions(content);
+        }
+
+        [NotNull]
+        public static AnalyzerOptions ToOptions([NotNull] string settingsText)
+        {
+            Guard.NotNull(settingsText, nameof(settingsText));
+
+            AdditionalText additionalText = new FakeAdditionalText(settingsText);
+            return new AnalyzerOptions(ImmutableArray.Create(additionalText));
         }
 
         private sealed class FakeAdditionalText : AdditionalText

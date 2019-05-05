@@ -713,6 +713,29 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyFix(source, CreateMessageForParameter("index"));
         }
+
+        [Fact]
+        public void When_parameters_are_annotated_with_NotNull_it_must_remove_all_attributes()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .WithNullableReferenceTypesEnabled()
+                .InGlobalScope(@"
+                    class C
+                    {
+                        void M([-[NotNull] -]string [|p1|], [-[NotNull] -]string [|p2|], [-[NotNull] -]string [|p3|])
+                        {
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyFixes(source,
+                CreateMessageForParameter("p1"),
+                CreateMessageForParameter("p2"),
+                CreateMessageForParameter("p3"));
+        }
     }
 }
 #endif

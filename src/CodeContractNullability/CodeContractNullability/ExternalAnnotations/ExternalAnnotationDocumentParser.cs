@@ -51,48 +51,57 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 foreach (XElement memberElement in assemblyElement.Elements("member"))
                 {
-                    string memberType = "?";
-                    string memberName = memberElement.Attribute("name")?.Value;
-                    if (memberName != null)
+                    ProcessMember(memberElement, result);
+                }
+            }
+        }
+
+        private static void ProcessMember([NotNull] XElement memberElement, [NotNull] ExternalAnnotationsMap result)
+        {
+            string memberType = "?";
+            string memberName = memberElement.Attribute("name")?.Value;
+            if (memberName != null)
+            {
+                if (memberName.Length > 2 && memberName[1] == ':')
+                {
+                    memberType = memberName[0].ToString();
+                    memberName = memberName.Substring(2);
+                }
+
+                MemberNullabilityInfo memberInfo = result.ContainsKey(memberName)
+                    ? result[memberName]
+                    : new MemberNullabilityInfo(memberType);
+
+                foreach (XElement childElement in memberElement.Elements())
+                {
+                    ProcessChildOfMember(childElement, memberInfo);
+                }
+
+                result[memberName] = memberInfo;
+            }
+        }
+
+        private static void ProcessChildOfMember([NotNull] XElement childElement, [NotNull] MemberNullabilityInfo memberInfo)
+        {
+            if (childElement.Name == "parameter")
+            {
+                string parameterName = childElement.Attribute("name")?.Value;
+                if (parameterName != null)
+                {
+                    foreach (XElement attributeElement in childElement.Elements("attribute"))
                     {
-                        if (memberName.Length > 2 && memberName[1] == ':')
+                        if (ElementHasNullabilityDefinition(attributeElement))
                         {
-                            memberType = memberName[0].ToString();
-                            memberName = memberName.Substring(2);
+                            memberInfo.ParametersNullability[parameterName] = true;
                         }
-
-                        MemberNullabilityInfo memberInfo = result.ContainsKey(memberName)
-                            ? result[memberName]
-                            : new MemberNullabilityInfo(memberType);
-
-                        foreach (XElement childElement in memberElement.Elements())
-                        {
-                            if (childElement.Name == "parameter")
-                            {
-                                string parameterName = childElement.Attribute("name")?.Value;
-                                if (parameterName != null)
-                                {
-                                    foreach (XElement attributeElement in childElement.Elements("attribute"))
-                                    {
-                                        if (ElementHasNullabilityDefinition(attributeElement))
-                                        {
-                                            memberInfo.ParametersNullability[parameterName] = true;
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (childElement.Name == "attribute")
-                            {
-                                if (ElementHasNullabilityDefinition(childElement))
-                                {
-                                    memberInfo.HasNullabilityDefined = true;
-                                }
-                            }
-                        }
-
-                        result[memberName] = memberInfo;
                     }
+                }
+            }
+            else if (childElement.Name == "attribute")
+            {
+                if (ElementHasNullabilityDefinition(childElement))
+                {
+                    memberInfo.HasNullabilityDefined = true;
                 }
             }
         }

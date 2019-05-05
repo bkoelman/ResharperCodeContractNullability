@@ -230,6 +230,55 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_side_by_side_external_annotations_file_does_not_exist_it_must_succeed()
+        {
+            // Arrange
+            using (var assemblyScope = new TempAssemblyScope())
+            {
+                string systemAnnotationsPath = Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
+
+                IFileSystem fileSystem = new FakeFileSystemBuilder()
+                    .IncludingTextFile(systemAnnotationsPath, new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrEmpty(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                    .Build();
+
+                ParsedSourceCode source = new TypeSourceCodeBuilder()
+                    .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                    .WithReferenceToExternalAssemblyOnDiskFor(assemblyScope.AssemblyPath, @"
+                        using System;
+
+                        namespace ExternalAssembly
+                        {
+                            public interface I
+                            {
+                                string M();
+                            }
+                        }
+                    ")
+                    .InGlobalScope(@"
+                        public class C : ExternalAssembly.I
+                        {
+                            public string [|M|]()
+                            {
+                                throw null;
+                            }
+                        }
+                    ")
+                    .Build();
+
+                var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
+                analyzerTest.VerifyNullabilityDiagnostics(source,
+                    analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+            }
+        }
+
+        [Fact]
         public void When_side_by_side_external_annotations_file_changes_it_must_update_analyzer_cache()
         {
             // Arrange
@@ -308,7 +357,8 @@ namespace CodeContractNullability.Test.Specs
                 analyzerTest.WaitForFileEvictionFromSideBySideCache(sideBySideAnnotationsPath);
 
                 // After update of the side-by-side file on disk, analyzer should detect the change and report a diagnostic this time.
-                analyzerTest.VerifyNullabilityDiagnostics(updatedSource, analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+                analyzerTest.VerifyNullabilityDiagnostics(updatedSource,
+                    analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
             }
         }
     }

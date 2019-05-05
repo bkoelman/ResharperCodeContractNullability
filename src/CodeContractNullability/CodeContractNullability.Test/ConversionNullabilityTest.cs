@@ -37,14 +37,37 @@ namespace CodeContractNullability.Test
         {
             Guard.NotNull(source, nameof(source));
 
+            FixProviderTestContext fixContext = CreateFixTestContext(source);
+
+            AssertDiagnosticsWithCodeFixes(fixContext, messages);
+        }
+
+        private protected void VerifyFixes([NotNull] ParsedSourceCode source,
+            [NotNull] [ItemNotNull] params string[] messages)
+        {
+            Guard.NotNull(source, nameof(source));
+
+            FixProviderTestContext fixContext = CreateFixTestContext(source);
+
+            string[] equivalenceKeysForFixAll =
+            {
+                nameof(NullableReferenceTypeConversionCodeFixProvider)
+            };
+
+            fixContext = fixContext.WithEquivalenceKeysForFixAll(equivalenceKeysForFixAll);
+
+            AssertDiagnosticsWithAllCodeFixes(fixContext, messages);
+        }
+
+        [NotNull]
+        private static FixProviderTestContext CreateFixTestContext([NotNull] ParsedSourceCode source)
+        {
             string[] expectedCode =
             {
                 source.ExpectedText
             };
 
-            var fixContext = new FixProviderTestContext(source.TestContext, expectedCode, source.CodeComparisonMode);
-
-            AssertDiagnosticsWithCodeFixes(fixContext, messages);
+            return new FixProviderTestContext(source.TestContext, expectedCode, source.CodeComparisonMode);
         }
 
         [NotNull]

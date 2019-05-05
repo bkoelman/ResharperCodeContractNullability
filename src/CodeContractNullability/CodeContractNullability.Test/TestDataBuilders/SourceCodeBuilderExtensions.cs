@@ -191,6 +191,20 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
+        public static TBuilder WithSettingsText<TBuilder>([NotNull] this TBuilder source,
+            [NotNull] string settingsText)
+            where TBuilder : SourceCodeBuilder
+        {
+            Guard.NotNull(settingsText, nameof(settingsText));
+
+            AnalyzerOptions options = AnalyzerSettingsBuilder.ToOptions(settingsText);
+
+            source.Editor.UpdateTestContext(context => context.WithOptions(options));
+
+            return source;
+        }
+
+        [NotNull]
         public static TBuilder ExpectingImportForNamespace<TBuilder>([NotNull] this TBuilder source,
             [NotNull] string expectedImportText)
             where TBuilder : SourceCodeBuilder

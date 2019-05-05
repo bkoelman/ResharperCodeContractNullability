@@ -7,11 +7,10 @@ namespace CodeContractNullability.Utilities
         [NotNull]
         public static string ToCamelCase([NotNull] this string memberTypePascalCase)
         {
-            Guard.NotNull(memberTypePascalCase, nameof(memberTypePascalCase));
+            Guard.NotNullNorWhiteSpace(memberTypePascalCase, nameof(memberTypePascalCase));
 
-            return memberTypePascalCase.Length > 1
-                ? memberTypePascalCase.Substring(0, 1).ToLowerInvariant() + memberTypePascalCase.Substring(1)
-                : memberTypePascalCase;
+            string firstChar = memberTypePascalCase.Substring(0, 1).ToLowerInvariant();
+            return memberTypePascalCase.Length > 1 ? firstChar + memberTypePascalCase.Substring(1) : firstChar;
         }
     }
 }
