@@ -24,8 +24,7 @@ namespace CodeContractNullability.Test
                 source.ExpectedText
             };
 
-            var fixTestContext = new FixProviderTestContext(source.TestContext, expectedCode,
-                TextComparisonMode.ExactMatch);
+            var fixTestContext = new FixProviderTestContext(source.TestContext, expectedCode, TextComparisonMode.ExactMatch);
 
             AssertDiagnosticsWithCodeFixes(fixTestContext, messages);
         }
