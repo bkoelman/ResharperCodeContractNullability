@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using CodeContractNullability.ExternalAnnotations;
 using CodeContractNullability.Test.TestDataBuilders;
 using FluentAssertions;
+using FluentAssertions.Extensions;
 using JetBrains.Annotations;
+using TestableFileSystem.Fakes;
 using TestableFileSystem.Fakes.Builders;
 using TestableFileSystem.Interfaces;
 using Xunit;
@@ -46,6 +49,168 @@ namespace CodeContractNullability.Test.Specs
                     @".NETFramework\mscorlib\Annotations.xml");
 
             IFileSystem fileSystem = new FakeFileSystemBuilder()
+                .IncludingTextFile(externalAnnotationsPath, new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:System.String.IsNullOrEmpty(System.String)")
+                        .WithParameter(new ExternalAnnotationParameterBuilder()
+                            .Named("value")
+                            .CanBeNull()))
+                    .GetXml())
+                .Build();
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void When_multiple_external_annotation_files_are_found_it_must_succeed()
+        {
+            // Arrange
+            string externalAnnotationsDirectory = Environment.ExpandEnvironmentVariables(
+                @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions\.NETFramework\mscorlib");
+
+            string annotationsFile1 = Path.Combine(externalAnnotationsDirectory, "Annotations1.xml");
+
+            var clock = new SystemClock(() => 1.January(2001).AsUtc());
+
+            IFileSystem fileSystem = new FakeFileSystemBuilder(clock)
+                .IncludingTextFile(annotationsFile1,
+                    new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrWhiteSpace(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                .IncludingTextFile(Path.Combine(externalAnnotationsDirectory, "Annotations2.xml"),
+                    new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrEmpty(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                .Build();
+
+            fileSystem.File.SetLastWriteTimeUtc(annotationsFile1, 2.January(2001).AsUtc());
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void When_external_annotations_contains_member_definition_without_nullability_it_must_succeed()
+        {
+            // Arrange
+            string externalAnnotationsDirectory = Environment.ExpandEnvironmentVariables(
+                @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions\.NETFramework\mscorlib");
+
+            IFileSystem fileSystem = new FakeFileSystemBuilder()
+                .IncludingTextFile(Path.Combine(externalAnnotationsDirectory, "Annotations1.xml"),
+                    new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrWhiteSpace(System.String)"))
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrEmpty(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                .Build();
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void When_external_annotations_are_cached_it_must_succeed()
+        {
+            // Arrange
+            string cachePath =
+                Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\ResharperCodeContractNullability\external-annotations.cache");
+
+            string externalAnnotationsPath =
+                Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions\.NETFramework\mscorlib\Annotations.xml");
+
+            var clock = new SystemClock(() => 1.January(2001).AsUtc());
+
+            IFileSystem fileSystem = new FakeFileSystemBuilder(clock)
+                .IncludingBinaryFile(cachePath,
+                    Convert.FromBase64String(
+                        "koHZKlN5c3RlbS5TdHJpbmcuSXNOdWxsT3JFbXB0eShTeXN0ZW0uU3RyaW5nKZPCgaV2YWx1ZcOhTdb/Ok/IgA=="))
+                .IncludingTextFile(externalAnnotationsPath, new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:System.String.IsNullOrEmpty(System.String)"))
+                    .GetXml())
+                .Build();
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void When_external_annotations_are_cached_without_external_annotations_on_disk_it_must_fail()
+        {
+            // Arrange
+            string cachePath =
+                Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\ResharperCodeContractNullability\external-annotations.cache");
+
+            var clock = new SystemClock(() => 1.January(2001).AsUtc());
+
+            IFileSystem fileSystem = new FakeFileSystemBuilder(clock)
+                .IncludingBinaryFile(cachePath,
+                    Convert.FromBase64String(
+                        "koHZKlN5c3RlbS5TdHJpbmcuSXNOdWxsT3JFbXB0eShTeXN0ZW0uU3RyaW5nKZPCgaV2YWx1ZcOhTdb/Ok/IgA=="))
+                .Build();
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().ThrowExactly<MissingExternalAnnotationsException>();
+        }
+
+        [Fact]
+        public void When_external_annotations_cache_is_corrupt_it_must_succeed()
+        {
+            // Arrange
+            string cachePath =
+                Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\ResharperCodeContractNullability\external-annotations.cache");
+
+            string externalAnnotationsPath =
+                Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions\.NETFramework\mscorlib\Annotations.xml");
+
+            var clock = new SystemClock(() => 1.January(2001).AsUtc());
+
+            IFileSystem fileSystem = new FakeFileSystemBuilder(clock)
+                .IncludingBinaryFile(cachePath, Encoding.ASCII.GetBytes("*** BAD CACHE DATA ***"))
                 .IncludingTextFile(externalAnnotationsPath, new ExternalAnnotationsBuilder()
                     .IncludingMember(new ExternalAnnotationFragmentBuilder()
                         .Named("M:System.String.IsNullOrEmpty(System.String)")
