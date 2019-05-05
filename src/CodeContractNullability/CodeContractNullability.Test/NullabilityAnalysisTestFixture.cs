@@ -38,6 +38,35 @@ namespace CodeContractNullability.Test
 
             externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
 
+            FixProviderTestContext fixContext = CreateFixTestContext(source);
+
+            AssertDiagnosticsWithCodeFixes(fixContext, messages);
+        }
+
+        private protected void VerifyNullabilityFixes([NotNull] ParsedSourceCode source,
+            [NotNull] [ItemNotNull] params string[] messages)
+        {
+            Guard.NotNull(source, nameof(source));
+            Guard.NotNull(messages, nameof(messages));
+
+            externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(source.ExternalAnnotationsMap);
+
+            FixProviderTestContext fixContext = CreateFixTestContext(source);
+
+            string[] equivalenceKeysForFixAll =
+            {
+                "Decorate with " + NotNullAttributeName,
+                "Decorate with " + CanBeNullAttributeName
+            };
+
+            fixContext = fixContext.WithEquivalenceKeysForFixAll(equivalenceKeysForFixAll);
+
+            AssertDiagnosticsWithAllCodeFixes(fixContext, messages);
+        }
+
+        [NotNull]
+        private FixProviderTestContext CreateFixTestContext([NotNull] ParsedSourceCode source)
+        {
             string fixNotNull = source.GetExpectedTextForAttribute(NotNullAttributeName);
             string fixCanBeNull = source.GetExpectedTextForAttribute(CanBeNullAttributeName);
 
@@ -47,10 +76,7 @@ namespace CodeContractNullability.Test
                 fixCanBeNull
             };
 
-            var fixContext = new FixProviderTestContext(source.TestContext, expectedCode,
-                source.CodeComparisonMode);
-
-            AssertDiagnosticsWithCodeFixes(fixContext, messages);
+            return new FixProviderTestContext(source.TestContext, expectedCode, source.CodeComparisonMode);
         }
 
         protected override DiagnosticAnalyzer CreateAnalyzer()

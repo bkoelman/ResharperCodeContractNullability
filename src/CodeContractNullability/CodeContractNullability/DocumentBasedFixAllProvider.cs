@@ -31,21 +31,21 @@ namespace CodeContractNullability
                 {
                     fixAction = CodeAction.Create(codeActionTitle,
                         cancellationToken => GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                        nameof(DocumentBasedFixAllProvider));
+                        fixAllContext.CodeActionEquivalenceKey);
                     break;
                 }
                 case FixAllScope.Project:
                 {
                     fixAction = CodeAction.Create(codeActionTitle,
                         cancellationToken => GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken),
-                            fixAllContext.Project), nameof(DocumentBasedFixAllProvider));
+                            fixAllContext.Project), fixAllContext.CodeActionEquivalenceKey);
                     break;
                 }
                 case FixAllScope.Solution:
                 {
                     fixAction = CodeAction.Create(codeActionTitle,
                         cancellationToken => GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
-                        nameof(DocumentBasedFixAllProvider));
+                        fixAllContext.CodeActionEquivalenceKey);
                     break;
                 }
             }
