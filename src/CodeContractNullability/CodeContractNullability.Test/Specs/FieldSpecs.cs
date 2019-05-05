@@ -303,6 +303,23 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityFix(source, CreateMessageForField("f"));
         }
 
+#if !NET452
+        [Fact]
+        public void When_field_type_is_reference_and_nullable_reference_types_are_enabled_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .WithNullableReferenceTypesEnabled()
+                .InDefaultClass(@"
+                    string f;
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+#endif
+
         [Fact]
         public void When_field_is_compiler_generated_it_must_be_skipped()
         {
