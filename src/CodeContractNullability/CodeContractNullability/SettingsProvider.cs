@@ -41,7 +41,7 @@ namespace CodeContractNullability
                 }
                 catch (Exception ex)
                 {
-                    Debug.Write("Failed to parse analyser settings file. Using default settings. Exception: " + ex);
+                    Debug.Write("Failed to parse analyzer settings file. Using default settings. Exception: " + ex);
                 }
             }
 
