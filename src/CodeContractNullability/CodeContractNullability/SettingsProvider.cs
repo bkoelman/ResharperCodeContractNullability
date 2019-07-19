@@ -83,7 +83,7 @@ namespace CodeContractNullability
         {
             Guard.NotNull(settings, nameof(settings));
 
-            Encoding encoding = new UTF8Encoding();
+            Encoding encoding = CreateEncoding();
             return GetStringForXml(encoding, writer =>
             {
                 var serializer = new DataContractSerializer(typeof(AnalyzerSettings));
