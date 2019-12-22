@@ -238,12 +238,14 @@ namespace CodeContractNullability.ExternalAnnotations
             }
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private enum Category
         {
             ExternalAnnotations,
             Extensions
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private enum Scope
         {
             SystemRider,
