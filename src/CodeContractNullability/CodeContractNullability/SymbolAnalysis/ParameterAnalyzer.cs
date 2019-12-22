@@ -79,21 +79,21 @@ namespace CodeContractNullability.SymbolAnalysis
         {
             ISymbol containingMember = parameter.ContainingSymbol;
 
-            foreach (INamedTypeSymbol iface in parameter.ContainingType.AllInterfaces)
+            foreach (INamedTypeSymbol @interface in parameter.ContainingType.AllInterfaces)
             {
-                foreach (ISymbol ifaceMember in iface.GetMembers())
+                foreach (ISymbol interfaceMember in @interface.GetMembers())
                 {
-                    ISymbol implementer = parameter.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
+                    ISymbol implementer = parameter.ContainingType.FindImplementationForInterfaceMember(interfaceMember);
 
                     if (containingMember.Equals(implementer))
                     {
                         ImmutableArray<IParameterSymbol> parameters = GetParametersFor(containingMember);
                         int parameterIndex = parameters.IndexOf(parameter);
 
-                        ImmutableArray<IParameterSymbol> ifaceParameters = GetParametersFor(ifaceMember);
-                        IParameterSymbol ifaceParameter = ifaceParameters[parameterIndex];
+                        ImmutableArray<IParameterSymbol> interfaceParameters = GetParametersFor(interfaceMember);
+                        IParameterSymbol interfaceParameter = interfaceParameters[parameterIndex];
 
-                        if (ifaceParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceParameter))
+                        if (interfaceParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(interfaceParameter))
                         {
                             return true;
                         }

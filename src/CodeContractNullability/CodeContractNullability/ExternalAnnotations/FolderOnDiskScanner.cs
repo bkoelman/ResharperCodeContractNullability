@@ -140,7 +140,7 @@ namespace CodeContractNullability.ExternalAnnotations
             foreach (string versionPath in fileSystem.Directory.GetDirectories(nuGetUserDirectory))
             {
                 string versionFolder = Path.GetFileName(versionPath);
-                if (versionFolder != null && Version.TryParse(versionFolder, out Version packageVersion))
+                if (Version.TryParse(versionFolder, out Version packageVersion))
                 {
                     string path = Path.Combine(versionPath, "DotFiles", "ExternalAnnotations");
                     if (fileSystem.Directory.Exists(path))
@@ -166,7 +166,7 @@ namespace CodeContractNullability.ExternalAnnotations
             foreach (string versionPath in fileSystem.Directory.GetDirectories(installationsFolder, RiderFolderNamePrefix + "*"))
             {
                 string versionFolder = Path.GetFileName(versionPath);
-                if (versionFolder?.Length > RiderFolderNamePrefix.Length)
+                if (versionFolder.Length > RiderFolderNamePrefix.Length)
                 {
                     if (Version.TryParse(versionFolder.Substring(RiderFolderNamePrefix.Length).TrimStart(),
                         out Version riderVersion))
@@ -200,7 +200,7 @@ namespace CodeContractNullability.ExternalAnnotations
                 ResharperFolderNamePrefix + "*"))
             {
                 string platformFolder = Path.GetFileName(platformPath);
-                if (platformFolder?.Length >= ResharperFolderNamePrefix.Length + 2)
+                if (platformFolder.Length >= ResharperFolderNamePrefix.Length + 2)
                 {
                     if (int.TryParse(platformFolder.Substring(ResharperFolderNamePrefix.Length, 2), out int vsVersion) &&
                         vsVersion >= 14)

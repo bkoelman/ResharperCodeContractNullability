@@ -30,7 +30,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
 
             if (appliesToItem)
             {
-                // Note: At the time of writing (August 2015), the set of Resharper's external annotations does not
+                // Note: At the time of writing (August 2015), the set of Re-sharper's external annotations does not
                 // include ItemNotNull / ItemCanBeNull elements. But we likely need to add support for them in the future.
                 return false;
             }

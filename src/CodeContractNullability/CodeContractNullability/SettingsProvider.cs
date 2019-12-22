@@ -58,24 +58,18 @@ namespace CodeContractNullability
         private static TResult ReadSourceText<TResult>([NotNull] SourceText sourceText,
             [NotNull] Func<XmlReader, TResult> readAction, CancellationToken cancellationToken)
         {
-            using (var stream = new MemoryStream())
-            {
-                using (var writer = new StreamWriter(stream))
-                {
-                    sourceText.Write(writer, cancellationToken);
-                    writer.Flush();
+            using var stream = new MemoryStream();
+            using var writer = new StreamWriter(stream);
 
-                    stream.Seek(0, SeekOrigin.Begin);
+            sourceText.Write(writer, cancellationToken);
+            writer.Flush();
 
-                    using (var textReader = new StreamReader(stream))
-                    {
-                        using (XmlReader xmlReader = XmlReader.Create(textReader))
-                        {
-                            return readAction(xmlReader);
-                        }
-                    }
-                }
-            }
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using var textReader = new StreamReader(stream);
+            using var xmlReader = XmlReader.Create(textReader);
+
+            return readAction(xmlReader);
         }
 
         [NotNull]
@@ -94,32 +88,23 @@ namespace CodeContractNullability
         [NotNull]
         private static string GetStringForXml([NotNull] Encoding encoding, [NotNull] Action<XmlWriter> writeAction)
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            using var textWriter = new StreamWriter(stream);
+            using var xmlWriter = XmlWriter.Create(textWriter, new XmlWriterSettings
             {
-                using (var textWriter = new StreamWriter(stream))
-                {
-                    var xmlSettings = new XmlWriterSettings
-                    {
-                        Encoding = encoding,
-                        Indent = true
-                    };
+                Encoding = encoding,
+                Indent = true
+            });
 
-                    using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, xmlSettings))
-                    {
-                        writeAction(xmlWriter);
+            writeAction(xmlWriter);
 
-                        xmlWriter.Flush();
-                        textWriter.Flush();
+            xmlWriter.Flush();
+            textWriter.Flush();
 
-                        stream.Seek(0, SeekOrigin.Begin);
+            stream.Seek(0, SeekOrigin.Begin);
 
-                        using (var reader = new StreamReader(stream))
-                        {
-                            return reader.ReadToEnd();
-                        }
-                    }
-                }
-            }
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
     }
 }

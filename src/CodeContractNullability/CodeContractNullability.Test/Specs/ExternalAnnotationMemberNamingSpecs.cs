@@ -128,7 +128,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_generic_parameters_in_generic_method_of_nongeneric_class_are_externally_annotated_it_must_be_skipped()
+        public void When_generic_parameters_in_generic_method_of_non_generic_class_are_externally_annotated_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new TypeSourceCodeBuilder()

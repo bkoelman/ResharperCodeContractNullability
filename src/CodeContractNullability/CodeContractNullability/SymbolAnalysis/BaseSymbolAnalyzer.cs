@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;
@@ -164,15 +165,15 @@ namespace CodeContractNullability.SymbolAnalysis
 
         protected virtual bool HasAnnotationInInterface([NotNull] TSymbol symbol)
         {
-            foreach (INamedTypeSymbol iface in symbol.ContainingType.AllInterfaces)
+            foreach (INamedTypeSymbol @interface in symbol.ContainingType.AllInterfaces)
             {
-                foreach (TSymbol ifaceMember in iface.GetMembers().OfType<TSymbol>())
+                foreach (TSymbol interfaceMember in @interface.GetMembers().OfType<TSymbol>())
                 {
-                    ISymbol implementer = symbol.ContainingType.FindImplementationForInterfaceMember(ifaceMember);
+                    ISymbol implementer = symbol.ContainingType.FindImplementationForInterfaceMember(interfaceMember);
 
                     if (symbol.Equals(implementer))
                     {
-                        if (ifaceMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(ifaceMember))
+                        if (interfaceMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(interfaceMember))
                         {
                             return true;
                         }

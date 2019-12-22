@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if !NET452
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Xunit;
-#if !NET452
 using CodeContractNullability.Test.TestDataBuilders;
 
 namespace CodeContractNullability.Test.Specs

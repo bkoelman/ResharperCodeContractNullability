@@ -147,23 +147,23 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 }
 
                 bool isOnFirstLineInBlock = true;
-                using (var reader = new StringReader(codeBlock.TrimEnd()))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (isOnFirstLineInBlock)
-                        {
-                            if (line.Trim().Length == 0)
-                            {
-                                continue;
-                            }
 
-                            isOnFirstLineInBlock = false;
+                using var reader = new StringReader(codeBlock.TrimEnd());
+
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (isOnFirstLineInBlock)
+                    {
+                        if (line.Trim().Length == 0)
+                        {
+                            continue;
                         }
 
-                        builder.AppendLine(line);
+                        isOnFirstLineInBlock = false;
                     }
+
+                    builder.AppendLine(line);
                 }
             }
 

@@ -9,7 +9,7 @@ namespace CodeContractNullability.Test.Specs
     public sealed class TokenTriviaSpecs : NullabilityTest
     {
         [Fact]
-        public void When_field_has_singleline_comments_they_must_be_preserved()
+        public void When_field_has_single_line_comments_they_must_be_preserved()
         {
             // Arrange
             string code = @"public class T
@@ -51,7 +51,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_property_has_singleline_comments_they_must_be_preserved()
+        public void When_property_has_single_line_comments_they_must_be_preserved()
         {
             // Arrange
             string code = @"public class T
@@ -93,7 +93,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_indexer_result_has_singleline_comments_they_must_be_preserved()
+        public void When_indexer_result_has_single_line_comments_they_must_be_preserved()
         {
             // Arrange
             string code = @"public class T
@@ -143,7 +143,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_indexer_parameter_has_singleline_comments_they_must_be_preserved()
+        public void When_indexer_parameter_has_single_line_comments_they_must_be_preserved()
         {
             // Arrange
             string code = @"public class T
@@ -191,7 +191,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_return_value_has_singleline_comments_they_must_be_preserved()
+        public void When_return_value_has_single_line_comments_they_must_be_preserved()
         {
             // Arrange
             string code = @"public class T
@@ -233,7 +233,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_method_parameter_has_singleline_comments_they_must_be_preserved()
+        public void When_method_parameter_has_single_line_comments_they_must_be_preserved()
         {
             // Arrange
             string code = @"public class T

@@ -47,7 +47,7 @@ namespace CodeContractNullability.ExternalAnnotations
                 //
                 // But when targeting the .NET Framework v4.5, mscorlib v4.0.0.0 is used, so this snapshot
                 // does not apply. To support this, we need to add assembly info to our data structure
-                // for each symbol. That makes the dataset grow a lot, taking longer to load/save.
+                // for each symbol. That makes the data set grow a lot, taking longer to load/save.
 
                 foreach (XElement memberElement in assemblyElement.Elements("member"))
                 {

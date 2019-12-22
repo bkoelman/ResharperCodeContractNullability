@@ -15,7 +15,7 @@ namespace CodeContractNullability.ExternalAnnotations
     /// Scans the filesystem for Resharper external annotations in xml files.
     /// </summary>
     /// <remarks>
-    /// Resharper provides downloadable xml definitions that contain decoration of built-in .NET Framework types. When a class derives
+    /// Resharper provides xml definitions for download that contain decoration of built-in .NET Framework types. When a class derives
     /// from such a built-in type, we need to have those definitions available because Resharper reports nullability annotation as
     /// unneeded when a base type is already decorated.
     /// </remarks>
@@ -107,16 +107,16 @@ namespace CodeContractNullability.ExternalAnnotations
                 {
                     MessagePackSerializer<ExternalAnnotationsCache> serializer =
                         SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
-                    using (IFileStream stream = fileSystem.File.OpenRead(CachePath))
-                    {
-                        using (new CodeTimer("ExternalAnnotationsCache:Read"))
-                        {
-                            ExternalAnnotationsCache result = serializer.Unpack(stream.AsStream());
 
-                            if (result.ExternalAnnotations.Any())
-                            {
-                                return result;
-                            }
+                    using IFileStream stream = fileSystem.File.OpenRead(CachePath);
+
+                    using (new CodeTimer("ExternalAnnotationsCache:Read"))
+                    {
+                        ExternalAnnotationsCache result = serializer.Unpack(stream.AsStream());
+
+                        if (result.ExternalAnnotations.Any())
+                        {
+                            return result;
                         }
                     }
                 }
@@ -161,12 +161,12 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 MessagePackSerializer<ExternalAnnotationsCache> serializer =
                     SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
-                using (IFileStream stream = fileSystem.File.Create(CachePath))
+
+                using IFileStream stream = fileSystem.File.Create(CachePath);
+
+                using (new CodeTimer("ExternalAnnotationsCache:Write"))
                 {
-                    using (new CodeTimer("ExternalAnnotationsCache:Write"))
-                    {
-                        serializer.Pack(stream.AsStream(), cache);
-                    }
+                    serializer.Pack(stream.AsStream(), cache);
                 }
             }
             catch (IOException)
@@ -195,10 +195,9 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 recorder.VisitFile(path);
 
-                using (StreamReader reader = fileSystem.File.OpenText(path))
-                {
-                    parser.ProcessDocument(reader, result);
-                }
+                using StreamReader reader = fileSystem.File.OpenText(path);
+
+                parser.ProcessDocument(reader, result);
             }
 
             Compact(result);

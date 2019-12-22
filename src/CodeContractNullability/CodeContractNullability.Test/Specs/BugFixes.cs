@@ -6,7 +6,7 @@ namespace CodeContractNullability.Test.Specs
     /// <summary>
     /// Tests for reported bugs.
     /// </summary>
-    public sealed class Bugfixes : NullabilityTest
+    public sealed class BugFixes : NullabilityTest
     {
         [Fact]
         [GitHubIssue(4)]
@@ -80,7 +80,7 @@ namespace CodeContractNullability.Test.Specs
         [Fact]
         [GitHubIssue(13)]
         public void
-            When_parameter_in_nongeneric_class_that_derives_from_generic_base_class_that_implements_annotated_generic_interface_it_must_be_skipped()
+            When_parameter_in_non_generic_class_that_derives_from_generic_base_class_that_implements_annotated_generic_interface_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new TypeSourceCodeBuilder()

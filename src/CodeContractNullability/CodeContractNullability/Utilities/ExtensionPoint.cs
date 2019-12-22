@@ -8,7 +8,7 @@ namespace CodeContractNullability.Utilities
     /// speed up running unit tests.
     /// </summary>
     /// <typeparam name="TInterface">
-    /// Type of the object that is replaceble.
+    /// Type of the object that is replaceable.
     /// </typeparam>
     public sealed class ExtensionPoint<TInterface>
         where TInterface : class

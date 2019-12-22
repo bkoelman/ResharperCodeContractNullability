@@ -869,7 +869,7 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
-        public void When_parameter_is_in_file_with_codegen_comment_at_top_it_must_be_skipped()
+        public void When_parameter_is_in_file_with_code_gen_comment_at_top_it_must_be_skipped()
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
