@@ -18,8 +18,8 @@ namespace CodeContractNullability
         public static async Task<ImmutableDictionary<Document, ImmutableArray<Diagnostic>>> GetDocumentDiagnosticsToFixAsync(
             [NotNull] FixAllContext fixAllContext)
         {
-            ImmutableArray<Diagnostic> allDiagnostics = ImmutableArray<Diagnostic>.Empty;
-            ImmutableArray<Project> projectsToFix = ImmutableArray<Project>.Empty;
+            var allDiagnostics = ImmutableArray<Diagnostic>.Empty;
+            var projectsToFix = ImmutableArray<Project>.Empty;
 
             Document document = fixAllContext.Document;
             Project project = fixAllContext.Project;

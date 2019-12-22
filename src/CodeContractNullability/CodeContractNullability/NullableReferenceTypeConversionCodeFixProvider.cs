@@ -70,7 +70,7 @@ namespace CodeContractNullability
         private void RegisterFixForSyntaxNode([NotNull] SyntaxNode declarationSyntax, [NotNull] ISymbol declarationSymbol,
             [NotNull] Diagnostic diagnostic, CodeFixContext context, [NotNull] FrameworkTypeCache typeCache)
         {
-            CodeAction codeAction = CodeAction.Create("Convert to C# syntax",
+            var codeAction = CodeAction.Create("Convert to C# syntax",
                 token => ChangeSolutionAsync(declarationSyntax, declarationSymbol, context.Document, typeCache, token),
                 nameof(NullableReferenceTypeConversionCodeFixProvider));
 

@@ -1,4 +1,5 @@
-﻿using CodeContractNullability.Test.TestDataBuilders;
+﻿#if !NET452
+using CodeContractNullability.Test.TestDataBuilders;
 using Xunit;
 
 namespace CodeContractNullability.Test.Specs
@@ -8,7 +9,6 @@ namespace CodeContractNullability.Test.Specs
     /// </summary>
     public sealed class LocalFunctionSpecs : NullabilityTest
     {
-#if !NET452
         [Fact]
         public void When_local_function_parameter_is_nullable_it_must_be_skipped()
         {
@@ -52,6 +52,6 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
-#endif
     }
 }
+#endif

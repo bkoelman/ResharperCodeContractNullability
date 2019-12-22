@@ -99,9 +99,12 @@ namespace CodeContractNullability
         private static INamedTypeSymbol GetNullabilityAttribute([NotNull] NullabilityAttributeSymbols nullSymbols,
             bool appliesToItem, bool canBeNull)
         {
-            return appliesToItem
-                ? (canBeNull ? nullSymbols.ItemCanBeNull : nullSymbols.ItemNotNull)
-                : (canBeNull ? nullSymbols.CanBeNull : nullSymbols.NotNull);
+            if (appliesToItem)
+            {
+                return canBeNull ? nullSymbols.ItemCanBeNull : nullSymbols.ItemNotNull;
+            }
+
+            return canBeNull ? nullSymbols.CanBeNull : nullSymbols.NotNull;
         }
 
         private void RegisterFixForAttribute(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,

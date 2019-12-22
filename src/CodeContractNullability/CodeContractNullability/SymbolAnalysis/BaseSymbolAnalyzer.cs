@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using CodeContractNullability.Utilities;
 using JetBrains.Annotations;

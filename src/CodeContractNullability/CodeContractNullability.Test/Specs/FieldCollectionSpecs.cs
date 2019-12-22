@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -216,7 +215,7 @@ namespace CodeContractNullability.Test.Specs
         {
             // Arrange
             ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .Using(typeof(ValueTuple<>).Namespace)
+                .Using(typeof(System.ValueTuple<>).Namespace)
                 .InDefaultClass(@"
                     private protected (string, string) f;
                 ")

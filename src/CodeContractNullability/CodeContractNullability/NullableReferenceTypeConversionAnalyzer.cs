@@ -114,7 +114,7 @@ namespace CodeContractNullability
                 }
 
                 string symbolType = GetSymbolTypeText(context);
-                Diagnostic diagnostic = Diagnostic.Create(rule, context.Symbol.Locations[0], symbolType, context.Symbol.Name);
+                var diagnostic = Diagnostic.Create(rule, context.Symbol.Locations[0], symbolType, context.Symbol.Name);
                 context.ReportDiagnostic(diagnostic);
             }
         }
