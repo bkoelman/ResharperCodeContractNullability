@@ -14,6 +14,12 @@ namespace CodeContractNullability.ExternalAnnotations
         private const string ResharperFolderNamePrefix = "ReSharperPlatformVs";
 
         [NotNull]
+        private static readonly Scope[] Scopes = Enum.GetValues(typeof(Scope)).Cast<Scope>().ToArray();
+
+        [NotNull]
+        private static readonly Category[] Categories = Enum.GetValues(typeof(Category)).Cast<Category>().ToArray();
+
+        [NotNull]
         private readonly IFileSystem fileSystem;
 
         [NotNull]
@@ -29,12 +35,6 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         private readonly string nuGetUserDirectory = Path.Combine(Environment.ExpandEnvironmentVariables("%USERPROFILE%"),
             ".nuget", "packages", "jetbrains.externalannotations");
-
-        [NotNull]
-        private static readonly Scope[] Scopes = Enum.GetValues(typeof(Scope)).Cast<Scope>().ToArray();
-
-        [NotNull]
-        private static readonly Category[] Categories = Enum.GetValues(typeof(Category)).Cast<Category>().ToArray();
 
         public FolderOnDiskScanner([NotNull] IFileSystem fileSystem)
         {
@@ -140,9 +140,11 @@ namespace CodeContractNullability.ExternalAnnotations
             foreach (string versionPath in fileSystem.Directory.GetDirectories(nuGetUserDirectory))
             {
                 string versionFolder = Path.GetFileName(versionPath);
+
                 if (Version.TryParse(versionFolder, out Version packageVersion))
                 {
                     string path = Path.Combine(versionPath, "DotFiles", "ExternalAnnotations");
+
                     if (fileSystem.Directory.Exists(path))
                     {
                         yield return new ExternalAnnotationsLocation(Scope.NuGet, Category.ExternalAnnotations, packageVersion,
@@ -166,12 +168,14 @@ namespace CodeContractNullability.ExternalAnnotations
             foreach (string versionPath in fileSystem.Directory.GetDirectories(installationsFolder, RiderFolderNamePrefix + "*"))
             {
                 string versionFolder = Path.GetFileName(versionPath);
+
                 if (versionFolder.Length > RiderFolderNamePrefix.Length)
                 {
                     if (Version.TryParse(versionFolder.Substring(RiderFolderNamePrefix.Length).TrimStart(),
                         out Version riderVersion))
                     {
                         string path = Path.Combine(versionPath, "lib", "ReSharperHost", "ExternalAnnotations");
+
                         if (fileSystem.Directory.Exists(path))
                         {
                             yield return new ExternalAnnotationsLocation(Scope.SystemRider, Category.ExternalAnnotations,
@@ -200,12 +204,14 @@ namespace CodeContractNullability.ExternalAnnotations
                 ResharperFolderNamePrefix + "*"))
             {
                 string platformFolder = Path.GetFileName(platformPath);
+
                 if (platformFolder.Length >= ResharperFolderNamePrefix.Length + 2)
                 {
                     if (int.TryParse(platformFolder.Substring(ResharperFolderNamePrefix.Length, 2), out int vsVersion) &&
                         vsVersion >= 14)
                     {
                         string path = Path.Combine(platformPath, subFolder);
+
                         if (fileSystem.Directory.Exists(path))
                         {
                             yield return new ExternalAnnotationsLocation(scope, category, new Version(vsVersion, 0), path);

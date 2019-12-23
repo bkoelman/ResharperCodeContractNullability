@@ -15,10 +15,10 @@ namespace CodeContractNullability.SymbolAnalysis
     internal abstract class BaseSymbolAnalyzer<TSymbol>
         where TSymbol : class, ISymbol
     {
-        private SymbolAnalysisContext context;
-
         [NotNull]
         private readonly AnalysisScope scope;
+
+        private SymbolAnalysisContext context;
 
         [NotNull]
         protected TSymbol Symbol { get; }
@@ -52,6 +52,7 @@ namespace CodeContractNullability.SymbolAnalysis
             }
 
             ITypeSymbol symbolType = GetEffectiveSymbolType();
+
             if (symbolType == null || !symbolType.TypeCanContainNull(scope.Settings.DisableReportOnNullableValueTypes))
             {
                 return;
@@ -117,6 +118,7 @@ namespace CodeContractNullability.SymbolAnalysis
                 {
                     Diagnostic disableDiagnostic = CreateDiagnosticFor(scope.DisableReportOnNullableValueTypesRule,
                         ImmutableDictionary<string, string>.Empty);
+
                     context.ReportDiagnostic(disableDiagnostic);
                 }
             }
@@ -127,6 +129,7 @@ namespace CodeContractNullability.SymbolAnalysis
             if (!scope.Settings.DisableReportOnNullableValueTypes)
             {
                 ITypeSymbol symbolType = GetEffectiveSymbolType();
+
                 if (symbolType != null && symbolType.IsSystemNullableType())
                 {
                     return true;

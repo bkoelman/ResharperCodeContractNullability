@@ -51,6 +51,7 @@ namespace CodeContractNullability
 
                 SyntaxNode syntaxRoot =
                     await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
 
                 FieldDeclarationSyntax fieldSyntax = targetSyntax is VariableDeclaratorSyntax
@@ -77,6 +78,7 @@ namespace CodeContractNullability
 
             var attributeProvider = new CachingNullabilityAttributeProvider(names);
             NullabilityAttributeSymbols nullSymbols = attributeProvider.GetSymbols(compilation, cancellationToken);
+
             if (nullSymbols == null)
             {
                 throw new InvalidOperationException("Internal error: failed to resolve attributes.");
@@ -183,7 +185,10 @@ namespace CodeContractNullability
             [NotNull]
             public static FixAllProvider Instance { get; } = new NullabilityFixAllProvider();
 
-            protected override string GetCodeActionTitle(string codeActionEquivalenceKey) => codeActionEquivalenceKey;
+            protected override string GetCodeActionTitle(string codeActionEquivalenceKey)
+            {
+                return codeActionEquivalenceKey;
+            }
 
             protected override async Task<SyntaxNode> FixAllInDocumentAsync(FixAllContext fixAllContext, Document document,
                 ImmutableArray<Diagnostic> diagnostics)
@@ -210,6 +215,7 @@ namespace CodeContractNullability
 
                     INamedTypeSymbol attributeToAdd =
                         GetNullabilityAttributeForEquivalenceKey(nullSymbols, fixAllContext.CodeActionEquivalenceKey);
+
                     AddNullabilityAttributeToSyntaxNode(targetSyntax, editor, attributeToAdd);
                 }
 

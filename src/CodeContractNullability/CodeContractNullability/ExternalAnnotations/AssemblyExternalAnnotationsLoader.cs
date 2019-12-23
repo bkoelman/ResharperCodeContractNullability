@@ -35,6 +35,7 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 string assemblyPath = assemblyReference?.FilePath;
                 string folder = Path.GetDirectoryName(assemblyPath);
+
                 if (folder != null)
                 {
                     string assemblyFileName = Path.GetFileNameWithoutExtension(assemblyPath);

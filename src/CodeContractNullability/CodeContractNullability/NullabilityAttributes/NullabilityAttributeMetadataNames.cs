@@ -60,6 +60,7 @@ namespace CodeContractNullability.NullabilityAttributes
         private INamedTypeSymbol GetVisibleAttribute([NotNull] string fullTypeName, [NotNull] Compilation compilation)
         {
             INamedTypeSymbol attributeSymbol = compilation.GetTypeByMetadataName(fullTypeName);
+
             return attributeSymbol != null && IsDefinedInSameAssembly(attributeSymbol, compilation.Assembly)
                 ? attributeSymbol
                 : null;

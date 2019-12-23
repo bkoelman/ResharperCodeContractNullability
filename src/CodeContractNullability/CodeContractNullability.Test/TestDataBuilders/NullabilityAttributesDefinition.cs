@@ -50,6 +50,7 @@ public sealed class ItemCanBeNullAttribute : System.Attribute { }
             get
             {
                 var textBuilder = new StringBuilder();
+
                 if (true)
                 {
                     if (!string.IsNullOrEmpty(CodeNamespace))
@@ -89,6 +90,15 @@ public sealed class ItemCanBeNullAttribute : System.Attribute { }
             AttributesDeclarationTextIndented = PrefixLinesWith("    ");
         }
 
+        public NullabilityAttributesDefinition([NotNull] string codeNamespace, [NotNull] [ItemNotNull] IList<string> nestedTypes)
+        {
+            Guard.NotNull(codeNamespace, nameof(codeNamespace));
+            Guard.NotNull(nestedTypes, nameof(nestedTypes));
+
+            CodeNamespace = codeNamespace;
+            NestedTypes = nestedTypes;
+        }
+
         [NotNull]
         private static string PrefixLinesWith([NotNull] string prefix)
         {
@@ -97,6 +107,7 @@ public sealed class ItemCanBeNullAttribute : System.Attribute { }
             using (var reader = new StringReader(AttributesDeclarationText))
             {
                 string line;
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     builder.Append(prefix);
@@ -105,15 +116,6 @@ public sealed class ItemCanBeNullAttribute : System.Attribute { }
             }
 
             return builder.ToString();
-        }
-
-        public NullabilityAttributesDefinition([NotNull] string codeNamespace, [NotNull] [ItemNotNull] IList<string> nestedTypes)
-        {
-            Guard.NotNull(codeNamespace, nameof(codeNamespace));
-            Guard.NotNull(nestedTypes, nameof(nestedTypes));
-
-            CodeNamespace = codeNamespace;
-            NestedTypes = nestedTypes;
         }
     }
 }

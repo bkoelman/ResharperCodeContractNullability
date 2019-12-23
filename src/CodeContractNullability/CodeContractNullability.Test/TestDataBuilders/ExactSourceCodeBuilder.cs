@@ -14,6 +14,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
         [NotNull]
         private string sourceText = string.Empty;
 
+        [NotNull]
+        public static string PublicGlobalNullabilityAttributes =>
+            new NullabilityAttributesBuilder().InGlobalNamespace().Build().SourceText;
+
         public ParsedSourceCode Build()
         {
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
@@ -36,9 +40,5 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             return text.Replace("\n", "\r\n").Replace("\r\r", "\r");
         }
-
-        [NotNull]
-        public static string PublicGlobalNullabilityAttributes =>
-            new NullabilityAttributesBuilder().InGlobalNamespace().Build().SourceText;
     }
 }

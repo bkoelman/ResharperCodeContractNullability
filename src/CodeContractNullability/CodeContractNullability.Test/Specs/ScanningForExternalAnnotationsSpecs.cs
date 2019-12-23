@@ -31,42 +31,6 @@ namespace CodeContractNullability.Test.Specs
             action.Should().ThrowExactly<MissingExternalAnnotationsException>();
         }
 
-        [Theory]
-        [InlineData(
-            @"%SystemDrive%\Program Files\JetBrains\JetBrains Rider 2018.2.1\lib\ReSharperHost\ExternalAnnotations\ExternalAnnotations")]
-        [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations")]
-        [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\Extensions")]
-        [InlineData(@"%USERPROFILE%\.nuget\packages\jetbrains.externalannotations\10.2.57\DotFiles\ExternalAnnotations")]
-        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations")]
-        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\Extensions")]
-        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations")]
-        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions")]
-        public void When_external_annotations_are_found_it_must_succeed([NotNull] string externalAnnotationsDirectory)
-        {
-            // Arrange
-            string externalAnnotationsPath =
-                Path.Combine(Environment.ExpandEnvironmentVariables(externalAnnotationsDirectory),
-                    @".NETFramework\mscorlib\Annotations.xml");
-
-            IFileSystem fileSystem = new FakeFileSystemBuilder()
-                .IncludingTextFile(externalAnnotationsPath, new ExternalAnnotationsBuilder()
-                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                        .Named("M:System.String.IsNullOrEmpty(System.String)")
-                        .WithParameter(new ExternalAnnotationParameterBuilder()
-                            .Named("value")
-                            .CanBeNull()))
-                    .GetXml())
-                .Build();
-
-            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
-
-            // Act
-            Action action = () => resolver.EnsureScanned();
-
-            // Assert
-            action.Should().NotThrow();
-        }
-
         [Fact]
         public void When_multiple_external_annotation_files_are_found_it_must_succeed()
         {
@@ -273,6 +237,7 @@ namespace CodeContractNullability.Test.Specs
                 .Build();
 
             var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
+
             analyzerTest.VerifyNullabilityDiagnostics(source,
                 analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
         }
@@ -358,6 +323,42 @@ namespace CodeContractNullability.Test.Specs
             // After update of the side-by-side file on disk, analyzer should detect the change and report a diagnostic this time.
             analyzerTest.VerifyNullabilityDiagnostics(updatedSource,
                 analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+        }
+
+        [Theory]
+        [InlineData(
+            @"%SystemDrive%\Program Files\JetBrains\JetBrains Rider 2018.2.1\lib\ReSharperHost\ExternalAnnotations\ExternalAnnotations")]
+        [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\ExternalAnnotations")]
+        [InlineData(@"%ProgramFiles(x86)%\JetBrains\Installations\ReSharperPlatformVs14\Extensions")]
+        [InlineData(@"%USERPROFILE%\.nuget\packages\jetbrains.externalannotations\10.2.57\DotFiles\ExternalAnnotations")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\Extensions")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\ExternalAnnotations")]
+        [InlineData(@"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs15\Extensions")]
+        public void When_external_annotations_are_found_it_must_succeed([NotNull] string externalAnnotationsDirectory)
+        {
+            // Arrange
+            string externalAnnotationsPath =
+                Path.Combine(Environment.ExpandEnvironmentVariables(externalAnnotationsDirectory),
+                    @".NETFramework\mscorlib\Annotations.xml");
+
+            IFileSystem fileSystem = new FakeFileSystemBuilder()
+                .IncludingTextFile(externalAnnotationsPath, new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:System.String.IsNullOrEmpty(System.String)")
+                        .WithParameter(new ExternalAnnotationParameterBuilder()
+                            .Named("value")
+                            .CanBeNull()))
+                    .GetXml())
+                .Build();
+
+            var resolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+
+            // Act
+            Action action = () => resolver.EnsureScanned();
+
+            // Assert
+            action.Should().NotThrow();
         }
     }
 }

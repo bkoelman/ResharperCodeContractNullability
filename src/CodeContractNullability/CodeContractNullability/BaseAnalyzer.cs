@@ -21,9 +21,8 @@ namespace CodeContractNullability
     /// </summary>
     public abstract class BaseAnalyzer : DiagnosticAnalyzer
     {
-        public const string DisableReportOnNullableValueTypesDiagnosticId = "XNUL";
-
         protected const string Category = "Nullability";
+        public const string DisableReportOnNullableValueTypesDiagnosticId = "XNUL";
 
         [NotNull]
         [ItemNotNull]
@@ -54,9 +53,6 @@ namespace CodeContractNullability
 
         [NotNull]
         private readonly DiagnosticDescriptor ruleForParameter;
-
-        [NotNull]
-        protected abstract DiagnosticDescriptor CreateRuleFor([NotNull] string memberTypePascalCase);
 
         [NotNull]
         private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new DiagnosticDescriptor(
@@ -112,6 +108,9 @@ perform the following additional steps after applying this code fix.
             // ReSharper restore DoNotCallOverridableMethodsInConstructor
         }
 
+        [NotNull]
+        protected abstract DiagnosticDescriptor CreateRuleFor([NotNull] string memberTypePascalCase);
+
         public override void Initialize([NotNull] AnalysisContext context)
         {
             Guard.NotNull(context, nameof(context));
@@ -125,6 +124,7 @@ perform the following additional steps after applying this code fix.
         private void TryEnableConcurrentExecution([NotNull] AnalysisContext context)
         {
             MethodInfo method = LazyEnableConcurrentExecutionMethod.Value;
+
             if (method != null)
             {
                 method.Invoke(context, EmptyObjectArray);
@@ -134,6 +134,7 @@ perform the following additional steps after applying this code fix.
         private void TrySkipGeneratedCode([NotNull] AnalysisContext context)
         {
             MethodInfo method = LazyConfigureGeneratedCodeAnalysisMethod.Value;
+
             if (method != null)
             {
                 method.Invoke(context, new object[]
@@ -156,6 +157,7 @@ perform the following additional steps after applying this code fix.
 
             NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached()
                 .GetSymbols(context.Compilation, context.CancellationToken);
+
             if (nullSymbols == null)
             {
                 // Nullability attributes not found; keep silent.
@@ -178,6 +180,7 @@ perform the following additional steps after applying this code fix.
             context.RegisterSymbolAction(c => AnalyzeField(c, factory, properties), SymbolKind.Field);
             context.RegisterSymbolAction(c => AnalyzeProperty(c, factory, properties), SymbolKind.Property);
             context.RegisterSymbolAction(c => AnalyzeMethod(c, factory, properties), SymbolKind.Method);
+
             context.RegisterSyntaxNodeAction(c => AnalyzeParameter(c.ToSymbolContext(), factory, properties),
                 SyntaxKind.Parameter);
         }

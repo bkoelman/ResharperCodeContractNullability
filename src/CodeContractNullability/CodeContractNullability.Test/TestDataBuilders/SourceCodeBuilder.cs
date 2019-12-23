@@ -22,17 +22,20 @@ namespace CodeContractNullability.Test.TestDataBuilders
             LanguageNames.CSharp, new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
 
         [NotNull]
-        private AnalyzerTestContext testContext = DefaultTestContext;
-
-        [CanBeNull]
-        private string headerText;
-
-        [NotNull]
         [ItemNotNull]
         private readonly HashSet<string> namespaceImports = new HashSet<string>
         {
             "System"
         };
+
+        [NotNull]
+        internal readonly CodeEditor Editor;
+
+        [NotNull]
+        private AnalyzerTestContext testContext = DefaultTestContext;
+
+        [CanBeNull]
+        private string headerText;
 
         [CanBeNull]
         private NullabilityAttributesDefinition nullabilityAttributes =
@@ -43,9 +46,6 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         private string codeNamespaceImportExpected = string.Empty;
-
-        [NotNull]
-        internal readonly CodeEditor Editor;
 
         protected SourceCodeBuilder()
         {
@@ -98,6 +98,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private void WriteNamespaceImports([NotNull] StringBuilder sourceBuilder)
         {
             bool hasNamespaceImportsAtTop = false;
+
             foreach (string ns in namespaceImports)
             {
                 sourceBuilder.AppendLine($"using {ns};");
@@ -135,6 +136,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             var builder = new StringBuilder();
 
             bool isInFirstBlock = true;
+
             foreach (string codeBlock in codeBlocks)
             {
                 if (isInFirstBlock)
@@ -151,6 +153,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 using var reader = new StringReader(codeBlock.TrimEnd());
 
                 string line;
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (isOnFirstLineInBlock)

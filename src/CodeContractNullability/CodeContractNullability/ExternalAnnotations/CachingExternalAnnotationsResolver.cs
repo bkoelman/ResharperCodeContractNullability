@@ -65,6 +65,7 @@ namespace CodeContractNullability.ExternalAnnotations
             [NotNull] Compilation compilation)
         {
             string path = loader.GetPathForExternalSymbolOrNull(symbol, compilation);
+
             if (path != null)
             {
                 AssemblyCacheEntry entry = assemblyCache.GetOrAdd(path, CreateAssemblyCacheEntry);
@@ -94,6 +95,7 @@ namespace CodeContractNullability.ExternalAnnotations
         private IFileSystemWatcher CreateAssemblyAnnotationsFileWatcher([NotNull] string path)
         {
             string directoryName = Path.GetDirectoryName(path);
+
             if (directoryName == null)
             {
                 throw new InvalidOperationException($"Internal error: failed to extract directory from path '{path}'.");
@@ -124,6 +126,7 @@ namespace CodeContractNullability.ExternalAnnotations
         private static FileSystemEventArgs OldValuesFrom([NotNull] RenamedEventArgs e)
         {
             string directoryName = Path.GetDirectoryName(e.OldFullPath);
+
             if (directoryName == null)
             {
                 throw new InvalidOperationException($"Internal error: failed to extract directory from path '{e.OldFullPath}'.");

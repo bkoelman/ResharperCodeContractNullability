@@ -135,6 +135,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             [NotNull] [ItemNotNull] params MetadataReference[] references)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
+
             CSharpCompilation compilation = CSharpCompilation
                 .Create(assemblyName, new[]
                 {

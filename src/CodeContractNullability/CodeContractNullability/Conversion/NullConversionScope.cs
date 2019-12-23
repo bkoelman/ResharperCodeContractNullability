@@ -113,6 +113,7 @@ namespace CodeContractNullability.Conversion
                 var methodSymbol = (IMethodSymbol)parameterSymbol.ContainingSymbol;
 
                 IMethodSymbol otherMethodSymbol = methodSymbol.PartialDefinitionPart ?? methodSymbol.PartialImplementationPart;
+
                 if (otherMethodSymbol != null)
                 {
                     int parameterIndex = methodSymbol.Parameters.IndexOf(parameterSymbol);
@@ -154,6 +155,7 @@ namespace CodeContractNullability.Conversion
             var memberSet = new HashSet<ISymbol>();
 
             List<ISymbol> membersInDerivedType;
+
             if (symbol.ContainingType.TypeKind == TypeKind.Interface)
             {
                 IEnumerable<ISymbol> symbols = await SymbolFinder
@@ -172,6 +174,7 @@ namespace CodeContractNullability.Conversion
             foreach (ISymbol memberInDerivedType in membersInDerivedType)
             {
                 ISymbol memberInDerivedTypeCorrected = memberInDerivedType;
+
                 if (symbol is IParameterSymbol parameterSymbol)
                 {
                     memberInDerivedTypeCorrected = LookupParameterInDerivedTypeFor(parameterSymbol, memberInDerivedType);

@@ -58,6 +58,7 @@ namespace CodeContractNullability.NullabilityAttributes
             if (symbol?.BaseType != null && symbol.BaseType.GetFullMetadataName() == SystemAttributeTypeName)
             {
                 INamedTypeSymbol container = symbol;
+
                 while (container != null)
                 {
                     if (container.DeclaredAccessibility != Accessibility.Public)
@@ -104,6 +105,10 @@ namespace CodeContractNullability.NullabilityAttributes
 
         private sealed class NullabilityAttributesVisitor : SymbolVisitor
         {
+            private bool IsComplete =>
+                NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null && ItemNotNullAttributeSymbol != null &&
+                ItemCanBeNullAttributeSymbol != null;
+
             [CanBeNull]
             public INamedTypeSymbol NotNullAttributeSymbol { get; private set; }
 
@@ -115,10 +120,6 @@ namespace CodeContractNullability.NullabilityAttributes
 
             [CanBeNull]
             public INamedTypeSymbol ItemCanBeNullAttributeSymbol { get; private set; }
-
-            private bool IsComplete =>
-                NotNullAttributeSymbol != null && CanBeNullAttributeSymbol != null && ItemNotNullAttributeSymbol != null &&
-                ItemCanBeNullAttributeSymbol != null;
 
             public override void VisitNamespace([NotNull] INamespaceSymbol symbol)
             {

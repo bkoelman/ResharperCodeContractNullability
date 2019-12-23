@@ -41,6 +41,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
             {
                 string methodId = symbol.ContainingSymbol.GetDocumentationCommentId();
                 MemberNullabilityInfo memberInfo = TryGetMemberById(methodId);
+
                 return memberInfo != null && memberInfo.ParametersNullability.ContainsKey(symbol.Name) &&
                     memberInfo.ParametersNullability[symbol.Name];
             }
@@ -64,6 +65,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
                 if (ContainsKey(key))
                 {
                     MemberNullabilityInfo memberInfo = this[key];
+
                     if (memberInfo.Type == type)
                     {
                         return memberInfo;

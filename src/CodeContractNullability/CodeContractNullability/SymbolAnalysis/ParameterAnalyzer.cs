@@ -39,6 +39,7 @@ namespace CodeContractNullability.SymbolAnalysis
         protected override bool HasAnnotationInBaseClass()
         {
             IParameterSymbol baseParameter = TryGetBaseParameterFor(Symbol);
+
             while (baseParameter != null)
             {
                 if (baseParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseParameter) ||
@@ -58,6 +59,7 @@ namespace CodeContractNullability.SymbolAnalysis
         {
             var containingMethod = parameterSymbol.ContainingSymbol as IMethodSymbol;
             IMethodSymbol baseMethod = containingMethod?.OverriddenMethod;
+
             if (baseMethod != null)
             {
                 int parameterIndex = containingMethod.Parameters.IndexOf(parameterSymbol);
@@ -66,6 +68,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             var containingProperty = parameterSymbol.ContainingSymbol as IPropertySymbol;
             IPropertySymbol baseProperty = containingProperty?.OverriddenProperty;
+
             if (baseProperty != null)
             {
                 int parameterIndex = containingProperty.Parameters.IndexOf(parameterSymbol);

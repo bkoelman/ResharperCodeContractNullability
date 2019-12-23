@@ -21,6 +21,7 @@ namespace CodeContractNullability
         {
             string title = $"{memberTypePascalCase} is missing item nullability annotation.";
             string messageFormat = $"{memberTypePascalCase} '{{0}}' is missing item nullability annotation.";
+
             string description =
                 $"The item type of this sequence/collection {memberTypePascalCase.ToCamelCase()} is a reference type or nullable type; it should be annotated with [ItemNotNull] or [ItemCanBeNull].";
 

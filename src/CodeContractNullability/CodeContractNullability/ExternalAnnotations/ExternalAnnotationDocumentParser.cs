@@ -17,6 +17,7 @@ namespace CodeContractNullability.ExternalAnnotations
             Guard.NotNull(result, nameof(result));
 
             XElement assemblyElement = XDocument.Load(reader).Element("assembly");
+
             if (assemblyElement != null)
             {
                 // Known limitation: we are not entirely correct here, by ignoring assembly info.
@@ -60,6 +61,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             string memberType = "?";
             string memberName = memberElement.Attribute("name")?.Value;
+
             if (memberName != null)
             {
                 if (memberName.Length > 2 && memberName[1] == ':')
@@ -86,6 +88,7 @@ namespace CodeContractNullability.ExternalAnnotations
             if (childElement.Name == "parameter")
             {
                 string parameterName = childElement.Attribute("name")?.Value;
+
                 if (parameterName != null)
                 {
                     foreach (XElement attributeElement in childElement.Elements("attribute"))
@@ -109,6 +112,7 @@ namespace CodeContractNullability.ExternalAnnotations
         private static bool ElementHasNullabilityDefinition([NotNull] XElement element)
         {
             string attributeName = element.Attribute("ctor")?.Value;
+
             return attributeName == "M:JetBrains.Annotations.NotNullAttribute.#ctor" ||
                 attributeName == "M:JetBrains.Annotations.CanBeNullAttribute.#ctor";
         }

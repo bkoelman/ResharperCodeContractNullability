@@ -22,6 +22,7 @@ namespace CodeContractNullability.SymbolAnalysis
         protected override bool HasAnnotationInBaseClass()
         {
             IPropertySymbol baseMember = Symbol.OverriddenProperty;
+
             while (baseMember != null)
             {
                 if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember) ||

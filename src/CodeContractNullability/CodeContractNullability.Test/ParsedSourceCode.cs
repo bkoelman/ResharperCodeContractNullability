@@ -13,6 +13,9 @@ namespace CodeContractNullability.Test
         private readonly FixableDocument document;
 
         [NotNull]
+        private readonly string attributePrefix;
+
+        [NotNull]
         public AnalyzerTestContext TestContext { get; }
 
         [NotNull]
@@ -22,9 +25,6 @@ namespace CodeContractNullability.Test
         public string ExpectedText => document.ExpectedText;
 
         public TextComparisonMode CodeComparisonMode { get; }
-
-        [NotNull]
-        private readonly string attributePrefix;
 
         public ParsedSourceCode([NotNull] string sourceText, [NotNull] AnalyzerTestContext testContext,
             [NotNull] ExternalAnnotationsMap externalAnnotationsMap, [ItemNotNull] [NotNull] IList<string> nestedTypes,
@@ -46,6 +46,7 @@ namespace CodeContractNullability.Test
         private static string ExtractAttributePrefix([NotNull] [ItemNotNull] IList<string> nestedTypes)
         {
             var attributePrefixBuilder = new StringBuilder();
+
             foreach (string nestedType in nestedTypes)
             {
                 int lastSpaceIndex = nestedType.LastIndexOf(' ');

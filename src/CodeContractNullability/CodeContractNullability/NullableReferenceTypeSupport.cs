@@ -36,6 +36,7 @@ namespace CodeContractNullability
         private static bool IsNullableAnnotationContextEnabled([NotNull] CompilationOptions compilationOptions)
         {
             PropertyInfo property = LazyNullableContextOptionsProperty.Value;
+
             if (property != null)
             {
                 string enumText = property.GetGetMethod().Invoke(compilationOptions, EmptyObjectArray).ToString();

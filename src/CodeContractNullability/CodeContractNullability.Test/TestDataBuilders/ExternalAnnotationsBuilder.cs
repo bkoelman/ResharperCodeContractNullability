@@ -39,6 +39,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private string GetText()
         {
             var textBuilder = new StringBuilder();
+
             textBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""utf-8""?>
                 <assembly name=""System.ThisValueIsNotUsed, Version=1.0.0.0"">");
 
@@ -57,6 +58,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             var annotations = new ExternalAnnotationsMap();
 
             var parser = new ExternalAnnotationDocumentParser();
+
             using (var reader = new StringReader(document))
             {
                 parser.ProcessDocument(reader, annotations);

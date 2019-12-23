@@ -101,6 +101,7 @@ namespace CodeContractNullability.SymbolAnalysis
             Guard.NotNull(typeCache, nameof(typeCache));
 
             var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
+
             if (namedTypeSymbol?.ConstructedFrom != null)
             {
                 bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(typeCache.LazyOfT) ||
@@ -184,6 +185,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             ISymbol previous = current;
             current = current.ContainingSymbol;
+
             while (!IsRootNamespace(current))
             {
                 if (current is ITypeSymbol && previous is ITypeSymbol)

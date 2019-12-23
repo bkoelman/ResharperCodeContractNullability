@@ -38,6 +38,7 @@ namespace CodeContractNullability
             {
                 SyntaxNode syntaxRoot =
                     await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
 
                 SyntaxNode declarationSyntax = TranslateField(targetSyntax);

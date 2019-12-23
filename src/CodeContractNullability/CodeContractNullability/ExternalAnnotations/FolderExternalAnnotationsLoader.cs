@@ -22,18 +22,18 @@ namespace CodeContractNullability.ExternalAnnotations
     internal sealed class FolderExternalAnnotationsLoader
     {
         [NotNull]
-        private readonly IFileSystem fileSystem;
-
-        [NotNull]
-        private readonly FolderOnDiskScanner scanner;
-
-        [NotNull]
         private static readonly string CachePath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "ResharperCodeContractNullability", "external-annotations.cache");
 
         [NotNull]
         private static readonly object LockObject = new object();
+
+        [NotNull]
+        private readonly IFileSystem fileSystem;
+
+        [NotNull]
+        private readonly FolderOnDiskScanner scanner;
 
         public FolderExternalAnnotationsLoader([NotNull] IFileSystem fileSystem)
         {
@@ -139,6 +139,7 @@ namespace CodeContractNullability.ExternalAnnotations
             using (new CodeTimer("ExternalAnnotationsCache:Scan"))
             {
                 var recorder = new HighestLastWriteTimeUtcRecorder(fileSystem);
+
                 foreach (string path in EnumerateAnnotationFiles())
                 {
                     recorder.VisitFile(path);
@@ -178,6 +179,7 @@ namespace CodeContractNullability.ExternalAnnotations
         private void EnsureDirectoryExists()
         {
             string folder = Path.GetDirectoryName(CachePath);
+
             if (folder != null)
             {
                 fileSystem.Directory.CreateDirectory(folder);
@@ -235,6 +237,7 @@ namespace CodeContractNullability.ExternalAnnotations
             foreach (string key in externalAnnotations.Keys.ToList())
             {
                 MemberNullabilityInfo annotation = externalAnnotations[key];
+
                 if (!HasNullabilityDefined(annotation))
                 {
                     externalAnnotations.Remove(key);
@@ -265,6 +268,7 @@ namespace CodeContractNullability.ExternalAnnotations
             public void VisitFile([NotNull] string path)
             {
                 IFileInfo fileInfo = fileSystem.ConstructFileInfo(path);
+
                 if (fileInfo.LastWriteTimeUtc > HighestLastWriteTimeUtc)
                 {
                     HighestLastWriteTimeUtc = fileInfo.LastWriteTimeUtc;

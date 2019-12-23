@@ -19,7 +19,10 @@ namespace CodeContractNullability
         public const string SettingsFileName = "ResharperCodeContractNullability.config";
 
         [NotNull]
-        public static Encoding CreateEncoding() => new UTF8Encoding();
+        public static Encoding CreateEncoding()
+        {
+            return new UTF8Encoding();
+        }
 
         [NotNull]
         internal static AnalyzerSettings LoadSettings([NotNull] AnalyzerOptions options, CancellationToken cancellationToken)
@@ -27,6 +30,7 @@ namespace CodeContractNullability
             Guard.NotNull(options, nameof(options));
 
             AdditionalText settingsFileOrNull = options.AdditionalFiles.FirstOrDefault(file => IsSettingsFile(file.Path));
+
             if (settingsFileOrNull != null)
             {
                 SourceText fileText = settingsFileOrNull.GetText(cancellationToken);
@@ -78,6 +82,7 @@ namespace CodeContractNullability
             Guard.NotNull(settings, nameof(settings));
 
             Encoding encoding = CreateEncoding();
+
             return GetStringForXml(encoding, writer =>
             {
                 var serializer = new DataContractSerializer(typeof(AnalyzerSettings));
@@ -90,6 +95,7 @@ namespace CodeContractNullability
         {
             using var stream = new MemoryStream();
             using var textWriter = new StreamWriter(stream);
+
             using var xmlWriter = XmlWriter.Create(textWriter, new XmlWriterSettings
             {
                 Encoding = encoding,

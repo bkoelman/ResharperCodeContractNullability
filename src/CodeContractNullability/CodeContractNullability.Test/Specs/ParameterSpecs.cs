@@ -117,76 +117,6 @@ namespace CodeContractNullability.Test.Specs
             VerifyNullabilityDiagnostic(source);
         }
 
-#if !NET452
-        [Fact]
-        public void When_parameter_type_is_generic_enum_it_must_be_reported_and_fixed()
-        {
-            // Arrange
-            ParsedSourceCode source = new TypeSourceCodeBuilder()
-                .InGlobalScope(@"
-                    class C<T> where T : Enum
-                    {
-                        void M([+NullabilityAttributePlaceholder+] T [|p|]) { }
-                    }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
-        }
-
-        [Fact]
-        public void When_parameter_type_is_generic_unmanaged_it_must_be_skipped()
-        {
-            // Arrange
-            ParsedSourceCode source = new TypeSourceCodeBuilder()
-                .InGlobalScope(@"
-                    class C<T> where T : unmanaged
-                    {
-                        void M(T p) { }
-                    }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityDiagnostic(source);
-        }
-
-        [Fact]
-        public void When_parameter_type_is_generic_delegate_it_must_be_reported_and_fixed()
-        {
-            // Arrange
-            ParsedSourceCode source = new TypeSourceCodeBuilder()
-                .InGlobalScope(@"
-                    class C<T> where T : Delegate
-                    {
-                        void M([+NullabilityAttributePlaceholder+] T [|p|]) { }
-                    }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
-        }
-
-        [Fact]
-        public void When_parameter_type_is_generic_multicast_delegate_it_must_be_reported_and_fixed()
-        {
-            // Arrange
-            ParsedSourceCode source = new TypeSourceCodeBuilder()
-                .InGlobalScope(@"
-                    class C<T> where T : MulticastDelegate
-                    {
-                        private protected void M([+NullabilityAttributePlaceholder+] T [|p|]) => throw new NotImplementedException();
-                    }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
-        }
-#endif
-
         [Fact]
         public void When_parameter_type_is_nullable_it_must_be_reported_and_fixed()
         {
@@ -293,36 +223,6 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityDiagnostic(source);
         }
-
-#if !NET452
-        [Fact]
-        public void When_in_parameter_is_nullable_it_must_be_reported_and_fixed()
-        {
-            // Arrange
-            ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .InDefaultClass(@"
-                    void M([+NullabilityAttributePlaceholder+] in int? [|p|]) { throw new NotImplementedException(); }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
-        }
-
-        [Fact]
-        public void When_in_parameter_is_value_type_it_must_be_skipped()
-        {
-            // Arrange
-            ParsedSourceCode source = new MemberSourceCodeBuilder()
-                .InDefaultClass(@"
-                    void M(in int p) { throw new NotImplementedException(); }
-                ")
-                .Build();
-
-            // Act and assert
-            VerifyNullabilityDiagnostic(source);
-        }
-#endif
 
         [Fact]
         public void When_out_parameter_is_nullable_it_must_be_reported_and_fixed()
@@ -970,5 +870,103 @@ namespace CodeContractNullability.Test.Specs
             // Act and assert
             VerifyNullabilityFix(source, CreateMessageForParameter("p"));
         }
+
+#if !NET452
+        [Fact]
+        public void When_parameter_type_is_generic_enum_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : Enum
+                    {
+                        void M([+NullabilityAttributePlaceholder+] T [|p|]) { }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_parameter_type_is_generic_unmanaged_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : unmanaged
+                    {
+                        void M(T p) { }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+
+        [Fact]
+        public void When_parameter_type_is_generic_delegate_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : Delegate
+                    {
+                        void M([+NullabilityAttributePlaceholder+] T [|p|]) { }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_parameter_type_is_generic_multicast_delegate_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    class C<T> where T : MulticastDelegate
+                    {
+                        private protected void M([+NullabilityAttributePlaceholder+] T [|p|]) => throw new NotImplementedException();
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_in_parameter_is_nullable_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .InDefaultClass(@"
+                    void M([+NullabilityAttributePlaceholder+] in int? [|p|]) { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_in_parameter_is_value_type_it_must_be_skipped()
+        {
+            // Arrange
+            ParsedSourceCode source = new MemberSourceCodeBuilder()
+                .InDefaultClass(@"
+                    void M(in int p) { throw new NotImplementedException(); }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityDiagnostic(source);
+        }
+#endif
     }
 }

@@ -58,6 +58,7 @@ namespace CodeContractNullability
                         fixAllContext.CancellationToken.ThrowIfCancellationRequested();
 
                         Project projectToFix = projectsToFix[i];
+
                         tasks[i] = Task.Run(async () =>
                         {
                             ImmutableArray<Diagnostic> projectDiagnostics =
@@ -71,6 +72,7 @@ namespace CodeContractNullability
 
                     allDiagnostics = allDiagnostics.AddRange(diagnostics.SelectMany(i =>
                         i.Value.Where(x => fixAllContext.DiagnosticIds.Contains(x.Id))));
+
                     break;
                 }
             }
@@ -134,6 +136,7 @@ namespace CodeContractNullability
             [ItemNotNull] ImmutableArray<Project> projects, CancellationToken cancellationToken)
         {
             ImmutableDictionary<SyntaxTree, Document>.Builder builder = ImmutableDictionary.CreateBuilder<SyntaxTree, Document>();
+
             foreach (Project project in projects)
             {
                 cancellationToken.ThrowIfCancellationRequested();

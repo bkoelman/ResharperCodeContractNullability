@@ -37,6 +37,7 @@ namespace CodeContractNullability.SymbolAnalysis
         protected override bool HasAnnotationInBaseClass()
         {
             IMethodSymbol baseMember = Symbol.OverriddenMethod;
+
             while (baseMember != null)
             {
                 if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember) ||

@@ -32,6 +32,7 @@ namespace CodeContractNullability
                     fixAction = CodeAction.Create(codeActionTitle,
                         cancellationToken => GetDocumentFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
                         fixAllContext.CodeActionEquivalenceKey);
+
                     break;
                 }
                 case FixAllScope.Project:
@@ -39,6 +40,7 @@ namespace CodeContractNullability
                     fixAction = CodeAction.Create(codeActionTitle,
                         cancellationToken => GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken),
                             fixAllContext.Project), fixAllContext.CodeActionEquivalenceKey);
+
                     break;
                 }
                 case FixAllScope.Solution:
@@ -46,6 +48,7 @@ namespace CodeContractNullability
                     fixAction = CodeAction.Create(codeActionTitle,
                         cancellationToken => GetSolutionFixesAsync(fixAllContext.WithCancellationToken(cancellationToken)),
                         fixAllContext.CodeActionEquivalenceKey);
+
                     break;
                 }
             }
@@ -123,6 +126,7 @@ namespace CodeContractNullability
             for (int i = 0; i < documents.Length; i++)
             {
                 SyntaxNode newDocumentRoot = await newDocuments[i].ConfigureAwait(false);
+
                 if (newDocumentRoot == null)
                 {
                     continue;

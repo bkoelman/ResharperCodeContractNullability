@@ -20,12 +20,6 @@ namespace CodeContractNullability
         private readonly ConcurrentDictionary<string, INamedTypeSymbol> typeMap =
             new ConcurrentDictionary<string, INamedTypeSymbol>();
 
-        public FrameworkTypeCache([NotNull] Compilation compilation)
-        {
-            Guard.NotNull(compilation, nameof(compilation));
-            this.compilation = compilation;
-        }
-
         [CanBeNull]
         public INamedTypeSymbol EnumerableOfT => GetCached(typeof(IEnumerable<>));
 
@@ -55,6 +49,12 @@ namespace CodeContractNullability
 
         [CanBeNull]
         public INamedTypeSymbol ConditionalAttribute => GetCached(typeof(ConditionalAttribute));
+
+        public FrameworkTypeCache([NotNull] Compilation compilation)
+        {
+            Guard.NotNull(compilation, nameof(compilation));
+            this.compilation = compilation;
+        }
 
         [CanBeNull]
         private INamedTypeSymbol GetCached([NotNull] Type type)

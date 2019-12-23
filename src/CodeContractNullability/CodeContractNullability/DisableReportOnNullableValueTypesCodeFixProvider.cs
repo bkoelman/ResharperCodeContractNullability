@@ -27,6 +27,7 @@ namespace CodeContractNullability
             {
                 var codeAction = CodeAction.Create("Disable reporting on nullable value types in project",
                     cancellationToken => CreateOrUpdateSolution(context));
+
                 context.RegisterCodeFix(codeAction, diagnostic);
             }
 
@@ -44,6 +45,7 @@ namespace CodeContractNullability
                     SettingsProvider.IsSettingsFile(document.FilePath));
 
             Project project = context.Document.Project;
+
             if (existingDocument != null)
             {
                 project = project.RemoveAdditionalDocument(existingDocument.Id);

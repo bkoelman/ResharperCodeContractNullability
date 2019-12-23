@@ -89,6 +89,7 @@ namespace CodeContractNullability.Conversion
         private static bool IsSyntaxParentOf([NotNull] SyntaxNode syntaxNode, [NotNull] SyntaxNode parentNode)
         {
             SyntaxNode currentNode = syntaxNode;
+
             while (currentNode != null)
             {
                 if (currentNode == parentNode)
@@ -163,9 +164,11 @@ namespace CodeContractNullability.Conversion
             where T : SyntaxNode
         {
             IList<SyntaxTrivia> trailingTrivia = TryRemoveTrailingWhitespaceIncludingEndOfLine(syntax);
+
             if (trailingTrivia != null)
             {
                 IList<SyntaxTrivia> leadingTrivia = TryRemoveLeadingWhitespaceOnSameLine(syntax);
+
                 if (leadingTrivia != null)
                 {
                     return syntax.WithTrailingTrivia(trailingTrivia).WithLeadingTrivia(leadingTrivia);

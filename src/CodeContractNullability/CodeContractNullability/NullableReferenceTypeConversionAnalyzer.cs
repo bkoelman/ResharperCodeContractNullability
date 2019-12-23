@@ -51,6 +51,7 @@ namespace CodeContractNullability
 
             NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached()
                 .GetSymbols(context.Compilation, context.CancellationToken);
+
             if (nullSymbols == null)
             {
                 // Nullability attributes not found; keep silent.
@@ -59,6 +60,7 @@ namespace CodeContractNullability
 
             context.RegisterSymbolAction(c => AnalyzeSymbol(c, nullSymbols), SymbolKind.Field, SymbolKind.Property,
                 SymbolKind.Method, SymbolKind.NamedType);
+
             context.RegisterSyntaxNodeAction(c => AnalyzeSymbol(c.ToSymbolContext(), nullSymbols), SyntaxKind.Parameter);
         }
 

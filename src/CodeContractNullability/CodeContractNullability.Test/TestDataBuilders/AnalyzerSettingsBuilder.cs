@@ -13,11 +13,6 @@ namespace CodeContractNullability.Test.TestDataBuilders
     {
         private bool disableReportOnNullableValueTypes;
 
-        public AnalyzerSettings Build()
-        {
-            return new AnalyzerSettings(disableReportOnNullableValueTypes);
-        }
-
         [NotNull]
         public AnalyzerSettingsBuilder DisableReportOnNullableValueTypes
         {
@@ -26,6 +21,11 @@ namespace CodeContractNullability.Test.TestDataBuilders
                 disableReportOnNullableValueTypes = true;
                 return this;
             }
+        }
+
+        public AnalyzerSettings Build()
+        {
+            return new AnalyzerSettings(disableReportOnNullableValueTypes);
         }
 
         [NotNull]

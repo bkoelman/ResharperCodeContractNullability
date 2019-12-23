@@ -52,6 +52,7 @@ namespace CodeContractNullability.Conversion
         private static string AddQuestionMarkToItemTypeName([NotNull] string typeName)
         {
             int closingAngleIndex = typeName.LastIndexOf('>');
+
             if (closingAngleIndex != -1)
             {
                 string leftPart = typeName.Substring(0, closingAngleIndex);
@@ -61,6 +62,7 @@ namespace CodeContractNullability.Conversion
             }
 
             int closingBracketIndex = typeName.LastIndexOf("[]", StringComparison.Ordinal);
+
             if (closingBracketIndex != -1)
             {
                 string leftPart = typeName.Substring(0, closingBracketIndex);

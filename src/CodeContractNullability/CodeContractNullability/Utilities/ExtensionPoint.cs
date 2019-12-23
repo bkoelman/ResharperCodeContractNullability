@@ -32,6 +32,7 @@ namespace CodeContractNullability.Utilities
         private static TInterface InstantiateNotNull([NotNull] Func<TInterface> valueFactory)
         {
             TInterface result = valueFactory();
+
             if (result == null)
             {
                 throw new Exception($"Failed to create instance of {typeof(TInterface)}.");

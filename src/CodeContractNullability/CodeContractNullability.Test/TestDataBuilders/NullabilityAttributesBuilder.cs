@@ -7,11 +7,11 @@ namespace CodeContractNullability.Test.TestDataBuilders
     internal sealed class NullabilityAttributesBuilder : ITestDataBuilder<NullabilityAttributesDefinition>
     {
         [NotNull]
-        private string codeNamespace = "Namespace.For.JetBrains.Annotation.Attributes";
-
-        [NotNull]
         [ItemNotNull]
         private readonly List<string> nestedTypes = new List<string>();
+
+        [NotNull]
+        private string codeNamespace = "Namespace.For.JetBrains.Annotation.Attributes";
 
         public NullabilityAttributesDefinition Build()
         {
