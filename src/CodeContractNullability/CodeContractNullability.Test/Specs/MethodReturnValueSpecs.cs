@@ -380,6 +380,24 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_method_is_user_defined_conversion_operator_it_must_be_reported_and_fixed()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .InGlobalScope(@"
+                    public class C
+                    {
+                        [+NullabilityAttributePlaceholder+]
+                        public static implicit operator [|C|](int p) { throw new NotImplementedException(); }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyNullabilityFix(source, CreateMessageForMethod("op_Implicit"));
+        }
+
+        [Fact]
         public void When_return_value_in_base_class_is_annotated_it_must_be_skipped()
         {
             // Arrange

@@ -40,21 +40,12 @@ namespace CodeContractNullability
                     await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
+                SyntaxNode declarationSyntax = targetSyntax.TranslateDeclarationSyntax();
 
-                SyntaxNode declarationSyntax = TranslateField(targetSyntax);
                 ISymbol declarationSymbol = DeclarationSyntaxToSymbol(declarationSyntax, model);
 
                 RegisterFixForSyntaxNode(declarationSyntax, declarationSymbol, diagnostic, context, typeCache);
             }
-        }
-
-        [NotNull]
-        private static SyntaxNode TranslateField([NotNull] SyntaxNode syntax)
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            return syntax is VariableDeclaratorSyntax fieldVariableSyntax
-                ? fieldVariableSyntax.GetAncestorOrThis<FieldDeclarationSyntax>()
-                : syntax;
         }
 
         [NotNull]
