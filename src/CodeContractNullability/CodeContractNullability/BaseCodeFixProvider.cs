@@ -53,15 +53,13 @@ namespace CodeContractNullability
                     await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
+                SyntaxNode declarationSyntax = targetSyntax.TranslateDeclarationSyntax();
 
-                FieldDeclarationSyntax fieldSyntax = targetSyntax is VariableDeclaratorSyntax
-                    ? targetSyntax.GetAncestorOrThis<FieldDeclarationSyntax>()
-                    : null;
-
-                if (targetSyntax is MethodDeclarationSyntax || targetSyntax is IndexerDeclarationSyntax ||
-                    targetSyntax is PropertyDeclarationSyntax || targetSyntax is ParameterSyntax || fieldSyntax != null)
+                if (declarationSyntax is MethodDeclarationSyntax || declarationSyntax is IndexerDeclarationSyntax ||
+                    declarationSyntax is PropertyDeclarationSyntax || declarationSyntax is ParameterSyntax ||
+                    declarationSyntax is FieldDeclarationSyntax || declarationSyntax is ConversionOperatorDeclarationSyntax)
                 {
-                    RegisterFixesForSyntaxNode(context, fieldSyntax ?? targetSyntax, diagnostic, nullSymbols);
+                    RegisterFixesForSyntaxNode(context, declarationSyntax, diagnostic, nullSymbols);
                 }
             }
         }

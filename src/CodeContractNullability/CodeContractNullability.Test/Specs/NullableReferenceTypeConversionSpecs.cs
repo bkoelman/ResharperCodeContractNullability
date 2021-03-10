@@ -523,6 +523,53 @@ namespace CodeContractNullability.Test.Specs
         }
 
         [Fact]
+        public void When_user_defined_implicit_conversion_operator_is_annotated_with_NotNull_it_must_remove_attribute()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .WithNullableReferenceTypesEnabled()
+                .InGlobalScope(@"
+                    public class C
+                    {
+                        [-[NotNull]
+                        -]public static implicit operator [|C|]([NotNull] string [|p|])
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyFix(source,
+                CreateMessageForMethod("op_Implicit"),
+                CreateMessageForParameter("p"));
+        }
+
+        [Fact]
+        public void When_user_defined_explicit_conversion_operator_is_annotated_with_CanBeNull_it_must_remove_attribute()
+        {
+            // Arrange
+            ParsedSourceCode source = new TypeSourceCodeBuilder()
+                .WithNullableReferenceTypesEnabled()
+                .InGlobalScope(@"
+                    public class C
+                    {
+                        [-[CanBeNull]
+                        -]public static explicit operator [|C|][+?+](int p)
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
+                ")
+                .Build();
+
+            // Act and assert
+            VerifyFix(source,
+                CreateMessageForMethod("op_Explicit"));
+        }
+
+        [Fact]
         public void When_delegate_and_parameters_are_annotated_it_must_be_reported_and_converted()
         {
             // Arrange
