@@ -21,7 +21,7 @@ namespace CodeContractNullability.Conversion
         private readonly DocumentEditor primaryEditor;
 
         [NotNull]
-        private readonly Dictionary<DocumentId, DocumentEditor> otherEditors = new();
+        private readonly Dictionary<DocumentId, DocumentEditor> otherEditors = new Dictionary<DocumentId, DocumentEditor>();
 
         [NotNull]
         public FrameworkTypeCache TypeCache { get; }

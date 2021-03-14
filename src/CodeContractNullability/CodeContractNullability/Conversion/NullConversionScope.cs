@@ -265,7 +265,7 @@ namespace CodeContractNullability.Conversion
                 {
                     return fieldSymbol.Type;
                 }
-                case INamedTypeSymbol { TypeKind: TypeKind.Delegate } typeSymbol:
+                case INamedTypeSymbol typeSymbol when typeSymbol.TypeKind == TypeKind.Delegate:
                 {
                     return typeSymbol.DelegateInvokeMethod.ReturnType;
                 }

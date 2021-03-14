@@ -26,7 +26,8 @@ namespace CodeContractNullability.ExternalAnnotations
         private readonly ICacheProvider<ExternalAnnotationsMap> cacheProvider;
 
         [NotNull]
-        private readonly ConcurrentDictionary<string, AssemblyCacheEntry> assemblyCache = new(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, AssemblyCacheEntry> assemblyCache =
+            new ConcurrentDictionary<string, AssemblyCacheEntry>(StringComparer.OrdinalIgnoreCase);
 
         public CachingExternalAnnotationsResolver([NotNull] IFileSystem fileSystem, [NotNull] ICacheProvider<ExternalAnnotationsMap> cacheProvider)
         {

@@ -6,7 +6,8 @@ namespace CodeContractNullability.Conversion
     internal sealed class ResharperNullabilitySymbolState
     {
         [NotNull]
-        public static readonly ResharperNullabilitySymbolState Default = new(ResharperNullableStatus.Unspecified, ResharperNullableStatus.Unspecified);
+        public static readonly ResharperNullabilitySymbolState Default =
+            new ResharperNullabilitySymbolState(ResharperNullableStatus.Unspecified, ResharperNullableStatus.Unspecified);
 
         public ResharperNullableStatus PrimaryStatus { get; }
         public ResharperNullableStatus ItemStatus { get; }
@@ -36,13 +37,13 @@ namespace CodeContractNullability.Conversion
         [NotNull]
         public ResharperNullabilitySymbolState ClearPrimaryStatus()
         {
-            return new(ResharperNullableStatus.Unspecified, ItemStatus);
+            return new ResharperNullabilitySymbolState(ResharperNullableStatus.Unspecified, ItemStatus);
         }
 
         [NotNull]
         public ResharperNullabilitySymbolState ClearItemStatus()
         {
-            return new(PrimaryStatus, ResharperNullableStatus.Unspecified);
+            return new ResharperNullabilitySymbolState(PrimaryStatus, ResharperNullableStatus.Unspecified);
         }
     }
 }

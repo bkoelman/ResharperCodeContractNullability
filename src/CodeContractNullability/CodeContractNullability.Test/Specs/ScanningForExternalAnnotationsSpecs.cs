@@ -184,24 +184,24 @@ namespace CodeContractNullability.Test.Specs
         public void When_side_by_side_external_annotations_file_does_not_exist_it_must_succeed()
         {
             // Arrange
-            using var assemblyScope = new TempAssemblyScope();
+            using (var assemblyScope = new TempAssemblyScope())
+            {
+                string systemAnnotationsPath = Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
 
-            string systemAnnotationsPath = Environment.ExpandEnvironmentVariables(
-                @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
+                IFileSystem fileSystem = new FakeFileSystemBuilder()
+                    .IncludingTextFile(systemAnnotationsPath, new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrEmpty(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                    .Build();
 
-            IFileSystem fileSystem = new FakeFileSystemBuilder()
-                .IncludingTextFile(systemAnnotationsPath, new ExternalAnnotationsBuilder()
-                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                        .Named("M:System.String.IsNullOrEmpty(System.String)")
-                        .WithParameter(new ExternalAnnotationParameterBuilder()
-                            .Named("value")
-                            .CanBeNull()))
-                    .GetXml())
-                .Build();
-
-            ParsedSourceCode source = new TypeSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
-                .WithReferenceToExternalAssemblyOnDiskFor(assemblyScope.AssemblyPath, @"
+                ParsedSourceCode source = new TypeSourceCodeBuilder()
+                    .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                    .WithReferenceToExternalAssemblyOnDiskFor(assemblyScope.AssemblyPath, @"
                         using System;
 
                         namespace ExternalAssembly
@@ -212,7 +212,7 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     ")
-                .InGlobalScope(@"
+                    .InGlobalScope(@"
                         public class C : ExternalAssembly.I
                         {
                             public string [|M|]()
@@ -221,43 +221,44 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     ")
-                .Build();
+                    .Build();
 
-            var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
+                var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
 
-            analyzerTest.VerifyNullabilityDiagnostics(source,
-                analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+                analyzerTest.VerifyNullabilityDiagnostics(source,
+                    analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+            }
         }
 
         [Fact]
         public void When_side_by_side_external_annotations_file_changes_it_must_update_analyzer_cache()
         {
             // Arrange
-            using var assemblyScope = new TempAssemblyScope();
+            using (var assemblyScope = new TempAssemblyScope())
+            {
+                string systemAnnotationsPath = Environment.ExpandEnvironmentVariables(
+                    @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
 
-            string systemAnnotationsPath = Environment.ExpandEnvironmentVariables(
-                @"%LOCALAPPDATA%\JetBrains\Installations\ReSharperPlatformVs14_57882815\ExternalAnnotations\.NETFramework\mscorlib\Annotations.xml");
+                string sideBySideAnnotationsPath = assemblyScope.TempPath + ".ExternalAnnotations.xml";
 
-            string sideBySideAnnotationsPath = assemblyScope.TempPath + ".ExternalAnnotations.xml";
+                IFileSystem fileSystem = new FakeFileSystemBuilder()
+                    .IncludingTextFile(systemAnnotationsPath, new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:System.String.IsNullOrEmpty(System.String)")
+                            .WithParameter(new ExternalAnnotationParameterBuilder()
+                                .Named("value")
+                                .CanBeNull()))
+                        .GetXml())
+                    .IncludingTextFile(sideBySideAnnotationsPath, new ExternalAnnotationsBuilder()
+                        .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                            .Named("M:ExternalAssembly.I.M")
+                            .NotNull())
+                        .GetXml())
+                    .Build();
 
-            IFileSystem fileSystem = new FakeFileSystemBuilder()
-                .IncludingTextFile(systemAnnotationsPath, new ExternalAnnotationsBuilder()
-                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                        .Named("M:System.String.IsNullOrEmpty(System.String)")
-                        .WithParameter(new ExternalAnnotationParameterBuilder()
-                            .Named("value")
-                            .CanBeNull()))
-                    .GetXml())
-                .IncludingTextFile(sideBySideAnnotationsPath, new ExternalAnnotationsBuilder()
-                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                        .Named("M:ExternalAssembly.I.M")
-                        .NotNull())
-                    .GetXml())
-                .Build();
-
-            TypeSourceCodeBuilder sourceBuilder = new TypeSourceCodeBuilder()
-                .WithNullabilityAttributes(new NullabilityAttributesBuilder())
-                .WithReferenceToExternalAssemblyOnDiskFor(assemblyScope.AssemblyPath, @"
+                TypeSourceCodeBuilder sourceBuilder = new TypeSourceCodeBuilder()
+                    .WithNullabilityAttributes(new NullabilityAttributesBuilder())
+                    .WithReferenceToExternalAssemblyOnDiskFor(assemblyScope.AssemblyPath, @"
                         using System;
 
                         namespace ExternalAssembly
@@ -269,8 +270,8 @@ namespace CodeContractNullability.Test.Specs
                         }
                     ");
 
-            ParsedSourceCode initialSource = sourceBuilder
-                .InGlobalScope(@"
+                ParsedSourceCode initialSource = sourceBuilder
+                    .InGlobalScope(@"
                         public class C : ExternalAssembly.I
                         {
                             public string M()
@@ -279,22 +280,22 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     ")
-                .Build();
+                    .Build();
 
-            // Method ExternalAssembly.I.M() is externally annotated in side-by-side xml file, so expect no diagnostics.
-            var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
-            analyzerTest.VerifyNullabilityDiagnostics(initialSource);
+                // Method ExternalAssembly.I.M() is externally annotated in side-by-side xml file, so expect no diagnostics.
+                var analyzerTest = new ReusableAnalyzerOnFileSystemTest(fileSystem);
+                analyzerTest.VerifyNullabilityDiagnostics(initialSource);
 
-            // Update contents of the side-by-side xml file: remove the external annotation.
-            fileSystem.File.WriteAllText(sideBySideAnnotationsPath, new ExternalAnnotationsBuilder()
-                .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                    .Named("M:ExternalAssembly.I.M"))
-                .GetXml());
+                // Update contents of the side-by-side xml file: remove the external annotation.
+                fileSystem.File.WriteAllText(sideBySideAnnotationsPath, new ExternalAnnotationsBuilder()
+                    .IncludingMember(new ExternalAnnotationFragmentBuilder()
+                        .Named("M:ExternalAssembly.I.M"))
+                    .GetXml());
 
-            // Update source text (add markers) without recreating analyzer instance.
-            ParsedSourceCode updatedSource = sourceBuilder
-                .ClearGlobalScope()
-                .InGlobalScope(@"
+                // Update source text (add markers) without recreating analyzer instance.
+                ParsedSourceCode updatedSource = sourceBuilder
+                    .ClearGlobalScope()
+                    .InGlobalScope(@"
                         public class C : ExternalAssembly.I
                         {
                             public string [|M|]()
@@ -303,13 +304,14 @@ namespace CodeContractNullability.Test.Specs
                             }
                         }
                     ")
-                .Build();
+                    .Build();
 
-            analyzerTest.WaitForFileEvictionFromSideBySideCache(sideBySideAnnotationsPath);
+                analyzerTest.WaitForFileEvictionFromSideBySideCache(sideBySideAnnotationsPath);
 
-            // After update of the side-by-side file on disk, analyzer should detect the change and report a diagnostic this time.
-            analyzerTest.VerifyNullabilityDiagnostics(updatedSource,
-                analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+                // After update of the side-by-side file on disk, analyzer should detect the change and report a diagnostic this time.
+                analyzerTest.VerifyNullabilityDiagnostics(updatedSource,
+                    analyzerTest.CreateMessageFor(SymbolType.Method, "M"));
+            }
         }
 
         [Theory]

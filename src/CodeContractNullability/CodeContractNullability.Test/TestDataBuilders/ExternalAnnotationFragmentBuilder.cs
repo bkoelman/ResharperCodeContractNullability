@@ -24,7 +24,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         [NotNull]
         [ItemNotNull]
-        private readonly List<XElement> parameters = new();
+        private readonly List<XElement> parameters = new List<XElement>();
 
         [NotNull]
         private string memberName = "value";

@@ -14,7 +14,8 @@ namespace CodeContractNullability.Utilities
 
         private static SymbolAnalysisContext SyntaxToSymbolContext(SyntaxNodeAnalysisContext context, [CanBeNull] ISymbol symbol)
         {
-            return new(symbol, context.SemanticModel.Compilation, context.Options, context.ReportDiagnostic, _ => true, context.CancellationToken);
+            return new SymbolAnalysisContext(symbol, context.SemanticModel.Compilation, context.Options, context.ReportDiagnostic, _ => true,
+                context.CancellationToken);
         }
     }
 }

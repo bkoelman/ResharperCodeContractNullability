@@ -20,7 +20,7 @@ namespace CodeContractNullability
         public const string DiagnosticId = "CNUL";
 
         [NotNull]
-        private readonly DiagnosticDescriptor rule = new(DiagnosticId, "Resharper nullability annotation can be converted to C# syntax.",
+        private readonly DiagnosticDescriptor rule = new DiagnosticDescriptor(DiagnosticId, "Resharper nullability annotation can be converted to C# syntax.",
             "Resharper nullability annotation(s) on {0} '{1}' can be converted to C# syntax.", "Nullability", DiagnosticSeverity.Warning, true,
             "Resharper nullability annotation(s) have been superseded by C# built-in syntax.",
             "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/CNUL_ResharperNullabilityAnnotationsCanBeConvertedToCSharpSyntax.md");
@@ -29,7 +29,8 @@ namespace CodeContractNullability
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(rule);
 
         [NotNull]
-        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } = new(() => new CachingNullabilityAttributeProvider());
+        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
+            new ExtensionPoint<INullabilityAttributeProvider>(() => new CachingNullabilityAttributeProvider());
 
         public override void Initialize([NotNull] AnalysisContext context)
         {
@@ -151,15 +152,15 @@ namespace CodeContractNullability
         {
             switch (context.Symbol)
             {
-                case IFieldSymbol:
+                case IFieldSymbol _:
                 {
                     return "field";
                 }
-                case IPropertySymbol:
+                case IPropertySymbol _:
                 {
                     return "property";
                 }
-                case IMethodSymbol:
+                case IMethodSymbol _:
                 {
                     return "method";
                 }
@@ -167,7 +168,7 @@ namespace CodeContractNullability
                 {
                     return "delegate";
                 }
-                case IParameterSymbol:
+                case IParameterSymbol _:
                 {
                     return "parameter";
                 }

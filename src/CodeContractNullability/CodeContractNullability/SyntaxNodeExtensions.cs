@@ -14,7 +14,7 @@ namespace CodeContractNullability
         {
             if (syntax is VariableDeclaratorSyntax fieldVariableSyntax)
             {
-                return fieldVariableSyntax.GetAncestorOrThis<FieldDeclarationSyntax>()!;
+                return fieldVariableSyntax.GetAncestorOrThis<FieldDeclarationSyntax>();
             }
 
             if (syntax is IdentifierNameSyntax identifierNameSyntax &&

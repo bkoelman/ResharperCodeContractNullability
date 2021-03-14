@@ -14,7 +14,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
     {
         [NotNull]
         [ItemNotNull]
-        private readonly List<XElement> fragments = new();
+        private readonly List<XElement> fragments = new List<XElement>();
 
         public ExternalAnnotationsMap Build()
         {

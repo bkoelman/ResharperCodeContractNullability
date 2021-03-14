@@ -13,7 +13,7 @@ namespace CodeContractNullability.Utilities
         private readonly string text;
 
         [NotNull]
-        private readonly Stopwatch stopwatch = new();
+        private readonly Stopwatch stopwatch = new Stopwatch();
 
         public CodeTimer([NotNull] string text)
         {

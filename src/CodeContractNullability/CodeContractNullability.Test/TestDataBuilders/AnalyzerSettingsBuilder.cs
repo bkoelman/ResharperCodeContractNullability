@@ -25,7 +25,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         public AnalyzerSettings Build()
         {
-            return new(disableReportOnNullableValueTypes);
+            return new AnalyzerSettings(disableReportOnNullableValueTypes);
         }
 
         [NotNull]

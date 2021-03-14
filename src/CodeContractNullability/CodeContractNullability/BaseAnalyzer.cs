@@ -31,12 +31,12 @@ namespace CodeContractNullability
         [NotNull]
         [ItemCanBeNull]
         private static readonly Lazy<MethodInfo> LazyEnableConcurrentExecutionMethod =
-            new(() => typeof(AnalysisContext).GetMethod("EnableConcurrentExecution"), LazyThreadSafetyMode.PublicationOnly);
+            new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("EnableConcurrentExecution"), LazyThreadSafetyMode.PublicationOnly);
 
         [NotNull]
         [ItemCanBeNull]
         private static readonly Lazy<MethodInfo> LazyConfigureGeneratedCodeAnalysisMethod =
-            new(() => typeof(AnalysisContext).GetMethod("ConfigureGeneratedCodeAnalysis"), LazyThreadSafetyMode.PublicationOnly);
+            new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("ConfigureGeneratedCodeAnalysis"), LazyThreadSafetyMode.PublicationOnly);
 
         private readonly bool appliesToItem;
 
@@ -53,7 +53,7 @@ namespace CodeContractNullability
         private readonly DiagnosticDescriptor ruleForParameter;
 
         [NotNull]
-        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new(DisableReportOnNullableValueTypesDiagnosticId,
+        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new DiagnosticDescriptor(DisableReportOnNullableValueTypesDiagnosticId,
             "Suggest to disable reporting on nullable value types.",
             "IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.", "Configuration",
             DiagnosticSeverity.Hidden, true, @"
@@ -80,10 +80,11 @@ perform the following additional steps after applying this code fix.
             ImmutableArray.Create(ruleForField, ruleForProperty, ruleForMethodReturnValue, ruleForParameter, disableReportOnNullableValueTypesRule);
 
         [NotNull]
-        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } = new(() => new CachingNullabilityAttributeProvider());
+        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
+            new ExtensionPoint<INullabilityAttributeProvider>(() => new CachingNullabilityAttributeProvider());
 
         [NotNull]
-        public ExtensionPoint<IFileSystem> FileSystem { get; } = new(() => FileSystemWrapper.Default);
+        public ExtensionPoint<IFileSystem> FileSystem { get; } = new ExtensionPoint<IFileSystem>(() => FileSystemWrapper.Default);
 
         [NotNull]
         public ExtensionPoint<IExternalAnnotationsResolver> ExternalAnnotationsResolver { get; }

@@ -10,7 +10,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
     {
         [NotNull]
         [ItemNotNull]
-        private readonly List<string> types = new();
+        private readonly List<string> types = new List<string>();
 
         protected override string GetSourceCode()
         {

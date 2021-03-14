@@ -17,7 +17,7 @@ namespace CodeContractNullability
         private readonly Compilation compilation;
 
         [NotNull]
-        private readonly ConcurrentDictionary<string, INamedTypeSymbol> typeMap = new();
+        private readonly ConcurrentDictionary<string, INamedTypeSymbol> typeMap = new ConcurrentDictionary<string, INamedTypeSymbol>();
 
         [CanBeNull]
         public INamedTypeSymbol EnumerableOfT => GetCached(typeof(IEnumerable<>));

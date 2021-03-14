@@ -24,10 +24,10 @@ namespace CodeContractNullability
     internal sealed class GeneratedCodeDocumentCache
     {
         [NotNull]
-        private readonly FileCommentScanner scanner = new();
+        private readonly FileCommentScanner scanner = new FileCommentScanner();
 
         [NotNull]
-        private readonly ConcurrentDictionary<string, bool> fileResultCache = new(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, bool> fileResultCache = new ConcurrentDictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 
         public bool IsInGeneratedCodeDocument([NotNull] ISymbol symbol, CancellationToken cancellationToken)
         {
@@ -67,7 +67,7 @@ namespace CodeContractNullability
         {
             [NotNull]
             private static readonly Regex FileNameRegex =
-                new(@"(^TemporaryGeneratedFile_.*|^assemblyinfo|^assemblyattributes|\.(g\.i|g|designer|generated|assemblyattributes))\.(cs|vb)$",
+                new Regex(@"(^TemporaryGeneratedFile_.*|^assemblyinfo|^assemblyattributes|\.(g\.i|g|designer|generated|assemblyattributes))\.(cs|vb)$",
                     RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
             public bool IsFileNameGenerated([CanBeNull] string filePath)

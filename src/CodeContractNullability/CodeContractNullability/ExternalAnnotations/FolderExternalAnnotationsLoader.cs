@@ -25,7 +25,7 @@ namespace CodeContractNullability.ExternalAnnotations
             "ResharperCodeContractNullability", "external-annotations.cache");
 
         [NotNull]
-        private static readonly object LockObject = new();
+        private static readonly object LockObject = new object();
 
         [NotNull]
         private readonly IFileSystem fileSystem;
@@ -105,15 +105,16 @@ namespace CodeContractNullability.ExternalAnnotations
                 {
                     MessagePackSerializer<ExternalAnnotationsCache> serializer = SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
 
-                    using IFileStream stream = fileSystem.File.OpenRead(CachePath);
-
-                    using (new CodeTimer("ExternalAnnotationsCache:Read"))
+                    using (IFileStream stream = fileSystem.File.OpenRead(CachePath))
                     {
-                        ExternalAnnotationsCache result = serializer.Unpack(stream.AsStream());
-
-                        if (result.ExternalAnnotations.Any())
+                        using (new CodeTimer("ExternalAnnotationsCache:Read"))
                         {
-                            return result;
+                            ExternalAnnotationsCache result = serializer.Unpack(stream.AsStream());
+
+                            if (result.ExternalAnnotations.Any())
+                            {
+                                return result;
+                            }
                         }
                     }
                 }
@@ -159,11 +160,12 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 MessagePackSerializer<ExternalAnnotationsCache> serializer = SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
 
-                using IFileStream stream = fileSystem.File.Create(CachePath);
-
-                using (new CodeTimer("ExternalAnnotationsCache:Write"))
+                using (IFileStream stream = fileSystem.File.Create(CachePath))
                 {
-                    serializer.Pack(stream.AsStream(), cache);
+                    using (new CodeTimer("ExternalAnnotationsCache:Write"))
+                    {
+                        serializer.Pack(stream.AsStream(), cache);
+                    }
                 }
             }
             catch (IOException)
@@ -193,9 +195,10 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 recorder.VisitFile(path);
 
-                using StreamReader reader = fileSystem.File.OpenText(path);
-
-                parser.ProcessDocument(reader, result);
+                using (StreamReader reader = fileSystem.File.OpenText(path))
+                {
+                    parser.ProcessDocument(reader, result);
+                }
             }
 
             Compact(result);

@@ -22,7 +22,7 @@ namespace CodeContractNullability
     public abstract class BaseCodeFixProvider : CodeFixProvider
     {
         [NotNull]
-        private static readonly SyntaxAnnotation NamespaceImportAnnotation = new();
+        private static readonly SyntaxAnnotation NamespaceImportAnnotation = new SyntaxAnnotation();
 
         private readonly bool appliesToItem;
 

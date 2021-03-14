@@ -17,7 +17,7 @@ namespace CodeContractNullability
         [NotNull]
         [ItemCanBeNull]
         private static readonly Lazy<PropertyInfo> LazyNullableContextOptionsProperty =
-            new(() => typeof(CSharpCompilationOptions).GetProperty("NullableContextOptions"), LazyThreadSafetyMode.PublicationOnly);
+            new Lazy<PropertyInfo>(() => typeof(CSharpCompilationOptions).GetProperty("NullableContextOptions"), LazyThreadSafetyMode.PublicationOnly);
 
         public static bool IsActive([NotNull] Compilation compilation)
         {

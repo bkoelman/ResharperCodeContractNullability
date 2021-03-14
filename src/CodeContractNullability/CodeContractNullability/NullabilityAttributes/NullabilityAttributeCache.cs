@@ -12,13 +12,13 @@ namespace CodeContractNullability.NullabilityAttributes
     internal sealed class CachingNullabilityAttributeProvider : INullabilityAttributeProvider
     {
         [NotNull]
-        private static readonly FreshReference<NullabilityAttributeMetadataNames> LastSeenNames = new(null);
+        private static readonly FreshReference<NullabilityAttributeMetadataNames> LastSeenNames = new FreshReference<NullabilityAttributeMetadataNames>(null);
 
         [NotNull]
-        private readonly FreshReference<NullabilityAttributeMetadataNames> names = new(null);
+        private readonly FreshReference<NullabilityAttributeMetadataNames> names = new FreshReference<NullabilityAttributeMetadataNames>(null);
 
         [NotNull]
-        private readonly FreshReference<NullabilityAttributeSymbols> symbols = new(null);
+        private readonly FreshReference<NullabilityAttributeSymbols> symbols = new FreshReference<NullabilityAttributeSymbols>(null);
 
         public CachingNullabilityAttributeProvider([CanBeNull] NullabilityAttributeMetadataNames names = null)
         {

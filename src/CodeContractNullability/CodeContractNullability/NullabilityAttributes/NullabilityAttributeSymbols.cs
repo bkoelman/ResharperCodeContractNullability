@@ -40,7 +40,8 @@ namespace CodeContractNullability.NullabilityAttributes
         [NotNull]
         public NullabilityAttributeMetadataNames GetMetadataNames()
         {
-            return new(NotNull.GetFullMetadataName(), CanBeNull.GetFullMetadataName(), ItemNotNull.GetFullMetadataName(), ItemCanBeNull.GetFullMetadataName());
+            return new NullabilityAttributeMetadataNames(NotNull.GetFullMetadataName(), CanBeNull.GetFullMetadataName(), ItemNotNull.GetFullMetadataName(),
+                ItemCanBeNull.GetFullMetadataName());
         }
 
         [NotNull]

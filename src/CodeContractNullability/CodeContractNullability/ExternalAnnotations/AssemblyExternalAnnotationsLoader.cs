@@ -52,14 +52,15 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             Guard.NotNull(externalAnnotationsPath, nameof(externalAnnotationsPath));
 
-            using StreamReader reader = fileSystem.File.OpenText(externalAnnotationsPath);
+            using (StreamReader reader = fileSystem.File.OpenText(externalAnnotationsPath))
+            {
+                var map = new ExternalAnnotationsMap();
 
-            var map = new ExternalAnnotationsMap();
+                var parser = new ExternalAnnotationDocumentParser();
+                parser.ProcessDocument(reader, map);
 
-            var parser = new ExternalAnnotationDocumentParser();
-            parser.ProcessDocument(reader, map);
-
-            return map;
+                return map;
+            }
         }
     }
 }

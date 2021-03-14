@@ -18,12 +18,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private static readonly TextSpan[] EmptyTextSpanArray = new TextSpan[0];
 
         [NotNull]
-        public static readonly AnalyzerTestContext DefaultTestContext = new(string.Empty, EmptyTextSpanArray, LanguageNames.CSharp,
+        public static readonly AnalyzerTestContext DefaultTestContext = new AnalyzerTestContext(string.Empty, EmptyTextSpanArray, LanguageNames.CSharp,
             new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
 
         [NotNull]
         [ItemNotNull]
-        private readonly HashSet<string> namespaceImports = new()
+        private readonly HashSet<string> namespaceImports = new HashSet<string>
         {
             "System"
         };
@@ -41,7 +41,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private NullabilityAttributesDefinition nullabilityAttributes = new NullabilityAttributesBuilder().InGlobalNamespace().Build();
 
         [NotNull]
-        private ExternalAnnotationsBuilder externalAnnotationsBuilder = new();
+        private ExternalAnnotationsBuilder externalAnnotationsBuilder = new ExternalAnnotationsBuilder();
 
         [NotNull]
         private string codeNamespaceImportExpected = string.Empty;
@@ -149,23 +149,24 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
                 bool isOnFirstLineInBlock = true;
 
-                using var reader = new StringReader(codeBlock.TrimEnd());
-
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
+                using (var reader = new StringReader(codeBlock.TrimEnd()))
                 {
-                    if (isOnFirstLineInBlock)
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        if (line.Trim().Length == 0)
+                        if (isOnFirstLineInBlock)
                         {
-                            continue;
+                            if (line.Trim().Length == 0)
+                            {
+                                continue;
+                            }
+
+                            isOnFirstLineInBlock = false;
                         }
 
-                        isOnFirstLineInBlock = false;
+                        builder.AppendLine(line);
                     }
-
-                    builder.AppendLine(line);
                 }
             }
 

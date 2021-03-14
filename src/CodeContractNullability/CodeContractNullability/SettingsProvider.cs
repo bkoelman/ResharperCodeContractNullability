@@ -62,18 +62,24 @@ namespace CodeContractNullability
         private static TResult ReadSourceText<TResult>([NotNull] SourceText sourceText, [NotNull] Func<XmlReader, TResult> readAction,
             CancellationToken cancellationToken)
         {
-            using var stream = new MemoryStream();
-            using var writer = new StreamWriter(stream);
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    sourceText.Write(writer, cancellationToken);
+                    writer.Flush();
 
-            sourceText.Write(writer, cancellationToken);
-            writer.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
 
-            stream.Seek(0, SeekOrigin.Begin);
-
-            using var textReader = new StreamReader(stream);
-            using var xmlReader = XmlReader.Create(textReader);
-
-            return readAction(xmlReader);
+                    using (var textReader = new StreamReader(stream))
+                    {
+                        using (var xmlReader = XmlReader.Create(textReader))
+                        {
+                            return readAction(xmlReader);
+                        }
+                    }
+                }
+            }
         }
 
         [NotNull]
@@ -93,24 +99,30 @@ namespace CodeContractNullability
         [NotNull]
         private static string GetStringForXml([NotNull] Encoding encoding, [NotNull] Action<XmlWriter> writeAction)
         {
-            using var stream = new MemoryStream();
-            using var textWriter = new StreamWriter(stream);
-
-            using var xmlWriter = XmlWriter.Create(textWriter, new XmlWriterSettings
+            using (var stream = new MemoryStream())
             {
-                Encoding = encoding,
-                Indent = true
-            });
+                using (var textWriter = new StreamWriter(stream))
+                {
+                    using (var xmlWriter = XmlWriter.Create(textWriter, new XmlWriterSettings
+                    {
+                        Encoding = encoding,
+                        Indent = true
+                    }))
+                    {
+                        writeAction(xmlWriter);
 
-            writeAction(xmlWriter);
+                        xmlWriter.Flush();
+                        textWriter.Flush();
 
-            xmlWriter.Flush();
-            textWriter.Flush();
+                        stream.Seek(0, SeekOrigin.Begin);
 
-            stream.Seek(0, SeekOrigin.Begin);
-
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
+                        using (var reader = new StreamReader(stream))
+                        {
+                            return reader.ReadToEnd();
+                        }
+                    }
+                }
+            }
         }
     }
 }
