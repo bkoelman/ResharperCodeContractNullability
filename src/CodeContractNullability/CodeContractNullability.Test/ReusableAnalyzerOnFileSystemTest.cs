@@ -26,8 +26,7 @@ namespace CodeContractNullability.Test
             this.fileSystem = fileSystem;
         }
 
-        public void VerifyNullabilityDiagnostics([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        public void VerifyNullabilityDiagnostics([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             VerifyNullabilityDiagnostic(source, messages);
         }
@@ -88,9 +87,7 @@ namespace CodeContractNullability.Test
             if (analyzer == null)
             {
                 analyzer = CreateNullabilityAnalyzer();
-
-                externalAnnotationsResolver =
-                    new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
+                externalAnnotationsResolver = new CachingExternalAnnotationsResolver(fileSystem, new LocalAnnotationCacheProvider(fileSystem));
 
                 analyzer.FileSystem.Override(fileSystem);
                 analyzer.ExternalAnnotationsResolver.Override(externalAnnotationsResolver);

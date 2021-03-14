@@ -18,12 +18,12 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private static readonly TextSpan[] EmptyTextSpanArray = new TextSpan[0];
 
         [NotNull]
-        public static readonly AnalyzerTestContext DefaultTestContext = new AnalyzerTestContext(string.Empty, EmptyTextSpanArray,
-            LanguageNames.CSharp, new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
+        public static readonly AnalyzerTestContext DefaultTestContext = new(string.Empty, EmptyTextSpanArray, LanguageNames.CSharp,
+            new AnalyzerOptions(ImmutableArray<AdditionalText>.Empty));
 
         [NotNull]
         [ItemNotNull]
-        private readonly HashSet<string> namespaceImports = new HashSet<string>
+        private readonly HashSet<string> namespaceImports = new()
         {
             "System"
         };
@@ -38,11 +38,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private string headerText;
 
         [CanBeNull]
-        private NullabilityAttributesDefinition nullabilityAttributes =
-            new NullabilityAttributesBuilder().InGlobalNamespace().Build();
+        private NullabilityAttributesDefinition nullabilityAttributes = new NullabilityAttributesBuilder().InGlobalNamespace().Build();
 
         [NotNull]
-        private ExternalAnnotationsBuilder externalAnnotationsBuilder = new ExternalAnnotationsBuilder();
+        private ExternalAnnotationsBuilder externalAnnotationsBuilder = new();
 
         [NotNull]
         private string codeNamespaceImportExpected = string.Empty;

@@ -24,8 +24,7 @@ namespace CodeContractNullability.Conversion
         [NotNull]
         private readonly ISymbol declarationSymbol;
 
-        public NullConversionScope([NotNull] NullConversionContext context, [NotNull] SyntaxNode declarationSyntax,
-            [NotNull] ISymbol declarationSymbol)
+        public NullConversionScope([NotNull] NullConversionContext context, [NotNull] SyntaxNode declarationSyntax, [NotNull] ISymbol declarationSymbol)
         {
             Guard.NotNull(context, nameof(context));
             Guard.NotNull(declarationSyntax, nameof(declarationSyntax));
@@ -50,15 +49,13 @@ namespace CodeContractNullability.Conversion
             DocumentEditor editor = await context.GetEditorForDeclaration(declarationSymbol).ConfigureAwait(false);
 
             ResharperNullabilitySymbolState nullabilityState = await ResharperNullabilityAttributesRemover
-                .RemoveFromDeclaration(declarationSymbol, declarationSyntax, baseState, editor, context.CancellationToken)
-                .ConfigureAwait(false);
+                .RemoveFromDeclaration(declarationSymbol, declarationSyntax, baseState, editor, context.CancellationToken).ConfigureAwait(false);
 
             nullabilityState = ReduceNullabilityState(nullabilityState);
 
             TypeSyntax declarationTypeSyntax = GetTypeSyntaxForDeclaration(declarationSyntax);
 
-            editor.ReplaceNode(declarationTypeSyntax,
-                (n, gen) => TypeDeclarationWriter.ToNullableTypeSyntax(n, nullabilityState));
+            editor.ReplaceNode(declarationTypeSyntax, (n, gen) => TypeDeclarationWriter.ToNullableTypeSyntax(n, nullabilityState));
 
             if (!(declarationSymbol is INamedTypeSymbol))
             {
@@ -76,14 +73,12 @@ namespace CodeContractNullability.Conversion
         {
             ITypeSymbol primaryDeclarationTypeSymbol = GetTypeFromSymbol(declarationSymbol);
 
-            if (nullabilityState.PrimaryStatus != ResharperNullableStatus.Unspecified &&
-                !IsReferenceType(primaryDeclarationTypeSymbol))
+            if (nullabilityState.PrimaryStatus != ResharperNullableStatus.Unspecified && !IsReferenceType(primaryDeclarationTypeSymbol))
             {
                 nullabilityState = nullabilityState.ClearPrimaryStatus();
             }
 
-            ITypeSymbol itemDeclarationTypeSymbol =
-                primaryDeclarationTypeSymbol.TryGetItemTypeForSequenceOrCollection(context.TypeCache) ??
+            ITypeSymbol itemDeclarationTypeSymbol = primaryDeclarationTypeSymbol.TryGetItemTypeForSequenceOrCollection(context.TypeCache) ??
                 primaryDeclarationTypeSymbol.TryGetItemTypeForLazyOrGenericTask(context.TypeCache);
 
             if (nullabilityState.ItemStatus != ResharperNullableStatus.Unspecified && !IsReferenceType(itemDeclarationTypeSymbol))
@@ -101,14 +96,12 @@ namespace CodeContractNullability.Conversion
 
         private static bool IsNullableValueType([NotNull] ITypeSymbol declarationTypeSymbol)
         {
-            return declarationTypeSymbol is INamedTypeSymbol namedTypeSymbol &&
-                namedTypeSymbol.ConstructedFrom.SpecialType == SpecialType.System_Nullable_T;
+            return declarationTypeSymbol is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.ConstructedFrom.SpecialType == SpecialType.System_Nullable_T;
         }
 
         private async Task ExecuteForPartialMethod([NotNull] ResharperNullabilitySymbolState nullabilityState)
         {
-            if (declarationSymbol is IParameterSymbol parameterSymbol &&
-                parameterSymbol.IsParameterInPartialMethod(context.CancellationToken))
+            if (declarationSymbol is IParameterSymbol parameterSymbol && parameterSymbol.IsParameterInPartialMethod(context.CancellationToken))
             {
                 var methodSymbol = (IMethodSymbol)parameterSymbol.ContainingSymbol;
 
@@ -119,8 +112,8 @@ namespace CodeContractNullability.Conversion
                     int parameterIndex = methodSymbol.Parameters.IndexOf(parameterSymbol);
                     IParameterSymbol otherParameterSymbol = otherMethodSymbol.Parameters[parameterIndex];
 
-                    SyntaxNode syntaxNode = otherParameterSymbol.DeclaringSyntaxReferences
-                        .Select(reference => reference.GetSyntax(context.CancellationToken)).First();
+                    SyntaxNode syntaxNode = otherParameterSymbol.DeclaringSyntaxReferences.Select(reference => reference.GetSyntax(context.CancellationToken))
+                        .First();
 
                     var nextScope = new NullConversionScope(context, syntaxNode, otherParameterSymbol);
                     await nextScope.RewriteDeclaration(nullabilityState, true).ConfigureAwait(false);
@@ -128,8 +121,7 @@ namespace CodeContractNullability.Conversion
             }
         }
 
-        private async Task ExecuteForDerivedTypes([NotNull] DocumentEditor editor,
-            [NotNull] ResharperNullabilitySymbolState nullabilityState)
+        private async Task ExecuteForDerivedTypes([NotNull] DocumentEditor editor, [NotNull] ResharperNullabilitySymbolState nullabilityState)
         {
             Solution solution = editor.OriginalDocument.Project.Solution;
 
@@ -138,8 +130,8 @@ namespace CodeContractNullability.Conversion
 
             foreach (ISymbol memberInDerivedType in membersInDerivedTypes)
             {
-                SyntaxNode syntaxNode = memberInDerivedType.DeclaringSyntaxReferences
-                    .Select(reference => reference.GetSyntax(context.CancellationToken)).First();
+                SyntaxNode syntaxNode = memberInDerivedType.DeclaringSyntaxReferences.Select(reference => reference.GetSyntax(context.CancellationToken))
+                    .First();
 
                 var nextScope = new NullConversionScope(context, syntaxNode, memberInDerivedType);
                 await nextScope.RewriteDeclaration(nullabilityState).ConfigureAwait(false);
@@ -147,8 +139,8 @@ namespace CodeContractNullability.Conversion
         }
 
         [ItemNotNull]
-        private static async Task<ISet<ISymbol>> GetMembersInDerivedTypesAsync([NotNull] ISymbol symbol,
-            [NotNull] Solution solution, CancellationToken cancellationToken)
+        private static async Task<ISet<ISymbol>> GetMembersInDerivedTypesAsync([NotNull] ISymbol symbol, [NotNull] Solution solution,
+            CancellationToken cancellationToken)
         {
             ISymbol memberSymbol = symbol is IParameterSymbol ? symbol.ContainingSymbol : symbol;
 
@@ -165,8 +157,7 @@ namespace CodeContractNullability.Conversion
             }
             else
             {
-                IEnumerable<ISymbol> symbols = await SymbolFinder
-                    .FindOverridesAsync(memberSymbol, solution, null, cancellationToken).ConfigureAwait(false);
+                IEnumerable<ISymbol> symbols = await SymbolFinder.FindOverridesAsync(memberSymbol, solution, null, cancellationToken).ConfigureAwait(false);
 
                 membersInDerivedType = symbols.Where(x => symbol.ContainingType.Equals(x.ContainingType.BaseType)).ToList();
             }

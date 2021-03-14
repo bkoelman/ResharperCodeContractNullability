@@ -30,11 +30,8 @@ namespace CodeContractNullability
                 {
                     if (document != null)
                     {
-                        ImmutableArray<Diagnostic> documentDiagnostics =
-                            await fixAllContext.GetDocumentDiagnosticsAsync(document).ConfigureAwait(false);
-
-                        return ImmutableDictionary<Document, ImmutableArray<Diagnostic>>.Empty.SetItem(document,
-                            documentDiagnostics);
+                        ImmutableArray<Diagnostic> documentDiagnostics = await fixAllContext.GetDocumentDiagnosticsAsync(document).ConfigureAwait(false);
+                        return ImmutableDictionary<Document, ImmutableArray<Diagnostic>>.Empty.SetItem(document, documentDiagnostics);
                     }
 
                     break;
@@ -61,17 +58,14 @@ namespace CodeContractNullability
 
                         tasks[i] = Task.Run(async () =>
                         {
-                            ImmutableArray<Diagnostic> projectDiagnostics =
-                                await GetAllDiagnosticsAsync(fixAllContext, projectToFix).ConfigureAwait(false);
-
+                            ImmutableArray<Diagnostic> projectDiagnostics = await GetAllDiagnosticsAsync(fixAllContext, projectToFix).ConfigureAwait(false);
                             diagnostics.TryAdd(projectToFix.Id, projectDiagnostics);
                         }, fixAllContext.CancellationToken);
                     }
 
                     await Task.WhenAll(tasks).ConfigureAwait(false);
 
-                    allDiagnostics = allDiagnostics.AddRange(diagnostics.SelectMany(i =>
-                        i.Value.Where(x => fixAllContext.DiagnosticIds.Contains(x.Id))));
+                    allDiagnostics = allDiagnostics.AddRange(diagnostics.SelectMany(i => i.Value.Where(x => fixAllContext.DiagnosticIds.Contains(x.Id))));
 
                     break;
                 }
@@ -82,13 +76,11 @@ namespace CodeContractNullability
                 return ImmutableDictionary<Document, ImmutableArray<Diagnostic>>.Empty;
             }
 
-            return await GetDocumentDiagnosticsToFixAsync(allDiagnostics, projectsToFix, fixAllContext.CancellationToken)
-                .ConfigureAwait(false);
+            return await GetDocumentDiagnosticsToFixAsync(allDiagnostics, projectsToFix, fixAllContext.CancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Gets all <see cref="Diagnostic" /> instances within a specific <see cref="Project" /> which are relevant to a
-        /// <see cref="FixAllContext" />.
+        /// Gets all <see cref="Diagnostic" /> instances within a specific <see cref="Project" /> which are relevant to a <see cref="FixAllContext" />.
         /// </summary>
         /// <param name="fixAllContext">
         /// The context for the Fix All operation.
@@ -97,28 +89,24 @@ namespace CodeContractNullability
         /// The project.
         /// </param>
         /// <returns>
-        /// A <see cref="Task{TResult}" /> representing the asynchronous operation. When the task completes successfully, the
-        /// <see cref="Task{TResult}.Result" /> will contain the requested diagnostics.
+        /// A <see cref="Task{TResult}" /> representing the asynchronous operation. When the task completes successfully, the <see cref="Task{TResult}.Result" />
+        /// will contain the requested diagnostics.
         /// </returns>
-        private static async Task<ImmutableArray<Diagnostic>> GetAllDiagnosticsAsync([NotNull] FixAllContext fixAllContext,
-            [NotNull] Project project)
+        private static async Task<ImmutableArray<Diagnostic>> GetAllDiagnosticsAsync([NotNull] FixAllContext fixAllContext, [NotNull] Project project)
         {
             return await fixAllContext.GetAllDiagnosticsAsync(project).ConfigureAwait(false);
         }
 
         [ItemNotNull]
         private static async Task<ImmutableDictionary<Document, ImmutableArray<Diagnostic>>> GetDocumentDiagnosticsToFixAsync(
-            [ItemNotNull] ImmutableArray<Diagnostic> diagnostics, [ItemNotNull] ImmutableArray<Project> projects,
-            CancellationToken cancellationToken)
+            [ItemNotNull] ImmutableArray<Diagnostic> diagnostics, [ItemNotNull] ImmutableArray<Project> projects, CancellationToken cancellationToken)
         {
-            ImmutableDictionary<SyntaxTree, Document> treeToDocumentMap =
-                await GetTreeToDocumentMapAsync(projects, cancellationToken).ConfigureAwait(false);
+            ImmutableDictionary<SyntaxTree, Document> treeToDocumentMap = await GetTreeToDocumentMapAsync(projects, cancellationToken).ConfigureAwait(false);
 
             ImmutableDictionary<Document, ImmutableArray<Diagnostic>>.Builder builder =
                 ImmutableDictionary.CreateBuilder<Document, ImmutableArray<Diagnostic>>();
 
-            foreach (IGrouping<Document, Diagnostic> documentAndDiagnostics in diagnostics.GroupBy(d =>
-                GetReportedDocument(d, treeToDocumentMap)))
+            foreach (IGrouping<Document, Diagnostic> documentAndDiagnostics in diagnostics.GroupBy(d => GetReportedDocument(d, treeToDocumentMap)))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -132,8 +120,8 @@ namespace CodeContractNullability
         }
 
         [ItemNotNull]
-        private static async Task<ImmutableDictionary<SyntaxTree, Document>> GetTreeToDocumentMapAsync(
-            [ItemNotNull] ImmutableArray<Project> projects, CancellationToken cancellationToken)
+        private static async Task<ImmutableDictionary<SyntaxTree, Document>> GetTreeToDocumentMapAsync([ItemNotNull] ImmutableArray<Project> projects,
+            CancellationToken cancellationToken)
         {
             ImmutableDictionary<SyntaxTree, Document>.Builder builder = ImmutableDictionary.CreateBuilder<SyntaxTree, Document>();
 
@@ -154,8 +142,7 @@ namespace CodeContractNullability
         }
 
         [CanBeNull]
-        private static Document GetReportedDocument([NotNull] Diagnostic diagnostic,
-            [NotNull] ImmutableDictionary<SyntaxTree, Document> treeToDocumentsMap)
+        private static Document GetReportedDocument([NotNull] Diagnostic diagnostic, [NotNull] ImmutableDictionary<SyntaxTree, Document> treeToDocumentsMap)
         {
             SyntaxTree tree = diagnostic.Location.SourceTree;
             return tree != null && treeToDocumentsMap.TryGetValue(tree, out Document document) ? document : null;

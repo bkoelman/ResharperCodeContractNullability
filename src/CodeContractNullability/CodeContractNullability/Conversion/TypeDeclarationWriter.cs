@@ -13,8 +13,7 @@ namespace CodeContractNullability.Conversion
         private const string SyntaxNodeExtensionsIdAnnotationKind = "Id";
 
         [NotNull]
-        public static SyntaxNode ToNullableTypeSyntax([NotNull] SyntaxNode declarationTypeSyntax,
-            [NotNull] ResharperNullabilitySymbolState nullabilityState)
+        public static SyntaxNode ToNullableTypeSyntax([NotNull] SyntaxNode declarationTypeSyntax, [NotNull] ResharperNullabilitySymbolState nullabilityState)
         {
             Guard.NotNull(declarationTypeSyntax, nameof(declarationTypeSyntax));
             Guard.NotNull(nullabilityState, nameof(nullabilityState));

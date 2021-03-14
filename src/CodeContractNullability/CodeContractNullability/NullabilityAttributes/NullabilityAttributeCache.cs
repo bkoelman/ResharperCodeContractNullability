@@ -6,22 +6,19 @@ using Microsoft.CodeAnalysis;
 namespace CodeContractNullability.NullabilityAttributes
 {
     /// <summary>
-    /// Provides cached access to the (Item)NotNullAttribute and (Item)CanBeNullAttribute symbols in a compilation. The cache is used for
-    /// hinting, resulting in potential faster lookups over (similar) compilations and solutions.
+    /// Provides cached access to the (Item)NotNullAttribute and (Item)CanBeNullAttribute symbols in a compilation. The cache is used for hinting, resulting
+    /// in potential faster lookups over (similar) compilations and solutions.
     /// </summary>
     internal sealed class CachingNullabilityAttributeProvider : INullabilityAttributeProvider
     {
         [NotNull]
-        private static readonly FreshReference<NullabilityAttributeMetadataNames> LastSeenNames =
-            new FreshReference<NullabilityAttributeMetadataNames>(null);
+        private static readonly FreshReference<NullabilityAttributeMetadataNames> LastSeenNames = new(null);
 
         [NotNull]
-        private readonly FreshReference<NullabilityAttributeMetadataNames> names =
-            new FreshReference<NullabilityAttributeMetadataNames>(null);
+        private readonly FreshReference<NullabilityAttributeMetadataNames> names = new(null);
 
         [NotNull]
-        private readonly FreshReference<NullabilityAttributeSymbols> symbols =
-            new FreshReference<NullabilityAttributeSymbols>(null);
+        private readonly FreshReference<NullabilityAttributeSymbols> symbols = new(null);
 
         public CachingNullabilityAttributeProvider([CanBeNull] NullabilityAttributeMetadataNames names = null)
         {
@@ -33,10 +30,7 @@ namespace CodeContractNullability.NullabilityAttributes
             Guard.NotNull(compilation, nameof(compilation));
 
             NullabilityAttributeSymbols symbolsSnapshot = symbols.Value;
-
-            NullabilityAttributeMetadataNames previousNames =
-                symbolsSnapshot?.GetMetadataNames() ?? names.Value ?? LastSeenNames.Value;
-
+            NullabilityAttributeMetadataNames previousNames = symbolsSnapshot?.GetMetadataNames() ?? names.Value ?? LastSeenNames.Value;
             symbolsSnapshot = previousNames?.GetSymbolsOrNull(compilation);
 
             if (symbolsSnapshot == null)

@@ -46,6 +46,8 @@ namespace CodeContractNullability.ExternalAnnotations
         [ItemNotNull]
         public IEnumerable<string> GetFoldersToScan()
         {
+            // @formatter:wrap_linq_expressions chop_always
+
             foreach (ExternalAnnotationsLocation location in
                 from folder in EnumerateExternalAnnotationLocations()
                 orderby folder.Category, folder.Scope, folder.Version
@@ -53,6 +55,8 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 yield return location.Path;
             }
+
+            // @formatter:wrap_linq_expressions restore
         }
 
         [NotNull]
@@ -70,8 +74,7 @@ namespace CodeContractNullability.ExternalAnnotations
         [NotNull]
         private static string GetRiderProbingFolder([NotNull] string startFolder)
         {
-            return Path.Combine(startFolder, "JetBrains", RiderFolderNamePrefix + "*", "lib", "ReSharperHost",
-                "ExternalAnnotations");
+            return Path.Combine(startFolder, "JetBrains", RiderFolderNamePrefix + "*", "lib", "ReSharperHost", "ExternalAnnotations");
         }
 
         [NotNull]
@@ -147,8 +150,7 @@ namespace CodeContractNullability.ExternalAnnotations
 
                     if (fileSystem.Directory.Exists(path))
                     {
-                        yield return new ExternalAnnotationsLocation(Scope.NuGet, Category.ExternalAnnotations, packageVersion,
-                            path);
+                        yield return new ExternalAnnotationsLocation(Scope.NuGet, Category.ExternalAnnotations, packageVersion, path);
                     }
                 }
             }
@@ -171,15 +173,13 @@ namespace CodeContractNullability.ExternalAnnotations
 
                 if (versionFolder.Length > RiderFolderNamePrefix.Length)
                 {
-                    if (Version.TryParse(versionFolder.Substring(RiderFolderNamePrefix.Length).TrimStart(),
-                        out Version riderVersion))
+                    if (Version.TryParse(versionFolder.Substring(RiderFolderNamePrefix.Length).TrimStart(), out Version riderVersion))
                     {
                         string path = Path.Combine(versionPath, "lib", "ReSharperHost", "ExternalAnnotations");
 
                         if (fileSystem.Directory.Exists(path))
                         {
-                            yield return new ExternalAnnotationsLocation(Scope.SystemRider, Category.ExternalAnnotations,
-                                riderVersion, path);
+                            yield return new ExternalAnnotationsLocation(Scope.SystemRider, Category.ExternalAnnotations, riderVersion, path);
                         }
                     }
                 }
@@ -200,15 +200,13 @@ namespace CodeContractNullability.ExternalAnnotations
                 yield break;
             }
 
-            foreach (string platformPath in fileSystem.Directory.GetDirectories(installationsFolder,
-                ResharperFolderNamePrefix + "*"))
+            foreach (string platformPath in fileSystem.Directory.GetDirectories(installationsFolder, ResharperFolderNamePrefix + "*"))
             {
                 string platformFolder = Path.GetFileName(platformPath);
 
                 if (platformFolder.Length >= ResharperFolderNamePrefix.Length + 2)
                 {
-                    if (int.TryParse(platformFolder.Substring(ResharperFolderNamePrefix.Length, 2), out int vsVersion) &&
-                        vsVersion >= 14)
+                    if (int.TryParse(platformFolder.Substring(ResharperFolderNamePrefix.Length, 2), out int vsVersion) && vsVersion >= 14)
                     {
                         string path = Path.Combine(platformPath, subFolder);
 

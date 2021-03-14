@@ -27,8 +27,8 @@ namespace CodeContractNullability.NullabilityAttributes
         [NotNull]
         private string ItemCanBeNull { get; }
 
-        public NullabilityAttributeMetadataNames([NotNull] string notNull, [NotNull] string canBeNull,
-            [NotNull] string itemNotNull, [NotNull] string itemCanBeNull)
+        public NullabilityAttributeMetadataNames([NotNull] string notNull, [NotNull] string canBeNull, [NotNull] string itemNotNull,
+            [NotNull] string itemCanBeNull)
         {
             Guard.NotNull(notNull, nameof(notNull));
             Guard.NotNull(canBeNull, nameof(canBeNull));
@@ -61,9 +61,7 @@ namespace CodeContractNullability.NullabilityAttributes
         {
             INamedTypeSymbol attributeSymbol = compilation.GetTypeByMetadataName(fullTypeName);
 
-            return attributeSymbol != null && IsDefinedInSameAssembly(attributeSymbol, compilation.Assembly)
-                ? attributeSymbol
-                : null;
+            return attributeSymbol != null && IsDefinedInSameAssembly(attributeSymbol, compilation.Assembly) ? attributeSymbol : null;
         }
 
         private bool IsDefinedInSameAssembly([NotNull] INamedTypeSymbol type, [NotNull] IAssemblySymbol assembly)
@@ -74,18 +72,24 @@ namespace CodeContractNullability.NullabilityAttributes
         [NotNull]
         public ImmutableDictionary<string, string> ToImmutableDictionary()
         {
-            return ImmutableDictionary.Create<string, string>().Add(KeyNotNull, NotNull).Add(KeyCanBeNull, CanBeNull)
-                .Add(KeyItemNotNull, ItemNotNull).Add(KeyItemCanBeNull, ItemCanBeNull);
+            // @formatter:wrap_chained_method_calls chop_always
+
+            return ImmutableDictionary.Create<string, string>()
+                .Add(KeyNotNull, NotNull)
+                .Add(KeyCanBeNull, CanBeNull)
+                .Add(KeyItemNotNull, ItemNotNull)
+                .Add(KeyItemCanBeNull, ItemCanBeNull);
+
+            // @formatter:wrap_chained_method_calls restore
         }
 
         [NotNull]
-        public static NullabilityAttributeMetadataNames FromImmutableDictionary(
-            [NotNull] ImmutableDictionary<string, string> properties)
+        public static NullabilityAttributeMetadataNames FromImmutableDictionary([NotNull] ImmutableDictionary<string, string> properties)
         {
             Guard.NotNull(properties, nameof(properties));
 
-            return new NullabilityAttributeMetadataNames(properties[KeyNotNull], properties[KeyCanBeNull],
-                properties[KeyItemNotNull], properties[KeyItemCanBeNull]);
+            return new NullabilityAttributeMetadataNames(properties[KeyNotNull], properties[KeyCanBeNull], properties[KeyItemNotNull],
+                properties[KeyItemCanBeNull]);
         }
     }
 }

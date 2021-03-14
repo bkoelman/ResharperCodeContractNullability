@@ -21,15 +21,15 @@ namespace CodeContractNullability.Conversion
         private readonly DocumentEditor primaryEditor;
 
         [NotNull]
-        private readonly Dictionary<DocumentId, DocumentEditor> otherEditors = new Dictionary<DocumentId, DocumentEditor>();
+        private readonly Dictionary<DocumentId, DocumentEditor> otherEditors = new();
 
         [NotNull]
         public FrameworkTypeCache TypeCache { get; }
 
         public CancellationToken CancellationToken { get; }
 
-        private NullConversionContext([NotNull] SyntaxNode declarationSyntax, [NotNull] DocumentEditor editor,
-            [NotNull] FrameworkTypeCache typeCache, CancellationToken cancellationToken)
+        private NullConversionContext([NotNull] SyntaxNode declarationSyntax, [NotNull] DocumentEditor editor, [NotNull] FrameworkTypeCache typeCache,
+            CancellationToken cancellationToken)
         {
             primaryDeclarationSyntax = declarationSyntax;
             primaryEditor = editor;
@@ -38,8 +38,8 @@ namespace CodeContractNullability.Conversion
         }
 
         [ItemNotNull]
-        public static async Task<NullConversionContext> Create([NotNull] SyntaxNode declarationSyntax,
-            [NotNull] Document document, [NotNull] FrameworkTypeCache typeCache, CancellationToken cancellationToken)
+        public static async Task<NullConversionContext> Create([NotNull] SyntaxNode declarationSyntax, [NotNull] Document document,
+            [NotNull] FrameworkTypeCache typeCache, CancellationToken cancellationToken)
         {
             Guard.NotNull(declarationSyntax, nameof(declarationSyntax));
             Guard.NotNull(document, nameof(document));
@@ -55,8 +55,7 @@ namespace CodeContractNullability.Conversion
         {
             Guard.NotNull(declarationSymbol, nameof(declarationSymbol));
 
-            SyntaxNode firstDeclarationSyntax = declarationSymbol.DeclaringSyntaxReferences.Select(reference =>
-                reference.GetSyntax(CancellationToken)).First();
+            SyntaxNode firstDeclarationSyntax = declarationSymbol.DeclaringSyntaxReferences.Select(reference => reference.GetSyntax(CancellationToken)).First();
 
             if (firstDeclarationSyntax.SyntaxTree.FilePath == primaryDeclarationSyntax.SyntaxTree.FilePath)
             {
@@ -68,8 +67,7 @@ namespace CodeContractNullability.Conversion
 
             if (!otherEditors.ContainsKey(otherDocument.Id))
             {
-                otherEditors[otherDocument.Id] =
-                    await DocumentEditor.CreateAsync(otherDocument, CancellationToken).ConfigureAwait(false);
+                otherEditors[otherDocument.Id] = await DocumentEditor.CreateAsync(otherDocument, CancellationToken).ConfigureAwait(false);
             }
 
             return otherEditors[otherDocument.Id];
@@ -96,14 +94,12 @@ namespace CodeContractNullability.Conversion
         }
 
         [ItemNotNull]
-        private static async Task<Document> GetDocumentFormatted([NotNull] DocumentEditor editor,
-            CancellationToken cancellationToken)
+        private static async Task<Document> GetDocumentFormatted([NotNull] DocumentEditor editor, CancellationToken cancellationToken)
         {
             Document document = editor.GetChangedDocument();
             OptionSet options = document.Project.Solution.Workspace.Options;
 
-            Document formatted = await Formatter.FormatAsync(document, Formatter.Annotation, options, cancellationToken)
-                .ConfigureAwait(false);
+            Document formatted = await Formatter.FormatAsync(document, Formatter.Annotation, options, cancellationToken).ConfigureAwait(false);
 
             return formatted;
         }

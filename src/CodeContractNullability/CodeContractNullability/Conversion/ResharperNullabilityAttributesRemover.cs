@@ -17,8 +17,8 @@ namespace CodeContractNullability.Conversion
     {
         [ItemNotNull]
         public static async Task<ResharperNullabilitySymbolState> RemoveFromDeclaration([NotNull] ISymbol declarationSymbol,
-            [NotNull] SyntaxNode declarationSyntax, [NotNull] ResharperNullabilitySymbolState baseState,
-            [NotNull] DocumentEditor editor, CancellationToken cancellationToken)
+            [NotNull] SyntaxNode declarationSyntax, [NotNull] ResharperNullabilitySymbolState baseState, [NotNull] DocumentEditor editor,
+            CancellationToken cancellationToken)
         {
             Guard.NotNull(declarationSymbol, nameof(declarationSymbol));
             Guard.NotNull(declarationSyntax, nameof(declarationSyntax));
@@ -30,8 +30,7 @@ namespace CodeContractNullability.Conversion
 
             foreach (AttributeData attribute in declarationSymbol.GetAttributes())
             {
-                AttributeSyntax attributeSyntax =
-                    await GetAttributeSyntaxAsync(attribute, cancellationToken).ConfigureAwait(false);
+                AttributeSyntax attributeSyntax = await GetAttributeSyntaxAsync(attribute, cancellationToken).ConfigureAwait(false);
 
                 switch (attribute.AttributeClass.Name)
                 {
@@ -78,8 +77,7 @@ namespace CodeContractNullability.Conversion
         }
 
         [ItemNotNull]
-        private static async Task<AttributeSyntax> GetAttributeSyntaxAsync([NotNull] AttributeData attributeData,
-            CancellationToken cancellationToken)
+        private static async Task<AttributeSyntax> GetAttributeSyntaxAsync([NotNull] AttributeData attributeData, CancellationToken cancellationToken)
         {
             SyntaxReference syntaxReference = attributeData.ApplicationSyntaxReference;
             SyntaxNode attributeSyntax = await syntaxReference.GetSyntaxAsync(cancellationToken).ConfigureAwait(false);
@@ -114,20 +112,15 @@ namespace CodeContractNullability.Conversion
                     throw new Exception("Internal error: Unexpected null return value (1).");
                 }
 
-                AttributeSyntax newAttributeSyntax = parent.DescendantNodes().OfType<AttributeSyntax>()
-                    .First(s => s.Name.ToString() == attributeName);
-
+                AttributeSyntax newAttributeSyntax = parent.DescendantNodes().OfType<AttributeSyntax>().First(s => s.Name.ToString() == attributeName);
                 var newAttributeListSyntax = (AttributeListSyntax)newAttributeSyntax.Parent;
 
-                return newAttributeListSyntax.Attributes.Count == 1
-                    ? RemoveSurroundingWhitespaceOnLine(newAttributeListSyntax)
-                    : parent;
+                return newAttributeListSyntax.Attributes.Count == 1 ? RemoveSurroundingWhitespaceOnLine(newAttributeListSyntax) : parent;
             });
 
             editor.ReplaceNode(attributeSyntax.Parent.Parent, (root, gen) =>
             {
-                AttributeSyntax newAttributeSyntax = root.DescendantNodes().OfType<AttributeSyntax>()
-                    .First(s => s.Name.ToString() == attributeName);
+                AttributeSyntax newAttributeSyntax = root.DescendantNodes().OfType<AttributeSyntax>().First(s => s.Name.ToString() == attributeName);
 
                 var newAttributeListSyntax = (AttributeListSyntax)newAttributeSyntax.Parent;
 
@@ -144,8 +137,7 @@ namespace CodeContractNullability.Conversion
                     return returnValue1;
                 }
 
-                AttributeListSyntax listWithoutAttributeSyntax = newAttributeListSyntax
-                    .RemoveNode(newAttributeSyntax, SyntaxRemoveOptions.KeepExteriorTrivia)
+                AttributeListSyntax listWithoutAttributeSyntax = newAttributeListSyntax.RemoveNode(newAttributeSyntax, SyntaxRemoveOptions.KeepExteriorTrivia)
                     .WithAdditionalAnnotations(Formatter.Annotation);
 
                 SyntaxNode returnValue2 = root.ReplaceNode(newAttributeListSyntax, listWithoutAttributeSyntax);
@@ -230,8 +222,7 @@ namespace CodeContractNullability.Conversion
 
         private static bool IsImplicitEndOfLine(SyntaxTrivia trivia)
         {
-            return trivia.IsDirective || trivia.Kind() == SyntaxKind.EndOfLineTrivia ||
-                trivia.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia;
+            return trivia.IsDirective || trivia.Kind() == SyntaxKind.EndOfLineTrivia || trivia.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia;
         }
 
         private static bool IsExplicitEndOfLine(SyntaxTrivia trivia)

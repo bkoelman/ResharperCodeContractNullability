@@ -214,8 +214,7 @@ namespace CodeContractNullability.Test.Specs
                 ")
                 .ExternallyAnnotated(new ExternalAnnotationsBuilder()
                     .IncludingMember(new ExternalAnnotationFragmentBuilder()
-                        .Named(
-                            "M:TestSystem.OuterClass`2.InnerClass`1.TestMethod``2(`1,`2,``1,System.Collections.Generic.KeyValuePair{``0,`0})")
+                        .Named("M:TestSystem.OuterClass`2.InnerClass`1.TestMethod``2(`1,`2,``1,System.Collections.Generic.KeyValuePair{``0,`0})")
                         .CanBeNull()
                         .WithParameter(new ExternalAnnotationParameterBuilder()
                             .Named("testOuter2")

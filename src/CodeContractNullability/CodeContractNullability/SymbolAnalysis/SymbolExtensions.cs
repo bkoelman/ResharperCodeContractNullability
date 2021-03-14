@@ -60,8 +60,7 @@ namespace CodeContractNullability.SymbolAnalysis
         }
 
         [CanBeNull]
-        public static ITypeSymbol TryGetItemTypeForSequenceOrCollection([NotNull] this ITypeSymbol typeSymbol,
-            [NotNull] FrameworkTypeCache typeCache)
+        public static ITypeSymbol TryGetItemTypeForSequenceOrCollection([NotNull] this ITypeSymbol typeSymbol, [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(typeSymbol, nameof(typeSymbol));
             Guard.NotNull(typeCache, nameof(typeCache));
@@ -94,8 +93,7 @@ namespace CodeContractNullability.SymbolAnalysis
         }
 
         [CanBeNull]
-        public static ITypeSymbol TryGetItemTypeForLazyOrGenericTask([NotNull] this ITypeSymbol typeSymbol,
-            [NotNull] FrameworkTypeCache typeCache)
+        public static ITypeSymbol TryGetItemTypeForLazyOrGenericTask([NotNull] this ITypeSymbol typeSymbol, [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(typeSymbol, nameof(typeSymbol));
             Guard.NotNull(typeCache, nameof(typeCache));
@@ -104,8 +102,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             if (namedTypeSymbol?.ConstructedFrom != null)
             {
-                bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(typeCache.LazyOfT) ||
-                    namedTypeSymbol.ConstructedFrom.Equals(typeCache.TaskOfT) ||
+                bool isMatch = namedTypeSymbol.ConstructedFrom.Equals(typeCache.LazyOfT) || namedTypeSymbol.ConstructedFrom.Equals(typeCache.TaskOfT) ||
                     namedTypeSymbol.ConstructedFrom.Equals(typeCache.ValueTaskOfT);
 
                 if (isMatch)
@@ -117,8 +114,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return null;
         }
 
-        public static bool HasCompilerGeneratedAnnotation([NotNull] this ISymbol memberSymbol,
-            [NotNull] FrameworkTypeCache typeCache)
+        public static bool HasCompilerGeneratedAnnotation([NotNull] this ISymbol memberSymbol, [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
             Guard.NotNull(typeCache, nameof(typeCache));
@@ -132,8 +128,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return false;
         }
 
-        public static bool HasDebuggerNonUserCodeAnnotation([NotNull] this ISymbol memberSymbol,
-            [NotNull] FrameworkTypeCache typeCache)
+        public static bool HasDebuggerNonUserCodeAnnotation([NotNull] this ISymbol memberSymbol, [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(memberSymbol, nameof(memberSymbol));
             Guard.NotNull(typeCache, nameof(typeCache));
@@ -147,8 +142,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return false;
         }
 
-        public static bool HasResharperConditionalAnnotation([NotNull] this ISymbol symbol,
-            [NotNull] FrameworkTypeCache typeCache)
+        public static bool HasResharperConditionalAnnotation([NotNull] this ISymbol symbol, [NotNull] FrameworkTypeCache typeCache)
         {
             Guard.NotNull(symbol, nameof(symbol));
             Guard.NotNull(typeCache, nameof(typeCache));
@@ -157,8 +151,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return attributes.Any(attr => IsResharperConditionalAttribute(attr, typeCache));
         }
 
-        private static bool IsResharperConditionalAttribute([NotNull] AttributeData attribute,
-            [NotNull] FrameworkTypeCache typeCache)
+        private static bool IsResharperConditionalAttribute([NotNull] AttributeData attribute, [NotNull] FrameworkTypeCache typeCache)
         {
             if (typeCache.ConditionalAttribute != null)
             {
@@ -209,15 +202,14 @@ namespace CodeContractNullability.SymbolAnalysis
             return symbol is INamespaceSymbol namespaceSymbol && namespaceSymbol.IsGlobalNamespace;
         }
 
-        public static bool IsParameterInPartialMethod([NotNull] this IParameterSymbol parameterSymbol,
-            CancellationToken cancellationToken)
+        public static bool IsParameterInPartialMethod([NotNull] this IParameterSymbol parameterSymbol, CancellationToken cancellationToken)
         {
             Guard.NotNull(parameterSymbol, nameof(parameterSymbol));
 
             if (parameterSymbol.ContainingSymbol is IMethodSymbol methodSymbol)
             {
-                foreach (MethodDeclarationSyntax methodSyntax in methodSymbol.DeclaringSyntaxReferences
-                    .Select(x => x.GetSyntax(cancellationToken)).OfType<MethodDeclarationSyntax>())
+                foreach (MethodDeclarationSyntax methodSyntax in methodSymbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax(cancellationToken))
+                    .OfType<MethodDeclarationSyntax>())
                 {
                     return methodSyntax.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
                 }

@@ -40,8 +40,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             while (baseMember != null)
             {
-                if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember) ||
-                    HasAnnotationInInterface(baseMember))
+                if (baseMember.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseMember) || HasAnnotationInInterface(baseMember))
                 {
                     return true;
                 }

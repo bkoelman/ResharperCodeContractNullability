@@ -59,8 +59,8 @@ namespace CodeContractNullability
         }
 
         [NotNull]
-        private static TResult ReadSourceText<TResult>([NotNull] SourceText sourceText,
-            [NotNull] Func<XmlReader, TResult> readAction, CancellationToken cancellationToken)
+        private static TResult ReadSourceText<TResult>([NotNull] SourceText sourceText, [NotNull] Func<XmlReader, TResult> readAction,
+            CancellationToken cancellationToken)
         {
             using var stream = new MemoryStream();
             using var writer = new StreamWriter(stream);

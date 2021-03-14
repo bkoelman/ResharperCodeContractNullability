@@ -25,7 +25,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
 
         public AnalyzerSettings Build()
         {
-            return new AnalyzerSettings(disableReportOnNullableValueTypes);
+            return new(disableReportOnNullableValueTypes);
         }
 
         [NotNull]
@@ -60,7 +60,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
             }
 
             [NotNull]
-            public override SourceText GetText(CancellationToken cancellationToken = new CancellationToken())
+            public override SourceText GetText(CancellationToken cancellationToken = default)
             {
                 return sourceText;
             }

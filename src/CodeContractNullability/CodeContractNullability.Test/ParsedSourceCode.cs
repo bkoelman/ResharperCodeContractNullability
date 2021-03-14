@@ -26,9 +26,8 @@ namespace CodeContractNullability.Test
 
         public TextComparisonMode CodeComparisonMode { get; }
 
-        public ParsedSourceCode([NotNull] string sourceText, [NotNull] AnalyzerTestContext testContext,
-            [NotNull] ExternalAnnotationsMap externalAnnotationsMap, [ItemNotNull] [NotNull] IList<string> nestedTypes,
-            TextComparisonMode codeComparisonMode)
+        public ParsedSourceCode([NotNull] string sourceText, [NotNull] AnalyzerTestContext testContext, [NotNull] ExternalAnnotationsMap externalAnnotationsMap,
+            [ItemNotNull] [NotNull] IList<string> nestedTypes, TextComparisonMode codeComparisonMode)
         {
             Guard.NotNull(sourceText, nameof(sourceText));
             Guard.NotNull(testContext, nameof(testContext));

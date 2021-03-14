@@ -17,8 +17,7 @@ namespace CodeContractNullability
     public sealed class DisableReportOnNullableValueTypesCodeFixProvider : CodeFixProvider
     {
         [ItemNotNull]
-        public override ImmutableArray<string> FixableDiagnosticIds =>
-            ImmutableArray.Create(BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId);
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(BaseAnalyzer.DisableReportOnNullableValueTypesDiagnosticId);
 
         [NotNull]
         public override Task RegisterCodeFixesAsync(CodeFixContext context)
@@ -41,8 +40,7 @@ namespace CodeContractNullability
             string content = SettingsProvider.ToFileContent(new AnalyzerSettings(true));
 
             TextDocument existingDocument =
-                context.Document.Project.AdditionalDocuments.FirstOrDefault(document =>
-                    SettingsProvider.IsSettingsFile(document.FilePath));
+                context.Document.Project.AdditionalDocuments.FirstOrDefault(document => SettingsProvider.IsSettingsFile(document.FilePath));
 
             Project project = context.Document.Project;
 

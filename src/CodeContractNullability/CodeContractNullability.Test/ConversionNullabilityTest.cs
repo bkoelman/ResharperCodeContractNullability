@@ -24,16 +24,14 @@ namespace CodeContractNullability.Test
             return new NullableReferenceTypeConversionCodeFixProvider();
         }
 
-        private protected void VerifyDiagnostics([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        private protected void VerifyDiagnostics([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 
             AssertDiagnostics(source.TestContext, messages);
         }
 
-        private protected void VerifyFix([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        private protected void VerifyFix([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 
@@ -42,8 +40,7 @@ namespace CodeContractNullability.Test
             AssertDiagnosticsWithCodeFixes(fixContext, messages);
         }
 
-        private protected void VerifyFixes([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        private protected void VerifyFixes([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 

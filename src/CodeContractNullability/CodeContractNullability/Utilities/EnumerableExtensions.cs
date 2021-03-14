@@ -7,8 +7,7 @@ namespace CodeContractNullability.Utilities
     {
         [NotNull]
         [ItemNotNull]
-        public static IEnumerable<T> PrependIfNotNull<T>([NotNull] [ItemNotNull] this IEnumerable<T> source,
-            [CanBeNull] T firstElement)
+        public static IEnumerable<T> PrependIfNotNull<T>([NotNull] [ItemNotNull] this IEnumerable<T> source, [CanBeNull] T firstElement)
             where T : class
         {
             Guard.NotNull(source, nameof(source));

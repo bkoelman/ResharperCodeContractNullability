@@ -31,14 +31,12 @@ namespace CodeContractNullability
         [NotNull]
         [ItemCanBeNull]
         private static readonly Lazy<MethodInfo> LazyEnableConcurrentExecutionMethod =
-            new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("EnableConcurrentExecution"),
-                LazyThreadSafetyMode.PublicationOnly);
+            new(() => typeof(AnalysisContext).GetMethod("EnableConcurrentExecution"), LazyThreadSafetyMode.PublicationOnly);
 
         [NotNull]
         [ItemCanBeNull]
         private static readonly Lazy<MethodInfo> LazyConfigureGeneratedCodeAnalysisMethod =
-            new Lazy<MethodInfo>(() => typeof(AnalysisContext).GetMethod("ConfigureGeneratedCodeAnalysis"),
-                LazyThreadSafetyMode.PublicationOnly);
+            new(() => typeof(AnalysisContext).GetMethod("ConfigureGeneratedCodeAnalysis"), LazyThreadSafetyMode.PublicationOnly);
 
         private readonly bool appliesToItem;
 
@@ -55,10 +53,10 @@ namespace CodeContractNullability
         private readonly DiagnosticDescriptor ruleForParameter;
 
         [NotNull]
-        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new DiagnosticDescriptor(
-            DisableReportOnNullableValueTypesDiagnosticId, "Suggest to disable reporting on nullable value types.",
-            "IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.",
-            "Configuration", DiagnosticSeverity.Hidden, true, @"
+        private readonly DiagnosticDescriptor disableReportOnNullableValueTypesRule = new(DisableReportOnNullableValueTypesDiagnosticId,
+            "Suggest to disable reporting on nullable value types.",
+            "IMPORTANT: Due to a bug in Visual Studio, additional steps are needed. Expand the arrow to the left of this message for details.", "Configuration",
+            DiagnosticSeverity.Hidden, true, @"
 At this time, the code fix is not able to fully configure the newly-created ResharperCodeContractNullability.config file 
 for use. This is tracked in bug report https://github.com/dotnet/roslyn/issues/4655. In the mean time, users must manually 
 perform the following additional steps after applying this code fix.
@@ -79,15 +77,13 @@ perform the following additional steps after applying this code fix.
 
         [ItemNotNull]
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(ruleForField, ruleForProperty, ruleForMethodReturnValue, ruleForParameter,
-                disableReportOnNullableValueTypesRule);
+            ImmutableArray.Create(ruleForField, ruleForProperty, ruleForMethodReturnValue, ruleForParameter, disableReportOnNullableValueTypesRule);
 
         [NotNull]
-        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
-            new ExtensionPoint<INullabilityAttributeProvider>(() => new CachingNullabilityAttributeProvider());
+        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } = new(() => new CachingNullabilityAttributeProvider());
 
         [NotNull]
-        public ExtensionPoint<IFileSystem> FileSystem { get; } = new ExtensionPoint<IFileSystem>(() => FileSystemWrapper.Default);
+        public ExtensionPoint<IFileSystem> FileSystem { get; } = new(() => FileSystemWrapper.Default);
 
         [NotNull]
         public ExtensionPoint<IExternalAnnotationsResolver> ExternalAnnotationsResolver { get; }
@@ -155,8 +151,7 @@ perform the following additional steps after applying this code fix.
 
             AnalyzerSettings settings = SettingsProvider.LoadSettings(context.Options, context.CancellationToken);
 
-            NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached()
-                .GetSymbols(context.Compilation, context.CancellationToken);
+            NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached().GetSymbols(context.Compilation, context.CancellationToken);
 
             if (nullSymbols == null)
             {
@@ -170,9 +165,7 @@ perform the following additional steps after applying this code fix.
             var generatedCodeCache = new GeneratedCodeDocumentCache();
             var typeCache = new FrameworkTypeCache(context.Compilation);
 
-            var nullabilityContext = new AnalysisScope(resolver, generatedCodeCache, typeCache, settings,
-                disableReportOnNullableValueTypesRule, appliesToItem);
-
+            var nullabilityContext = new AnalysisScope(resolver, generatedCodeCache, typeCache, settings, disableReportOnNullableValueTypesRule, appliesToItem);
             var factory = new SymbolAnalyzerFactory(nullabilityContext);
 
             ImmutableDictionary<string, string> properties = nullSymbols.GetMetadataNamesAsProperties();
@@ -181,8 +174,7 @@ perform the following additional steps after applying this code fix.
             context.RegisterSymbolAction(c => AnalyzeProperty(c, factory, properties), SymbolKind.Property);
             context.RegisterSymbolAction(c => AnalyzeMethod(c, factory, properties), SymbolKind.Method);
 
-            context.RegisterSyntaxNodeAction(c => AnalyzeParameter(c.ToSymbolContext(), factory, properties),
-                SyntaxKind.Parameter);
+            context.RegisterSyntaxNodeAction(c => AnalyzeParameter(c.ToSymbolContext(), factory, properties), SyntaxKind.Parameter);
         }
 
         private void AnalyzeField(SymbolAnalysisContext context, [NotNull] SymbolAnalyzerFactory factory,

@@ -8,14 +8,14 @@ namespace CodeContractNullability.Test.TestDataBuilders
     {
         [NotNull]
         [ItemNotNull]
-        private readonly List<string> nestedTypes = new List<string>();
+        private readonly List<string> nestedTypes = new();
 
         [NotNull]
         private string codeNamespace = "Namespace.For.JetBrains.Annotation.Attributes";
 
         public NullabilityAttributesDefinition Build()
         {
-            return new NullabilityAttributesDefinition(codeNamespace, nestedTypes);
+            return new(codeNamespace, nestedTypes);
         }
 
         [NotNull]

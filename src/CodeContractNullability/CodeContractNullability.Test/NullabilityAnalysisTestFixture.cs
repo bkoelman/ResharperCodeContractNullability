@@ -11,8 +11,7 @@ namespace CodeContractNullability.Test
     public abstract class NullabilityAnalysisTestFixture : AnalysisTestFixture
     {
         [NotNull]
-        private IExternalAnnotationsResolver externalAnnotationsResolver =
-            new SimpleExternalAnnotationsResolver(new ExternalAnnotationsBuilder().Build());
+        private IExternalAnnotationsResolver externalAnnotationsResolver = new SimpleExternalAnnotationsResolver(new ExternalAnnotationsBuilder().Build());
 
         [NotNull]
         protected abstract string NotNullAttributeName { get; }
@@ -20,8 +19,7 @@ namespace CodeContractNullability.Test
         [NotNull]
         protected abstract string CanBeNullAttributeName { get; }
 
-        private protected void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        private protected void VerifyNullabilityDiagnostic([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
 
@@ -30,8 +28,7 @@ namespace CodeContractNullability.Test
             AssertDiagnostics(source.TestContext, messages);
         }
 
-        private protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        private protected virtual void VerifyNullabilityFix([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(messages, nameof(messages));
@@ -43,8 +40,7 @@ namespace CodeContractNullability.Test
             AssertDiagnosticsWithCodeFixes(fixContext, messages);
         }
 
-        private protected void VerifyNullabilityFixes([NotNull] ParsedSourceCode source,
-            [NotNull] [ItemNotNull] params string[] messages)
+        private protected void VerifyNullabilityFixes([NotNull] ParsedSourceCode source, [NotNull] [ItemNotNull] params string[] messages)
         {
             Guard.NotNull(source, nameof(source));
             Guard.NotNull(messages, nameof(messages));

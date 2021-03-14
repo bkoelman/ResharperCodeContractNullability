@@ -20,18 +20,16 @@ namespace CodeContractNullability
         public const string DiagnosticId = "CNUL";
 
         [NotNull]
-        private readonly DiagnosticDescriptor rule = new DiagnosticDescriptor(DiagnosticId,
-            "Resharper nullability annotation can be converted to C# syntax.",
-            "Resharper nullability annotation(s) on {0} '{1}' can be converted to C# syntax.", "Nullability",
-            DiagnosticSeverity.Warning, true, "Resharper nullability annotation(s) have been superseded by C# built-in syntax.",
+        private readonly DiagnosticDescriptor rule = new(DiagnosticId, "Resharper nullability annotation can be converted to C# syntax.",
+            "Resharper nullability annotation(s) on {0} '{1}' can be converted to C# syntax.", "Nullability", DiagnosticSeverity.Warning, true,
+            "Resharper nullability annotation(s) have been superseded by C# built-in syntax.",
             "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/CNUL_ResharperNullabilityAnnotationsCanBeConvertedToCSharpSyntax.md");
 
         [ItemNotNull]
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(rule);
 
         [NotNull]
-        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } =
-            new ExtensionPoint<INullabilityAttributeProvider>(() => new CachingNullabilityAttributeProvider());
+        public ExtensionPoint<INullabilityAttributeProvider> NullabilityAttributeProvider { get; } = new(() => new CachingNullabilityAttributeProvider());
 
         public override void Initialize([NotNull] AnalysisContext context)
         {
@@ -49,8 +47,7 @@ namespace CodeContractNullability
                 return;
             }
 
-            NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached()
-                .GetSymbols(context.Compilation, context.CancellationToken);
+            NullabilityAttributeSymbols nullSymbols = NullabilityAttributeProvider.GetCached().GetSymbols(context.Compilation, context.CancellationToken);
 
             if (nullSymbols == null)
             {
@@ -58,9 +55,7 @@ namespace CodeContractNullability
                 return;
             }
 
-            context.RegisterSymbolAction(c => AnalyzeSymbol(c, nullSymbols), SymbolKind.Field, SymbolKind.Property,
-                SymbolKind.Method, SymbolKind.NamedType);
-
+            context.RegisterSymbolAction(c => AnalyzeSymbol(c, nullSymbols), SymbolKind.Field, SymbolKind.Property, SymbolKind.Method, SymbolKind.NamedType);
             context.RegisterSyntaxNodeAction(c => AnalyzeSymbol(c.ToSymbolContext(), nullSymbols), SyntaxKind.Parameter);
         }
 
@@ -107,8 +102,7 @@ namespace CodeContractNullability
 
             if (hasCanBeNull || hasNotNull || hasItemCanBeNull || hasItemNotNull)
             {
-                if (context.Symbol is IParameterSymbol parameterSymbol &&
-                    parameterSymbol.IsParameterInPartialMethod(context.CancellationToken) &&
+                if (context.Symbol is IParameterSymbol parameterSymbol && parameterSymbol.IsParameterInPartialMethod(context.CancellationToken) &&
                     !ConfirmParameterHasNullabilityAttribute(context, nullSymbols, parameterSymbol))
                 {
                     // Parameter in partial method that does not contain any nullability attributes.
@@ -121,8 +115,8 @@ namespace CodeContractNullability
             }
         }
 
-        private static bool ConfirmParameterHasNullabilityAttribute(SymbolAnalysisContext context,
-            [NotNull] NullabilityAttributeSymbols nullSymbols, [NotNull] IParameterSymbol parameterSymbol)
+        private static bool ConfirmParameterHasNullabilityAttribute(SymbolAnalysisContext context, [NotNull] NullabilityAttributeSymbols nullSymbols,
+            [NotNull] IParameterSymbol parameterSymbol)
         {
             INamedTypeSymbol[] nullabilityAttributeSymbols =
             {
@@ -132,8 +126,8 @@ namespace CodeContractNullability
                 nullSymbols.ItemCanBeNull
             };
 
-            foreach (ParameterSyntax parameterSyntax in parameterSymbol.DeclaringSyntaxReferences
-                .Select(x => x.GetSyntax(context.CancellationToken)).OfType<ParameterSyntax>())
+            foreach (ParameterSyntax parameterSyntax in parameterSymbol.DeclaringSyntaxReferences.Select(x => x.GetSyntax(context.CancellationToken))
+                .OfType<ParameterSyntax>())
             {
                 SemanticModel model = context.Compilation.GetSemanticModel(parameterSyntax.SyntaxTree);
 

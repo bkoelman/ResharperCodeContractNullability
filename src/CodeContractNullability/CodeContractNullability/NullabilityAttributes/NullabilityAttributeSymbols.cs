@@ -23,8 +23,8 @@ namespace CodeContractNullability.NullabilityAttributes
         [NotNull]
         public INamedTypeSymbol ItemCanBeNull { get; }
 
-        public NullabilityAttributeSymbols([NotNull] INamedTypeSymbol notNull, [NotNull] INamedTypeSymbol canBeNull,
-            [NotNull] INamedTypeSymbol itemNotNull, [NotNull] INamedTypeSymbol itemCanBeNull)
+        public NullabilityAttributeSymbols([NotNull] INamedTypeSymbol notNull, [NotNull] INamedTypeSymbol canBeNull, [NotNull] INamedTypeSymbol itemNotNull,
+            [NotNull] INamedTypeSymbol itemCanBeNull)
         {
             Guard.NotNull(notNull, nameof(notNull));
             Guard.NotNull(canBeNull, nameof(canBeNull));
@@ -40,8 +40,7 @@ namespace CodeContractNullability.NullabilityAttributes
         [NotNull]
         public NullabilityAttributeMetadataNames GetMetadataNames()
         {
-            return new NullabilityAttributeMetadataNames(NotNull.GetFullMetadataName(), CanBeNull.GetFullMetadataName(),
-                ItemNotNull.GetFullMetadataName(), ItemCanBeNull.GetFullMetadataName());
+            return new(NotNull.GetFullMetadataName(), CanBeNull.GetFullMetadataName(), ItemNotNull.GetFullMetadataName(), ItemCanBeNull.GetFullMetadataName());
         }
 
         [NotNull]

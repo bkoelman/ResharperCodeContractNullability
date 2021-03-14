@@ -42,8 +42,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
             while (baseParameter != null)
             {
-                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseParameter) ||
-                    HasAnnotationInInterface(baseParameter))
+                if (baseParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(baseParameter) || HasAnnotationInInterface(baseParameter))
                 {
                     return true;
                 }
@@ -96,8 +95,7 @@ namespace CodeContractNullability.SymbolAnalysis
                         ImmutableArray<IParameterSymbol> interfaceParameters = GetParametersFor(interfaceMember);
                         IParameterSymbol interfaceParameter = interfaceParameters[parameterIndex];
 
-                        if (interfaceParameter.HasNullabilityAnnotation(AppliesToItem) ||
-                            HasExternalAnnotationFor(interfaceParameter))
+                        if (interfaceParameter.HasNullabilityAnnotation(AppliesToItem) || HasExternalAnnotationFor(interfaceParameter))
                         {
                             return true;
                         }

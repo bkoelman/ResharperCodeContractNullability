@@ -24,9 +24,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
         public bool AppliesToItem { get; }
 
-        public AnalysisScope([NotNull] IExternalAnnotationsResolver externalAnnotations,
-            [NotNull] GeneratedCodeDocumentCache generatedCodeCache, [NotNull] FrameworkTypeCache typeCache,
-            [NotNull] AnalyzerSettings settings, [NotNull] DiagnosticDescriptor disableReportOnNullableValueTypesRule,
+        public AnalysisScope([NotNull] IExternalAnnotationsResolver externalAnnotations, [NotNull] GeneratedCodeDocumentCache generatedCodeCache,
+            [NotNull] FrameworkTypeCache typeCache, [NotNull] AnalyzerSettings settings, [NotNull] DiagnosticDescriptor disableReportOnNullableValueTypesRule,
             bool appliesToItem)
         {
             Guard.NotNull(externalAnnotations, nameof(externalAnnotations));

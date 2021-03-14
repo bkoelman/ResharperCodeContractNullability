@@ -17,8 +17,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             Guard.NotNull(fileSystem, nameof(fileSystem));
 
-            localCache = new Lazy<ExternalAnnotationsMap>(new FolderExternalAnnotationsLoader(fileSystem).Create,
-                LazyThreadSafetyMode.ExecutionAndPublication);
+            localCache = new Lazy<ExternalAnnotationsMap>(new FolderExternalAnnotationsLoader(fileSystem).Create, LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         public ExternalAnnotationsMap GetValue()

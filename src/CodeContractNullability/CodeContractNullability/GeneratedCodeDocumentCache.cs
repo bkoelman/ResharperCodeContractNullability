@@ -17,19 +17,17 @@ namespace CodeContractNullability
     /// Within a compilation, caches per-file whether it consists of generated code.
     /// </summary>
     /// <remarks>
-    /// Inspired by StyleCop source code. Path:
-    /// DotNetAnalyzers/StyleCopAnalyzers/StyleCop.Analyzers/StyleCop.Analyzers/GeneratedCodeAnalysisExtensions.cs
+    /// Inspired by StyleCop source code. Path: DotNetAnalyzers/StyleCopAnalyzers/StyleCop.Analyzers/StyleCop.Analyzers/GeneratedCodeAnalysisExtensions.cs
     /// <see
     ///     href="https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/eea978e9953973f32bce5d8e376a14a5ee0e6d9a/StyleCop.Analyzers/StyleCop.Analyzers/GeneratedCodeAnalysisExtensions.cs" />
     /// </remarks>
     internal sealed class GeneratedCodeDocumentCache
     {
         [NotNull]
-        private readonly FileCommentScanner scanner = new FileCommentScanner();
+        private readonly FileCommentScanner scanner = new();
 
         [NotNull]
-        private readonly ConcurrentDictionary<string, bool> fileResultCache =
-            new ConcurrentDictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, bool> fileResultCache = new(StringComparer.OrdinalIgnoreCase);
 
         public bool IsInGeneratedCodeDocument([NotNull] ISymbol symbol, CancellationToken cancellationToken)
         {
@@ -69,8 +67,7 @@ namespace CodeContractNullability
         {
             [NotNull]
             private static readonly Regex FileNameRegex =
-                new Regex(
-                    @"(^TemporaryGeneratedFile_.*|^assemblyinfo|^assemblyattributes|\.(g\.i|g|designer|generated|assemblyattributes))\.(cs|vb)$",
+                new(@"(^TemporaryGeneratedFile_.*|^assemblyinfo|^assemblyattributes|\.(g\.i|g|designer|generated|assemblyattributes))\.(cs|vb)$",
                     RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
             public bool IsFileNameGenerated([CanBeNull] string filePath)

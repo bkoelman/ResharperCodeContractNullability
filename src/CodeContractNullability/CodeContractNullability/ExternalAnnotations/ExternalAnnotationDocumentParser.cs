@@ -70,9 +70,7 @@ namespace CodeContractNullability.ExternalAnnotations
                     memberName = memberName.Substring(2);
                 }
 
-                MemberNullabilityInfo memberInfo = result.ContainsKey(memberName)
-                    ? result[memberName]
-                    : new MemberNullabilityInfo(memberType);
+                MemberNullabilityInfo memberInfo = result.ContainsKey(memberName) ? result[memberName] : new MemberNullabilityInfo(memberType);
 
                 foreach (XElement childElement in memberElement.Elements())
                 {
@@ -113,8 +111,7 @@ namespace CodeContractNullability.ExternalAnnotations
         {
             string attributeName = element.Attribute("ctor")?.Value;
 
-            return attributeName == "M:JetBrains.Annotations.NotNullAttribute.#ctor" ||
-                attributeName == "M:JetBrains.Annotations.CanBeNullAttribute.#ctor";
+            return attributeName == "M:JetBrains.Annotations.NotNullAttribute.#ctor" || attributeName == "M:JetBrains.Annotations.CanBeNullAttribute.#ctor";
         }
     }
 }

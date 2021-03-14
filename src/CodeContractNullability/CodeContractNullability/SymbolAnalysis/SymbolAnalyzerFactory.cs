@@ -19,25 +19,25 @@ namespace CodeContractNullability.SymbolAnalysis
         [NotNull]
         public FieldAnalyzer GetFieldAnalyzer(SymbolAnalysisContext context)
         {
-            return new FieldAnalyzer(context, scope);
+            return new(context, scope);
         }
 
         [NotNull]
         public PropertyAnalyzer GetPropertyAnalyzer(SymbolAnalysisContext context)
         {
-            return new PropertyAnalyzer(context, scope);
+            return new(context, scope);
         }
 
         [NotNull]
         public MethodReturnValueAnalyzer GetMethodReturnValueAnalyzer(SymbolAnalysisContext context)
         {
-            return new MethodReturnValueAnalyzer(context, scope);
+            return new(context, scope);
         }
 
         [NotNull]
         public ParameterAnalyzer GetParameterAnalyzer(SymbolAnalysisContext context)
         {
-            return new ParameterAnalyzer(context, scope);
+            return new(context, scope);
         }
     }
 }

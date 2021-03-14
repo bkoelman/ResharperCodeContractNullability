@@ -10,10 +10,9 @@ using TestableFileSystem.Interfaces;
 namespace CodeContractNullability.ExternalAnnotations
 {
     /// <summary>
-    /// Performs one-time load of files from built-in Resharper External Annotation folders, along with a cached set of per-assembly
-    /// External Annotations (loaded from [AssemblyName].ExternalAnnotations.xml in assembly folder). The annotation files from this last
-    /// set typically come from NuGet packages or assembly references. From that set, each per-assembly file is monitored for filesystem
-    /// changes and flushed accordingly.
+    /// Performs one-time load of files from built-in Resharper External Annotation folders, along with a cached set of per-assembly External Annotations
+    /// (loaded from [AssemblyName].ExternalAnnotations.xml in assembly folder). The annotation files from this last set typically come from NuGet packages
+    /// or assembly references. From that set, each per-assembly file is monitored for filesystem changes and flushed accordingly.
     /// </summary>
     public sealed class CachingExternalAnnotationsResolver : IExternalAnnotationsResolver
     {
@@ -27,11 +26,9 @@ namespace CodeContractNullability.ExternalAnnotations
         private readonly ICacheProvider<ExternalAnnotationsMap> cacheProvider;
 
         [NotNull]
-        private readonly ConcurrentDictionary<string, AssemblyCacheEntry> assemblyCache =
-            new ConcurrentDictionary<string, AssemblyCacheEntry>(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, AssemblyCacheEntry> assemblyCache = new(StringComparer.OrdinalIgnoreCase);
 
-        public CachingExternalAnnotationsResolver([NotNull] IFileSystem fileSystem,
-            [NotNull] ICacheProvider<ExternalAnnotationsMap> cacheProvider)
+        public CachingExternalAnnotationsResolver([NotNull] IFileSystem fileSystem, [NotNull] ICacheProvider<ExternalAnnotationsMap> cacheProvider)
         {
             Guard.NotNull(fileSystem, nameof(fileSystem));
             Guard.NotNull(cacheProvider, nameof(cacheProvider));
@@ -52,8 +49,7 @@ namespace CodeContractNullability.ExternalAnnotations
             Guard.NotNull(symbol, nameof(symbol));
             Guard.NotNull(compilation, nameof(compilation));
 
-            return HasAnnotationInSharedCache(symbol, appliesToItem) ||
-                HasAnnotationInSideBySideFile(symbol, appliesToItem, compilation);
+            return HasAnnotationInSharedCache(symbol, appliesToItem) || HasAnnotationInSideBySideFile(symbol, appliesToItem, compilation);
         }
 
         private bool HasAnnotationInSharedCache([NotNull] ISymbol symbol, bool appliesToItem)
@@ -61,8 +57,7 @@ namespace CodeContractNullability.ExternalAnnotations
             return cacheProvider.GetValue().Contains(symbol, appliesToItem);
         }
 
-        private bool HasAnnotationInSideBySideFile([NotNull] ISymbol symbol, bool appliesToItem,
-            [NotNull] Compilation compilation)
+        private bool HasAnnotationInSideBySideFile([NotNull] ISymbol symbol, bool appliesToItem, [NotNull] Compilation compilation)
         {
             string path = loader.GetPathForExternalSymbolOrNull(symbol, compilation);
 

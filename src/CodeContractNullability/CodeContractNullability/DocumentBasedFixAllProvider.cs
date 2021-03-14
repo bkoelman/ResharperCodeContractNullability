@@ -38,8 +38,8 @@ namespace CodeContractNullability
                 case FixAllScope.Project:
                 {
                     fixAction = CodeAction.Create(codeActionTitle,
-                        cancellationToken => GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken),
-                            fixAllContext.Project), fixAllContext.CodeActionEquivalenceKey);
+                        cancellationToken => GetProjectFixesAsync(fixAllContext.WithCancellationToken(cancellationToken), fixAllContext.Project),
+                        fixAllContext.CodeActionEquivalenceKey);
 
                     break;
                 }
@@ -82,8 +82,8 @@ namespace CodeContractNullability
         /// </returns>
         [NotNull]
         [ItemCanBeNull]
-        protected abstract Task<SyntaxNode> FixAllInDocumentAsync([NotNull] FixAllContext fixAllContext,
-            [NotNull] Document document, [ItemNotNull] ImmutableArray<Diagnostic> diagnostics);
+        protected abstract Task<SyntaxNode> FixAllInDocumentAsync([NotNull] FixAllContext fixAllContext, [NotNull] Document document,
+            [ItemNotNull] ImmutableArray<Diagnostic> diagnostics);
 
         [ItemNotNull]
         private async Task<Document> GetDocumentFixesAsync([NotNull] FixAllContext fixAllContext)
@@ -96,15 +96,12 @@ namespace CodeContractNullability
                 return fixAllContext.Document;
             }
 
-            SyntaxNode newRoot = await FixAllInDocumentAsync(fixAllContext, fixAllContext.Document, diagnostics)
-                .ConfigureAwait(false);
-
+            SyntaxNode newRoot = await FixAllInDocumentAsync(fixAllContext, fixAllContext.Document, diagnostics).ConfigureAwait(false);
             return newRoot == null ? fixAllContext.Document : fixAllContext.Document.WithSyntaxRoot(newRoot);
         }
 
         [ItemNotNull]
-        private async Task<Solution> GetSolutionFixesAsync([NotNull] FixAllContext fixAllContext,
-            [ItemNotNull] ImmutableArray<Document> documents)
+        private async Task<Solution> GetSolutionFixesAsync([NotNull] FixAllContext fixAllContext, [ItemNotNull] ImmutableArray<Document> documents)
         {
             ImmutableDictionary<Document, ImmutableArray<Diagnostic>> documentDiagnosticsToFix =
                 await FixAllContextHelper.GetDocumentDiagnosticsToFixAsync(fixAllContext).ConfigureAwait(false);

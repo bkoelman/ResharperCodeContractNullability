@@ -43,8 +43,7 @@ namespace CodeContractNullability.SymbolAnalysis
             AnalyzeNullability(descriptor, properties);
         }
 
-        private void AnalyzeNullability([NotNull] DiagnosticDescriptor descriptor,
-            [NotNull] ImmutableDictionary<string, string> properties)
+        private void AnalyzeNullability([NotNull] DiagnosticDescriptor descriptor, [NotNull] ImmutableDictionary<string, string> properties)
         {
             if (Symbol.HasNullabilityAnnotation(AppliesToItem))
             {
@@ -82,8 +81,8 @@ namespace CodeContractNullability.SymbolAnalysis
 
         private bool IsSafeToIgnore()
         {
-            if (Symbol.HasCompilerGeneratedAnnotation(scope.TypeCache) ||
-                Symbol.HasDebuggerNonUserCodeAnnotation(scope.TypeCache) || Symbol.IsImplicitlyDeclared)
+            if (Symbol.HasCompilerGeneratedAnnotation(scope.TypeCache) || Symbol.HasDebuggerNonUserCodeAnnotation(scope.TypeCache) ||
+                Symbol.IsImplicitlyDeclared)
             {
                 return true;
             }
@@ -101,8 +100,7 @@ namespace CodeContractNullability.SymbolAnalysis
             return false;
         }
 
-        private void AnalyzeFor([NotNull] DiagnosticDescriptor descriptor,
-            [NotNull] ImmutableDictionary<string, string> properties)
+        private void AnalyzeFor([NotNull] DiagnosticDescriptor descriptor, [NotNull] ImmutableDictionary<string, string> properties)
         {
             if (scope.ExternalAnnotations.HasAnnotationForSymbol(Symbol, AppliesToItem, context.Compilation))
             {
@@ -116,9 +114,7 @@ namespace CodeContractNullability.SymbolAnalysis
 
                 if (ShouldSuggestDisableReportOnNullableValueTypes())
                 {
-                    Diagnostic disableDiagnostic = CreateDiagnosticFor(scope.DisableReportOnNullableValueTypesRule,
-                        ImmutableDictionary<string, string>.Empty);
-
+                    Diagnostic disableDiagnostic = CreateDiagnosticFor(scope.DisableReportOnNullableValueTypesRule, ImmutableDictionary<string, string>.Empty);
                     context.ReportDiagnostic(disableDiagnostic);
                 }
             }
@@ -159,8 +155,7 @@ namespace CodeContractNullability.SymbolAnalysis
         }
 
         [NotNull]
-        private Diagnostic CreateDiagnosticFor([NotNull] DiagnosticDescriptor descriptor,
-            [NotNull] ImmutableDictionary<string, string> properties)
+        private Diagnostic CreateDiagnosticFor([NotNull] DiagnosticDescriptor descriptor, [NotNull] ImmutableDictionary<string, string> properties)
         {
             return Diagnostic.Create(descriptor, Symbol.Locations[0], properties, Symbol.Name);
         }

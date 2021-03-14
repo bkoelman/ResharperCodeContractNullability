@@ -19,8 +19,7 @@ namespace CodeContractNullability
     public sealed class NullableReferenceTypeConversionCodeFixProvider : CodeFixProvider
     {
         [ItemNotNull]
-        public override ImmutableArray<string> FixableDiagnosticIds =>
-            ImmutableArray.Create(NullableReferenceTypeConversionAnalyzer.DiagnosticId);
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(NullableReferenceTypeConversionAnalyzer.DiagnosticId);
 
         [NotNull]
         public override FixAllProvider GetFixAllProvider()
@@ -36,9 +35,7 @@ namespace CodeContractNullability
 
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
-                SyntaxNode syntaxRoot =
-                    await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
+                SyntaxNode syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
                 SyntaxNode declarationSyntax = targetSyntax.TranslateDeclarationSyntax();
 
@@ -59,8 +56,8 @@ namespace CodeContractNullability
             return model.GetDeclaredSymbol(declarationSyntax);
         }
 
-        private void RegisterFixForSyntaxNode([NotNull] SyntaxNode declarationSyntax, [NotNull] ISymbol declarationSymbol,
-            [NotNull] Diagnostic diagnostic, CodeFixContext context, [NotNull] FrameworkTypeCache typeCache)
+        private void RegisterFixForSyntaxNode([NotNull] SyntaxNode declarationSyntax, [NotNull] ISymbol declarationSymbol, [NotNull] Diagnostic diagnostic,
+            CodeFixContext context, [NotNull] FrameworkTypeCache typeCache)
         {
             var codeAction = CodeAction.Create("Convert to C# syntax",
                 token => ChangeSolutionAsync(declarationSyntax, declarationSymbol, context.Document, typeCache, token),
@@ -70,15 +67,12 @@ namespace CodeContractNullability
         }
 
         [ItemNotNull]
-        private async Task<Solution> ChangeSolutionAsync([NotNull] SyntaxNode declarationSyntax,
-            [NotNull] ISymbol declarationSymbol, [NotNull] Document document, [NotNull] FrameworkTypeCache typeCache,
-            CancellationToken cancellationToken)
+        private async Task<Solution> ChangeSolutionAsync([NotNull] SyntaxNode declarationSyntax, [NotNull] ISymbol declarationSymbol,
+            [NotNull] Document document, [NotNull] FrameworkTypeCache typeCache, CancellationToken cancellationToken)
         {
-            NullConversionContext context = await NullConversionContext
-                .Create(declarationSyntax, document, typeCache, cancellationToken).ConfigureAwait(false);
+            NullConversionContext context = await NullConversionContext.Create(declarationSyntax, document, typeCache, cancellationToken).ConfigureAwait(false);
 
             var scope = new NullConversionScope(context, declarationSyntax, declarationSymbol);
-
             await scope.RewriteDeclaration(ResharperNullabilitySymbolState.Default).ConfigureAwait(false);
 
             return await context.GetSolution().ConfigureAwait(false);

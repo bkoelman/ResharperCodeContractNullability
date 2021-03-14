@@ -41,8 +41,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder WithNullabilityAttributes<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] NullabilityAttributesBuilder builder)
+        public static TBuilder WithNullabilityAttributes<TBuilder>([NotNull] this TBuilder source, [NotNull] NullabilityAttributesBuilder builder)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
@@ -106,8 +105,8 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder WithReferenceToExternalAssemblyOnDiskFor<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string assemblyPath, [NotNull] string code)
+        public static TBuilder WithReferenceToExternalAssemblyOnDiskFor<TBuilder>([NotNull] this TBuilder source, [NotNull] string assemblyPath,
+            [NotNull] string code)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
@@ -136,12 +135,10 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
 
-            CSharpCompilation compilation = CSharpCompilation
-                .Create(assemblyName, new[]
-                {
-                    tree
-                })
-                .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            CSharpCompilation compilation = CSharpCompilation.Create(assemblyName, new[]
+            {
+                tree
+            }).WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             compilation = compilation.AddReferences(SourceCodeBuilder.DefaultTestContext.References);
             compilation = compilation.AddReferences(references);
@@ -164,8 +161,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder ExternallyAnnotated<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] ExternalAnnotationsBuilder builder)
+        public static TBuilder ExternallyAnnotated<TBuilder>([NotNull] this TBuilder source, [NotNull] ExternalAnnotationsBuilder builder)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
@@ -177,8 +173,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder WithSettings<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] AnalyzerSettingsBuilder settingsBuilder)
+        public static TBuilder WithSettings<TBuilder>([NotNull] this TBuilder source, [NotNull] AnalyzerSettingsBuilder settingsBuilder)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(settingsBuilder, nameof(settingsBuilder));
@@ -192,8 +187,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder WithSettingsText<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string settingsText)
+        public static TBuilder WithSettingsText<TBuilder>([NotNull] this TBuilder source, [NotNull] string settingsText)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(settingsText, nameof(settingsText));
@@ -206,8 +200,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         }
 
         [NotNull]
-        public static TBuilder ExpectingImportForNamespace<TBuilder>([NotNull] this TBuilder source,
-            [NotNull] string expectedImportText)
+        public static TBuilder ExpectingImportForNamespace<TBuilder>([NotNull] this TBuilder source, [NotNull] string expectedImportText)
             where TBuilder : SourceCodeBuilder
         {
             Guard.NotNull(source, nameof(source));
@@ -224,8 +217,7 @@ namespace CodeContractNullability.Test.TestDataBuilders
         {
             Guard.NotNull(source, nameof(source));
 
-            source.Editor.UpdateTestContext(context =>
-                context.WithNullableReferenceTypesSupport(NullableReferenceTypesSupport.Enabled));
+            source.Editor.UpdateTestContext(context => context.WithNullableReferenceTypesSupport(NullableReferenceTypesSupport.Enabled));
 
             return source;
         }

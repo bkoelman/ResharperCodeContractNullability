@@ -8,8 +8,8 @@ using TestableFileSystem.Interfaces;
 namespace CodeContractNullability.ExternalAnnotations
 {
     /// <summary>
-    /// Attempts to find and parse a side-by-side [AssemblyName].ExternalAnnotations.xml file that resides in the same folder as the
-    /// assembly that contains the requested symbol.
+    /// Attempts to find and parse a side-by-side [AssemblyName].ExternalAnnotations.xml file that resides in the same folder as the assembly that contains
+    /// the requested symbol.
     /// </summary>
     internal sealed class AssemblyExternalAnnotationsLoader
     {
@@ -30,8 +30,7 @@ namespace CodeContractNullability.ExternalAnnotations
 
             if (symbol.ContainingAssembly != null)
             {
-                var assemblyReference =
-                    compilation.GetMetadataReference(symbol.ContainingAssembly) as PortableExecutableReference;
+                var assemblyReference = compilation.GetMetadataReference(symbol.ContainingAssembly) as PortableExecutableReference;
 
                 string assemblyPath = assemblyReference?.FilePath;
                 string folder = Path.GetDirectoryName(assemblyPath);

@@ -10,8 +10,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
     /// <summary>
     /// Data storage for external annotations.
     /// </summary>
-    [CollectionDataContract(Name = "annotations", ItemName = "e", KeyName = "k", ValueName = "v",
-        Namespace = ExternalAnnotationsCache.CacheNamespace)]
+    [CollectionDataContract(Name = "annotations", ItemName = "e", KeyName = "k", ValueName = "v", Namespace = ExternalAnnotationsCache.CacheNamespace)]
     [Serializable]
     public sealed class ExternalAnnotationsMap : Dictionary<string, MemberNullabilityInfo>
     {
@@ -42,8 +41,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
                 string methodId = symbol.ContainingSymbol.GetDocumentationCommentId();
                 MemberNullabilityInfo memberInfo = TryGetMemberById(methodId);
 
-                return memberInfo != null && memberInfo.ParametersNullability.ContainsKey(symbol.Name) &&
-                    memberInfo.ParametersNullability[symbol.Name];
+                return memberInfo != null && memberInfo.ParametersNullability.ContainsKey(symbol.Name) && memberInfo.ParametersNullability[symbol.Name];
             }
             else
             {

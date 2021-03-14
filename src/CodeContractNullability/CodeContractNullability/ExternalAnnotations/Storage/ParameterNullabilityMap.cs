@@ -8,8 +8,7 @@ namespace CodeContractNullability.ExternalAnnotations.Storage
     /// <summary>
     /// Data storage for external annotations.
     /// </summary>
-    [CollectionDataContract(Name = "p", ItemName = "e", KeyName = "k", ValueName = "v",
-        Namespace = ExternalAnnotationsCache.CacheNamespace)]
+    [CollectionDataContract(Name = "p", ItemName = "e", KeyName = "k", ValueName = "v", Namespace = ExternalAnnotationsCache.CacheNamespace)]
     [Serializable]
     public sealed class ParameterNullabilityMap : Dictionary<string, bool>
     {

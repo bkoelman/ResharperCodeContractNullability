@@ -15,19 +15,17 @@ namespace CodeContractNullability.ExternalAnnotations
     /// Scans the filesystem for Resharper external annotations in xml files.
     /// </summary>
     /// <remarks>
-    /// Resharper provides xml definitions for download that contain decoration of built-in .NET Framework types. When a class derives
-    /// from such a built-in type, we need to have those definitions available because Resharper reports nullability annotation as
-    /// unneeded when a base type is already decorated.
+    /// Resharper provides xml definitions for download that contain decoration of built-in .NET Framework types. When a class derives from such a built-in
+    /// type, we need to have those definitions available because Resharper reports nullability annotation as unneeded when a base type is already decorated.
     /// </remarks>
     internal sealed class FolderExternalAnnotationsLoader
     {
         [NotNull]
-        private static readonly string CachePath =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "ResharperCodeContractNullability", "external-annotations.cache");
+        private static readonly string CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ResharperCodeContractNullability", "external-annotations.cache");
 
         [NotNull]
-        private static readonly object LockObject = new object();
+        private static readonly object LockObject = new();
 
         [NotNull]
         private readonly IFileSystem fileSystem;
@@ -105,8 +103,7 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 if (fileSystem.File.Exists(CachePath))
                 {
-                    MessagePackSerializer<ExternalAnnotationsCache> serializer =
-                        SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
+                    MessagePackSerializer<ExternalAnnotationsCache> serializer = SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
 
                     using IFileStream stream = fileSystem.File.OpenRead(CachePath);
 
@@ -160,8 +157,7 @@ namespace CodeContractNullability.ExternalAnnotations
             {
                 EnsureDirectoryExists();
 
-                MessagePackSerializer<ExternalAnnotationsCache> serializer =
-                    SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
+                MessagePackSerializer<ExternalAnnotationsCache> serializer = SerializationContext.Default.GetSerializer<ExternalAnnotationsCache>();
 
                 using IFileStream stream = fileSystem.File.Create(CachePath);
 

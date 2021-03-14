@@ -15,15 +15,13 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private string sourceText = string.Empty;
 
         [NotNull]
-        public static string PublicGlobalNullabilityAttributes =>
-            new NullabilityAttributesBuilder().InGlobalNamespace().Build().SourceText;
+        public static string PublicGlobalNullabilityAttributes => new NullabilityAttributesBuilder().InGlobalNamespace().Build().SourceText;
 
         public ParsedSourceCode Build()
         {
             ExternalAnnotationsMap map = new ExternalAnnotationsBuilder().Build();
 
-            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, EmptyStringArray,
-                TextComparisonMode.ExactMatch);
+            return new ParsedSourceCode(sourceText, SourceCodeBuilder.DefaultTestContext, map, EmptyStringArray, TextComparisonMode.ExactMatch);
         }
 
         [NotNull]

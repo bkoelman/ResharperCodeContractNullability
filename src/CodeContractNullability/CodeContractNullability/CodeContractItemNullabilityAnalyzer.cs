@@ -25,8 +25,7 @@ namespace CodeContractNullability
             string description =
                 $"The item type of this sequence/collection {memberTypePascalCase.ToCamelCase()} is a reference type or nullable type; it should be annotated with [ItemNotNull] or [ItemCanBeNull].";
 
-            return new DiagnosticDescriptor(DiagnosticId, title, messageFormat, Category, DiagnosticSeverity.Warning, true,
-                description,
+            return new DiagnosticDescriptor(DiagnosticId, title, messageFormat, Category, DiagnosticSeverity.Warning, true, description,
                 "https://github.com/bkoelman/ResharperCodeContractNullability/blob/master/doc/reference/RINUL_MemberIsMissingItemNullabilityAnnotation.md");
         }
     }

@@ -11,12 +11,12 @@ namespace CodeContractNullability.Utilities
     /// </typeparam>
     /// <remarks>
     /// <para>
-    /// It is strongly recommended to mark <see cref="FreshReference{T}" /> members in your class as <c>readonly</c>, because
-    /// accidentally replacing a FreshReference object with another FreshReference object defeats the whole purpose of this class.
+    /// It is strongly recommended to mark <see cref="FreshReference{T}" /> members in your class as <c>readonly</c>, because accidentally replacing a
+    /// FreshReference object with another FreshReference object defeats the whole purpose of this class.
     /// </para>
     /// <para>
-    /// Note that <see cref="FreshReference{T}" /> only guards non-cached and atomic exchange of the wrapped object reference. If you
-    /// need to access members of the wrapped object reference non-cached or atomically, locking is probably a better solution.
+    /// Note that <see cref="FreshReference{T}" /> only guards non-cached and atomic exchange of the wrapped object reference. If you need to access members
+    /// of the wrapped object reference non-cached or atomically, locking is probably a better solution.
     /// </para>
     /// </remarks>
     internal sealed class FreshReference<T>

@@ -22,7 +22,7 @@ namespace CodeContractNullability
     public abstract class BaseCodeFixProvider : CodeFixProvider
     {
         [NotNull]
-        private static readonly SyntaxAnnotation NamespaceImportAnnotation = new SyntaxAnnotation();
+        private static readonly SyntaxAnnotation NamespaceImportAnnotation = new();
 
         private readonly bool appliesToItem;
 
@@ -45,19 +45,16 @@ namespace CodeContractNullability
         {
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
-                NullabilityAttributeSymbols nullSymbols =
-                    await GetNullabilityAttributesFromDiagnostic(diagnostic, context.Document, context.CancellationToken)
-                        .ConfigureAwait(false);
+                NullabilityAttributeSymbols nullSymbols = await GetNullabilityAttributesFromDiagnostic(diagnostic, context.Document, context.CancellationToken)
+                    .ConfigureAwait(false);
 
-                SyntaxNode syntaxRoot =
-                    await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-
+                SyntaxNode syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
                 SyntaxNode targetSyntax = syntaxRoot.FindNode(context.Span);
                 SyntaxNode declarationSyntax = targetSyntax.TranslateDeclarationSyntax();
 
                 if (declarationSyntax is MethodDeclarationSyntax || declarationSyntax is IndexerDeclarationSyntax ||
-                    declarationSyntax is PropertyDeclarationSyntax || declarationSyntax is ParameterSyntax ||
-                    declarationSyntax is FieldDeclarationSyntax || declarationSyntax is ConversionOperatorDeclarationSyntax)
+                    declarationSyntax is PropertyDeclarationSyntax || declarationSyntax is ParameterSyntax || declarationSyntax is FieldDeclarationSyntax ||
+                    declarationSyntax is ConversionOperatorDeclarationSyntax)
                 {
                     RegisterFixesForSyntaxNode(context, declarationSyntax, diagnostic, nullSymbols);
                 }
@@ -66,12 +63,10 @@ namespace CodeContractNullability
 
         [NotNull]
         [ItemNotNull]
-        private static async Task<NullabilityAttributeSymbols> GetNullabilityAttributesFromDiagnostic(
-            [NotNull] Diagnostic diagnostic, [NotNull] Document document, CancellationToken cancellationToken)
+        private static async Task<NullabilityAttributeSymbols> GetNullabilityAttributesFromDiagnostic([NotNull] Diagnostic diagnostic,
+            [NotNull] Document document, CancellationToken cancellationToken)
         {
-            NullabilityAttributeMetadataNames names =
-                NullabilityAttributeMetadataNames.FromImmutableDictionary(diagnostic.Properties);
-
+            NullabilityAttributeMetadataNames names = NullabilityAttributeMetadataNames.FromImmutableDictionary(diagnostic.Properties);
             Compilation compilation = await document.Project.GetCompilationAsync(cancellationToken).ConfigureAwait(false);
 
             var attributeProvider = new CachingNullabilityAttributeProvider(names);
@@ -85,8 +80,8 @@ namespace CodeContractNullability
             return nullSymbols;
         }
 
-        private void RegisterFixesForSyntaxNode(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] NullabilityAttributeSymbols nullSymbols)
+        private void RegisterFixesForSyntaxNode(CodeFixContext context, [NotNull] SyntaxNode syntaxNode, [NotNull] Diagnostic diagnostic,
+            [NotNull] NullabilityAttributeSymbols nullSymbols)
         {
             INamedTypeSymbol nullabilityNotNullAttribute = GetNullabilityAttribute(nullSymbols, appliesToItem, false);
             RegisterFixForAttribute(context, syntaxNode, diagnostic, nullabilityNotNullAttribute);
@@ -96,8 +91,7 @@ namespace CodeContractNullability
         }
 
         [NotNull]
-        private static INamedTypeSymbol GetNullabilityAttribute([NotNull] NullabilityAttributeSymbols nullSymbols,
-            bool appliesToItem, bool canBeNull)
+        private static INamedTypeSymbol GetNullabilityAttribute([NotNull] NullabilityAttributeSymbols nullSymbols, bool appliesToItem, bool canBeNull)
         {
             if (appliesToItem)
             {
@@ -107,21 +101,20 @@ namespace CodeContractNullability
             return canBeNull ? nullSymbols.CanBeNull : nullSymbols.NotNull;
         }
 
-        private void RegisterFixForAttribute(CodeFixContext context, [NotNull] SyntaxNode syntaxNode,
-            [NotNull] Diagnostic diagnostic, [NotNull] INamedTypeSymbol nullabilityAttribute)
+        private void RegisterFixForAttribute(CodeFixContext context, [NotNull] SyntaxNode syntaxNode, [NotNull] Diagnostic diagnostic,
+            [NotNull] INamedTypeSymbol nullabilityAttribute)
         {
             string description = "Decorate with " + nullabilityAttribute.Name.Replace("Attribute", "");
 
             context.RegisterCodeFix(
-                CodeAction.Create(description,
-                    cancellationToken => ApplyCodeFixAsync(syntaxNode, context.Document, nullabilityAttribute, cancellationToken),
+                CodeAction.Create(description, cancellationToken => ApplyCodeFixAsync(syntaxNode, context.Document, nullabilityAttribute, cancellationToken),
                     description), diagnostic);
         }
 
         [NotNull]
         [ItemNotNull]
-        private async Task<Document> ApplyCodeFixAsync([NotNull] SyntaxNode syntaxNode, [NotNull] Document document,
-            [NotNull] INamedTypeSymbol attribute, CancellationToken cancellationToken)
+        private async Task<Document> ApplyCodeFixAsync([NotNull] SyntaxNode syntaxNode, [NotNull] Document document, [NotNull] INamedTypeSymbol attribute,
+            CancellationToken cancellationToken)
         {
             DocumentEditor editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
@@ -142,18 +135,16 @@ namespace CodeContractNullability
         }
 
         [ItemNotNull]
-        private static async Task<Document> ImportNamespacesAsync([NotNull] Document document,
-            CancellationToken cancellationToken)
+        private static async Task<Document> ImportNamespacesAsync([NotNull] Document document, CancellationToken cancellationToken)
         {
             OptionSet options = document.Project.Solution.Workspace.Options;
 
-            return await ImportAdder.AddImportsAsync(document, NamespaceImportAnnotation, options, cancellationToken)
-                .ConfigureAwait(false);
+            return await ImportAdder.AddImportsAsync(document, NamespaceImportAnnotation, options, cancellationToken).ConfigureAwait(false);
         }
 
         [NotNull]
-        private static INamedTypeSymbol GetNullabilityAttributeForEquivalenceKey(
-            [NotNull] NullabilityAttributeSymbols nullSymbols, [NotNull] string equivalenceKey)
+        private static INamedTypeSymbol GetNullabilityAttributeForEquivalenceKey([NotNull] NullabilityAttributeSymbols nullSymbols,
+            [NotNull] string equivalenceKey)
         {
             switch (equivalenceKey)
             {
@@ -196,12 +187,10 @@ namespace CodeContractNullability
                     return null;
                 }
 
-                DocumentEditor editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken)
-                    .ConfigureAwait(false);
+                DocumentEditor editor = await DocumentEditor.CreateAsync(document, fixAllContext.CancellationToken).ConfigureAwait(false);
 
                 NullabilityAttributeSymbols nullSymbols =
-                    await GetNullabilityAttributesFromDiagnostic(diagnostics.First(), document, fixAllContext.CancellationToken)
-                        .ConfigureAwait(false);
+                    await GetNullabilityAttributesFromDiagnostic(diagnostics.First(), document, fixAllContext.CancellationToken).ConfigureAwait(false);
 
                 SyntaxNode syntaxRoot = await document.GetSyntaxRootAsync(fixAllContext.CancellationToken).ConfigureAwait(false);
 
@@ -210,18 +199,12 @@ namespace CodeContractNullability
                     fixAllContext.CancellationToken.ThrowIfCancellationRequested();
 
                     SyntaxNode targetSyntax = syntaxRoot.FindNode(diagnostic.Location.SourceSpan, false, true);
-
-                    INamedTypeSymbol attributeToAdd =
-                        GetNullabilityAttributeForEquivalenceKey(nullSymbols, fixAllContext.CodeActionEquivalenceKey);
-
+                    INamedTypeSymbol attributeToAdd = GetNullabilityAttributeForEquivalenceKey(nullSymbols, fixAllContext.CodeActionEquivalenceKey);
                     AddNullabilityAttributeToSyntaxNode(targetSyntax, editor, attributeToAdd);
                 }
 
                 Document documentChanged = editor.GetChangedDocument();
-
-                Document documentFormatted = await ImportNamespacesAsync(documentChanged, fixAllContext.CancellationToken)
-                    .ConfigureAwait(false);
-
+                Document documentFormatted = await ImportNamespacesAsync(documentChanged, fixAllContext.CancellationToken).ConfigureAwait(false);
                 return await documentFormatted.GetSyntaxRootAsync().ConfigureAwait(false);
             }
         }

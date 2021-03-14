@@ -32,8 +32,14 @@ namespace CodeContractNullability.NullabilityAttributes
         [CanBeNull]
         private NullabilityAttributeSymbols ScanInSources([NotNull] Compilation compilation, CancellationToken cancellationToken)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+
             List<INamedTypeSymbol> matches = compilation.GetSymbolsWithName(IsAttributeName, SymbolFilter.Type, cancellationToken)
-                .OfType<INamedTypeSymbol>().Where(x => IsUsableAttribute(x, true)).ToList();
+                .OfType<INamedTypeSymbol>()
+                .Where(x => IsUsableAttribute(x, true))
+                .ToList();
+
+            // @formatter:wrap_chained_method_calls restore
 
             INamedTypeSymbol notNullAttributeSymbol = matches.FirstOrDefault(x => x.Name == AttributeNameForNotNull);
             INamedTypeSymbol canBeNullAttributeSymbol = matches.FirstOrDefault(x => x.Name == AttributeNameForCanBeNull);
@@ -42,8 +48,8 @@ namespace CodeContractNullability.NullabilityAttributes
 
             return notNullAttributeSymbol != null && canBeNullAttributeSymbol != null && itemNotNullAttributeSymbol != null &&
                 itemCanBeNullAttributeSymbol != null
-                    ? new NullabilityAttributeSymbols(notNullAttributeSymbol, canBeNullAttributeSymbol,
-                        itemNotNullAttributeSymbol, itemCanBeNullAttributeSymbol)
+                    ? new NullabilityAttributeSymbols(notNullAttributeSymbol, canBeNullAttributeSymbol, itemNotNullAttributeSymbol,
+                        itemCanBeNullAttributeSymbol)
                     : null;
         }
 
@@ -79,8 +85,7 @@ namespace CodeContractNullability.NullabilityAttributes
         }
 
         [CanBeNull]
-        private NullabilityAttributeSymbols ScanInReferences([NotNull] Compilation compilation,
-            CancellationToken cancellationToken)
+        private NullabilityAttributeSymbols ScanInReferences([NotNull] Compilation compilation, CancellationToken cancellationToken)
         {
             foreach (MetadataReference reference in compilation.References)
             {
@@ -91,8 +96,8 @@ namespace CodeContractNullability.NullabilityAttributes
                     var visitor = new NullabilityAttributesVisitor();
                     visitor.Visit(externalAssemblySymbol.GlobalNamespace);
 
-                    if (visitor.NotNullAttributeSymbol != null && visitor.CanBeNullAttributeSymbol != null &&
-                        visitor.ItemNotNullAttributeSymbol != null && visitor.ItemCanBeNullAttributeSymbol != null)
+                    if (visitor.NotNullAttributeSymbol != null && visitor.CanBeNullAttributeSymbol != null && visitor.ItemNotNullAttributeSymbol != null &&
+                        visitor.ItemCanBeNullAttributeSymbol != null)
                     {
                         return new NullabilityAttributeSymbols(visitor.NotNullAttributeSymbol, visitor.CanBeNullAttributeSymbol,
                             visitor.ItemNotNullAttributeSymbol, visitor.ItemCanBeNullAttributeSymbol);
