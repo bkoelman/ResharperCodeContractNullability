@@ -55,7 +55,7 @@ namespace CodeContractNullability.Conversion
 
             TypeSyntax declarationTypeSyntax = GetTypeSyntaxForDeclaration(declarationSyntax);
 
-            editor.ReplaceNode(declarationTypeSyntax, (n, gen) => TypeDeclarationWriter.ToNullableTypeSyntax(n, nullabilityState));
+            editor.ReplaceNode(declarationTypeSyntax, (n, _) => TypeDeclarationWriter.ToNullableTypeSyntax(n, nullabilityState));
 
             if (!(declarationSymbol is INamedTypeSymbol))
             {
@@ -265,7 +265,7 @@ namespace CodeContractNullability.Conversion
                 {
                     return fieldSymbol.Type;
                 }
-                case INamedTypeSymbol typeSymbol when typeSymbol.TypeKind == TypeKind.Delegate:
+                case INamedTypeSymbol { TypeKind: TypeKind.Delegate } typeSymbol:
                 {
                     return typeSymbol.DelegateInvokeMethod.ReturnType;
                 }

@@ -151,15 +151,15 @@ namespace CodeContractNullability
         {
             switch (context.Symbol)
             {
-                case IFieldSymbol _:
+                case IFieldSymbol:
                 {
                     return "field";
                 }
-                case IPropertySymbol _:
+                case IPropertySymbol:
                 {
                     return "property";
                 }
-                case IMethodSymbol _:
+                case IMethodSymbol:
                 {
                     return "method";
                 }
@@ -167,7 +167,7 @@ namespace CodeContractNullability
                 {
                     return "delegate";
                 }
-                case IParameterSymbol _:
+                case IParameterSymbol:
                 {
                     return "parameter";
                 }

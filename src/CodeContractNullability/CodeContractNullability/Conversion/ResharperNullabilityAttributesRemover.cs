@@ -105,7 +105,7 @@ namespace CodeContractNullability.Conversion
         {
             string attributeName = attributeSyntax.Name.ToString();
 
-            editor.ReplaceNode(attributeSyntax.Parent, (parent, gen) =>
+            editor.ReplaceNode(attributeSyntax.Parent, (parent, _) =>
             {
                 if (parent == null)
                 {
@@ -118,7 +118,7 @@ namespace CodeContractNullability.Conversion
                 return newAttributeListSyntax.Attributes.Count == 1 ? RemoveSurroundingWhitespaceOnLine(newAttributeListSyntax) : parent;
             });
 
-            editor.ReplaceNode(attributeSyntax.Parent.Parent, (root, gen) =>
+            editor.ReplaceNode(attributeSyntax.Parent.Parent, (root, _) =>
             {
                 AttributeSyntax newAttributeSyntax = root.DescendantNodes().OfType<AttributeSyntax>().First(s => s.Name.ToString() == attributeName);
 

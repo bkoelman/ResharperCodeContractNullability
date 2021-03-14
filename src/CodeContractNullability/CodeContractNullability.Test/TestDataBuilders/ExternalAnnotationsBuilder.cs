@@ -56,7 +56,6 @@ namespace CodeContractNullability.Test.TestDataBuilders
         private static ExternalAnnotationsMap Parse([NotNull] string document)
         {
             var annotations = new ExternalAnnotationsMap();
-
             var parser = new ExternalAnnotationDocumentParser();
 
             using (var reader = new StringReader(document))

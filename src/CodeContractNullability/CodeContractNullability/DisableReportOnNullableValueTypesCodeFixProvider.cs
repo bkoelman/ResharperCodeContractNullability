@@ -24,8 +24,7 @@ namespace CodeContractNullability
         {
             foreach (Diagnostic diagnostic in context.Diagnostics)
             {
-                var codeAction = CodeAction.Create("Disable reporting on nullable value types in project",
-                    cancellationToken => CreateOrUpdateSolution(context));
+                var codeAction = CodeAction.Create("Disable reporting on nullable value types in project", _ => CreateOrUpdateSolution(context));
 
                 context.RegisterCodeFix(codeAction, diagnostic);
             }
